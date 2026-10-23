@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>V-AGENT — Твой помощник по созданию контента</title>
+    <!-- Подключаем шрифты -->
+    <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600&family=Unbounded:wght@600&display=swap" rel="stylesheet">
+    <style>
+        /* Твой CSS */
+        :root{
+          --bg:#F1F3F6; --card:#FFFFFF; --ink:#151A21; --mute:#667085;
+          --line:#DCE1E8; --accent:#3D5AFE; --accent-soft:#E6EAFF;
+          --r:18px;
+        }
+        *{box-sizing:border-box;margin:0;padding:0}
+        html{scroll-behavior:smooth}
+        body{
+          background:var(--bg);color:var(--ink);
+          font:400 16px/1.6 "Onest",system-ui,sans-serif;
+          -webkit-font-smoothing:antialiased;
+        }
+        a{color:inherit;text-decoration:none}
+        code{background:var(--accent-soft);padding:1px 7px;border-radius:6px;font-size:.9em}
+
+        /* NAV */
+        .nav{
+          position:sticky;top:0;z-index:10;
+          display:flex;justify-content:space-between;align-items:center;
+          padding:18px max(24px,calc((100% - 1040px)/2));
+          background:rgba(241,243,246,.85);backdrop-filter:blur(12px);
+        }
+        .logo{font:600 17px "Unbounded",sans-serif;letter-spacing:-.02em}
+        .nav nav{display:flex;gap:28px}
+        .nav nav a{color:var(--mute);font-size:15px;transition:color .2s}
+        .nav nav a:hover{color:var(--ink)}
+
+        main{max-width:1040px;margin:0 auto;padding:0 24px}
+
+        /* HERO */
+        .hero{padding:90px 0 70px;text-align:center}
+        h1{
+          font:600 clamp(34px,6vw,64px)/1.1 "Unbounded",sans-serif;
+          letter-spacing:-.035em;
+          animation:rise .9s cubic-bezier(.2,.7,.2,1) both;
+        }
+        .lead{
+          max-width:520px;margin:24px auto 0;color:var(--mute);font-size:18px;
+          animation:rise .9s .12s cubic-bezier(.2,.7,.2,1) both;
+        }
+        .cta{
+          display:flex;gap:12px;justify-content:center;margin-top:34px;
+          animation:rise .9s .24s cubic-bezier(.2,.7,.2,1) both;
+        }
+        @keyframes rise{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+
+        /* BUTTONS */
+        .btn{
+          display:inline-block;padding:13px 26px;border-radius:999px;
+          border:1px solid var(--line);background:var(--card);
+          font-weight:500;font-size:15px;cursor:pointer;
+          transition:transform .2s,box-shadow .2s,background .2s;
+        }
+        .btn:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(21,26,33,.08)}
+        .btn:active{transform:translateY(0) scale(.97)}
+        .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+        .btn.primary:hover{box-shadow:0 10px 24px rgba(61,90,254,.35)}
+
+        /* COMPOSER (hero demo) */
+        .composer{
+          max-width:560px;margin:64px auto 0;text-align:left;
+          background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+          padding:20px 22px;box-shadow:0 30px 60px -30px rgba(21,26,33,.2);
+          animation:rise 1s .4s cubic-bezier(.2,.7,.2,1) both;
+        }
+        .composer-top{display:flex;align-items:center;gap:6px;margin-bottom:16px}
+        .dot{width:9px;height:9px;border-radius:50%;background:var(--line)}
+        .composer-title{margin-left:10px;color:var(--mute);font-size:13px}
+        .composer-text{min-height:76px;font-size:17px;line-height:1.55}
+        .caret{
+          display:inline-block;width:2px;height:1.1em;margin-left:2px;
+          background:var(--accent);vertical-align:text-bottom;animation:blink 1s steps(2) infinite;
+        }
+        @keyframes blink{50%{opacity:0}}
+        .composer-bottom{
+          display:flex;justify-content:space-between;align-items:center;
+          margin-top:18px;padding-top:16px;border-top:1px solid var(--line);gap:12px;flex-wrap:wrap;
+        }
+        .chips{display:flex;gap:8px;flex-wrap:wrap}
+        .chip{
+          font-size:13px;padding:5px 12px;border-radius:999px;
+          border:1px solid var(--line);color:var(--mute);transition:all .35s;
+        }
+        .chip.on{background:var(--accent-soft);border-color:var(--accent-soft);color:var(--accent)}
+        .status{font-size:13px;color:var(--mute);transition:color .3s}
+        .status.done{color:var(--accent)}
+
+        /* SECTIONS */
+        .section{padding:80px 0}
+        h2{font:600 clamp(26px,4vw,38px)/1.2 "Unbounded",sans-serif;letter-spacing:-.03em;margin-bottom:36px}
+        h3{font-weight:600;font-size:18px;margin-bottom:6px}
+        .sub{color:var(--mute);margin:-20px 0 32px}
+
+        .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
+        .card{
+          background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:28px;
+        }
+        .card p,.file p,.panel p{color:var(--mute)}
+
+        /* DOWNLOADS */
+        .downloads{display:grid;gap:14px}
+        .file{
+          display:flex;justify-content:space-between;align-items:center;gap:20px;
+          background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:22px 26px;
+        }
+
+        /* TABS */
+        .tabs{
+          position:relative;display:inline-flex;gap:4px;padding:5px;
+          background:var(--card);border:1px solid var(--line);border-radius:999px;
+          max-width:100%;overflow-x:auto;
+        }
+        .tab{
+          position:relative;z-index:1;border:0;background:none;cursor:pointer;
+          padding:9px 20px;border-radius:999px;font:500 15px "Onest",sans-serif;
+          color:var(--mute);white-space:nowrap;transition:color .25s;
+        }
+        .tab.active{color:#fff}
+        .tab-indicator{
+          position:absolute;top:5px;left:0;height:calc(100% - 10px);width:0;
+          background:var(--accent);border-radius:999px;
+          transition:transform .4s cubic-bezier(.3,.8,.2,1),width .4s cubic-bezier(.3,.8,.2,1);
+        }
+        .panel{
+          display:none;margin-top:22px;padding:30px;
+          background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+        }
+        .panel.active{display:block;animation:fade .45s ease both}
+        @keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+        .links{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
+        .link{
+          padding:9px 18px;border-radius:999px;background:var(--bg);font-size:14px;font-weight:500;
+          transition:background .2s,color .2s,transform .2s;
+        }
+        .link:hover{background:var(--accent);color:#fff;transform:translateY(-2px)}
+
+        /* SCROLL REVEAL */
+        .reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.2,1)}
+        .reveal.in{opacity:1;transform:none}
+
+        .footer{padding:50px 24px;text-align:center;color:var(--mute);font-size:14px}
+
+        /* A11Y */
+        :focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+        @media (max-width:640px){
+          .nav nav{gap:16px}
+          .hero{padding-top:60px}
+          .file{flex-direction:column;align-items:flex-start}
+        }
+        @media (prefers-reduced-motion:reduce){
+          *{animation:none!important;transition:none!important}
+          .reveal{opacity:1;transform:none}
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAV -->
+    <header class="nav">
+        <div class="logo">V-AGENT</div>
+        <nav>
+            <a href="#features">Возможности</a>
+            <a href="#download">Скачать</a>
+            <a href="#socials">Соцсети</a>
+        </nav>
+    </header>
+
+    <main>
+        <!-- HERO -->
+        <section class="hero">
+            <h1>Контент под контролем</h1>
+            <p class="lead">V-AGENT — умный помощник для создания постов, генерации картинок и автопостинга в Telegram.</p>
+            <div class="cta">
+                <a href="#download" class="btn primary">Скачать</a>
+                <a href="#features" class="btn">Узнать больше</a>
+            </div>
+
+            <!-- ДЕМО-АНИМАЦИЯ -->
+            <div class="composer">
+                <div class="composer-top">
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="composer-title">Новый пост</span>
+                </div>
+                <div class="composer-text">
+                    <span id="typed"></span><span class="caret"></span>
+                </div>
+                <div class="composer-bottom">
+                    <div class="chips">
+                        <span class="chip">Текст</span>
+                        <span class="chip">Картинка</span>
+                        <span class="chip">Telegram</span>
+                    </div>
+                    <span id="status" class="status">Черновик</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- FEATURES -->
+        <section id="features" class="section reveal">
+            <h2>Что умеет V-AGENT</h2>
+            <p class="sub">Все инструменты для ведения канала в одном приложении.</p>
+            <div class="grid">
+                <div class="card">
+                    <h3>Нейро-тексты</h3>
+                    <p>12 стилей написания: от строгого научного до дерзкого анти-ИИ.</p>
+                </div>
+                <div class="card">
+                    <h3>Генерация картинок</h3>
+                    <p>7 стилей изображений, которые идеально подходят к вашему тексту.</p>
+                </div>
+                <div class="card">
+                    <h3>Автопостинг</h3>
+                    <p>Составьте контент-план, и бот будет публиковать посты по расписанию.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- DOWNLOADS -->
+        <section id="download" class="section reveal">
+            <h2>Скачать приложение</h2>
+            <p class="sub">Доступно для Windows и Android.</p>
+            <div class="downloads">
+                <div class="file">
+                    <div>
+                        <h3>Версия для Windows</h3>
+                        <p>Файл: V-AGENT.exe (Windows 10/11)</p>
+                    </div>
+                    <!-- ЗАМЕНИ ССЫЛКУ # НА СВОЮ ИЗ РАЗДЕЛА RELEASES -->
+                    <a href="#" class="btn primary">Скачать .exe</a>
+                </div>
+                <div class="file">
+                    <div>
+                        <h3>Версия для Android</h3>
+                        <p>Файл: V-AGENT.apk (Android 8.0+)</p>
+                    </div>
+                    <!-- ЗАМЕНИ ССЫЛКУ # НА СВОЮ ИЗ РАЗДЕЛА RELEASES -->
+                    <a href="#" class="btn primary">Скачать .apk</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- SOCIALS -->
+        <section id="socials" class="section reveal">
+            <h2>Соцсети и поддержка</h2>
+            <p class="sub">Следите за обновлениями или задайте вопрос.</p>
+            
+            <div class="tabs">
+                <button class="tab active" data-tab="tab-1">Telegram</button>
+                <button class="tab" data-tab="tab-2">GitHub</button>
+                <button class="tab" data-tab="tab-3">Помощь</button>
+                <div class="tab-indicator"></div>
+            </div>
+
+            <div id="tab-1" class="panel active">
+                <h3>Telegram-канал</h3>
+                <p>Там выходят анонсы новых версий и советы по контенту.</p>
+                <!-- ЗАМЕНИ ССЫЛКУ НА СВОЙ КАНАЛ -->
+                <div class="links">
+                    <a href="https://t.me/твой_канал" class="link" target="_blank">Перейти в канал</a>
+                </div>
+            </div>
+
+            <div id="tab-2" class="panel">
+                <h3>GitHub</h3>
+                <p>Исходный код проекта и сообщения об ошибках.</p>
+                <!-- ЗАМЕНИ ССЫЛКУ НА СВОЙ РЕПОЗИТОРИЙ -->
+                <div class="links">
+                    <a href="https://github.com/твой_ник/твой_репо" class="link" target="_blank">Открыть репозиторий</a>
+                </div>
+            </div>
+
+            <div id="tab-3" class="panel">
+                <h3>Нужна помощь?</h3>
+                <p>Если возникли вопросы при установке, напишите нам.</p>
+                <!-- ЗАМЕНИ ССЫЛКУ НА СВОЙ АККАУНТ -->
+                <div class="links">
+                    <a href="https://t.me/твой_ник" class="link" target="_blank">Написать в Telegram</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; <span id="year"></span> V-AGENT. Все права защищены.</p>
+    </footer>
+
+    <!-- Твой JS -->
+    <script>
+        // Год в футере
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // ---------- Вкладки с ползунком ----------
+        const tabsBox = document.querySelector('.tabs');
+        const tabs = document.querySelectorAll('.tab');
+        const panels = document.querySelectorAll('.panel');
+        const indicator = document.querySelector('.tab-indicator');
+
+        function moveIndicator(tab) {
+          indicator.style.width = tab.offsetWidth + 'px';
+          indicator.style.transform = `translateX(${tab.offsetLeft}px)`;
+        }
+
+        tabs.forEach(tab => {
+          tab.addEventListener('click', () => {
+            tabs.forEach(t => t.classList.remove('active'));
+            panels.forEach(p => p.classList.remove('active'));
+            tab.classList.add('active');
+            document.getElementById(tab.dataset.tab).classList.add('active');
+            moveIndicator(tab);
+          });
+        });
+
+        const start = () => moveIndicator(document.querySelector('.tab.active'));
+        window.addEventListener('load', start);
+        window.addEventListener('resize', start);
+
+        // ---------- Появление блоков при прокрутке ----------
+        const io = new IntersectionObserver(entries => {
+          entries.forEach(e => {
+            if (e.isIntersecting) {
+              e.target.classList.add('in');
+              io.unobserve(e.target);
+            }
+          });
+        }, { threshold: 0.15 });
+        document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+        // ---------- Демо в шапке: печатается пост и "публикуется" ----------
+        const typed = document.getElementById('typed');
+        const status = document.getElementById('status');
+        const chips = document.querySelectorAll('.chip');
+        const posts = [
+          'Три идеи для контента на неделю уже готовы. Осталось выбрать время публикации.',
+          'Новый пост оформлен и ждёт своей очереди. V-agent отправит его сам.'
+        ];
+        const sleep = ms => new Promise(r => setTimeout(r, ms));
+        const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        async function demo() {
+          let i = 0;
+          while (true) {
+            const text = posts[i++ % posts.length];
+            typed.textContent = '';
+            status.textContent = 'Черновик';
+            status.classList.remove('done');
+            chips.forEach(c => c.classList.remove('on'));
+
+            for (const ch of text) {
+              typed.textContent += ch;
+              await sleep(32);
+            }
+            await sleep(500);
+            for (const c of chips) {
+              c.classList.add('on');
+              await sleep(350);
+            }
+            status.textContent = 'Опубликовано';
+            status.classList.add('done');
+            await sleep(2600);
+          }
+        }
+
+        if (reduce) {
+          typed.textContent = posts[0];
+          chips.forEach(c => c.classList.add('on'));
+          status.textContent = 'Опубликовано';
+        } else {
+          demo();
+        }
+    </script>
+</body>
+</html>
