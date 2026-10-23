@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>V-AGENT — Твой помощник по созданию контента</title>
     
-    <!-- Иконка сайта -->
+    <!-- Иконка сайта (вкладка браузера) -->
     <link rel="icon" href="icon.ico" type="image/x-icon">
     
     <!-- Шрифты -->
@@ -41,8 +41,11 @@
           padding:18px max(24px,calc((100% - 1040px)/2));
           background:var(--nav);backdrop-filter:blur(12px);
         }
+        
+        /* Стили для логотипа в шапке */
         .logo{display:inline-flex;align-items:center;gap:10px;font:600 17px "Unbounded",sans-serif;letter-spacing:-.02em}
-        .logo img{width:28px;height:28px;border-radius:7px;object-fit:cover}
+        .logo img{width:28px;height:28px;border-radius:7px;object-fit:contain;} /* object-fit: contain чтобы иконка не обрезалась */
+        
         .nav nav{display:flex;gap:28px}
         .nav nav a{color:var(--mute);font-size:15px;transition:color .2s}
         .nav nav a:hover{color:var(--ink)}
@@ -242,8 +245,9 @@
 
     <!-- NAV -->
     <header class="nav">
+        <!-- Логотип теперь использует icon.ico -->
         <div class="logo">
-            <img src="logo_text.png" alt="V-AGENT">
+            <img src="icon.ico" alt="V-AGENT">
             <span>V-AGENT</span>
         </div>
         <div class="nav-right">
