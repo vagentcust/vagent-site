@@ -12,7 +12,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600&family=Unbounded:wght@600&display=swap" rel="stylesheet">
     
     <style>
-        /* Твой CSS с добавлениями */
+        /* Твой CSS */
         :root{
           --bg:#F1F3F6; --card:#FFFFFF; --ink:#151A21; --mute:#667085;
           --line:#DCE1E8; --accent:#3D5AFE; --accent-soft:#E6EAFF;
@@ -41,10 +41,8 @@
           padding:18px max(24px,calc((100% - 1040px)/2));
           background:var(--nav);backdrop-filter:blur(12px);
         }
-        
-        .logo{font:600 17px "Unbounded",sans-serif;letter-spacing:-.02em; display:flex; align-items:center; gap:10px;}
-        .logo img {height: 32px; width: auto;}
-        
+        .logo{display:inline-flex;align-items:center;gap:10px;font:600 17px "Unbounded",sans-serif;letter-spacing:-.02em}
+        .logo img{width:28px;height:28px;border-radius:7px;object-fit:cover}
         .nav nav{display:flex;gap:28px}
         .nav nav a{color:var(--mute);font-size:15px;transition:color .2s}
         .nav nav a:hover{color:var(--ink)}
@@ -80,51 +78,62 @@
         .btn.primary{background:var(--accent);border-color:var(--accent);color:var(--on)}
         .btn.primary:hover{box-shadow:0 10px 24px color-mix(in srgb,var(--accent) 40%,transparent)}
 
-        /* COMPOSER (hero demo) */
+        /* AI CHAT DEMO */
+        @property --a{syntax:"<angle>";initial-value:0deg;inherits:false}
+        @keyframes spin{to{--a:360deg}}
         .composer{
-          max-width:560px;margin:64px auto 0;text-align:left;
+          position:relative;max-width:560px;margin:64px auto 0;text-align:left;
           background:var(--card);border:1px solid var(--line);border-radius:var(--r);
           padding:20px 22px;box-shadow:0 30px 60px -30px var(--shadow);
+          transition:box-shadow .6s;
           animation:rise 1s .4s cubic-bezier(.2,.7,.2,1) both;
         }
-        .composer.sent{animation:sent .7s ease}
-        @keyframes sent{40%{transform:translateY(-10px) scale(1.015)}}
-        .composer-top{display:flex;align-items:center;gap:6px;margin-bottom:16px}
+        .composer::before{
+          content:"";position:absolute;inset:-1px;border-radius:inherit;padding:1.5px;pointer-events:none;
+          background:conic-gradient(from var(--a),transparent 0 55%,var(--accent) 75%,#ff7ad9 88%,#5ce1e6 95%,transparent);
+          -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+          -webkit-mask-composite:xor;mask-composite:exclude;
+          opacity:0;transition:opacity .6s;animation:spin 2.5s linear infinite;
+        }
+        .composer.busy::before{opacity:1}
+        .composer.busy{box-shadow:0 0 46px -10px color-mix(in srgb,var(--accent) 60%,transparent),0 30px 60px -30px var(--shadow)}
+        .composer-top{display:flex;align-items:center;gap:6px;margin-bottom:18px}
         .dot{width:9px;height:9px;border-radius:50%;background:var(--line)}
         .composer-title{margin-left:10px;color:var(--mute);font-size:13px}
-        .composer-text{min-height:60px;font-size:17px;line-height:1.55;transition:opacity .3s}
-        .composer-text.off{opacity:.35}
-        .caret{
-          display:inline-block;width:2px;height:1.1em;margin-left:2px;
-          background:var(--accent);vertical-align:text-bottom;animation:blink 1s steps(2) infinite;
+
+        .chat{min-height:215px;display:flex;flex-direction:column;gap:20px;transition:opacity .5s,transform .5s}
+        .chat.out{opacity:0;transform:translateY(-8px)}
+        .user{
+          align-self:flex-end;max-width:88%;min-height:42px;padding:10px 16px;
+          background:var(--accent-soft);border-radius:16px 16px 4px 16px;font-size:15px;
         }
-        @keyframes blink{50%{opacity:0}}
-        .media{display:grid;grid-template-rows:0fr;transition:grid-template-rows .5s cubic-bezier(.3,.8,.2,1)}
-        .media.open{grid-template-rows:1fr}
-        .media-inner{overflow:hidden}
-        .pic{
-          height:150px;margin-top:14px;border-radius:12px;
-          background:linear-gradient(120deg,var(--accent-soft),var(--accent),var(--accent-soft));
-          background-size:250% 100%;animation:slide 5s linear infinite;
+        .user.ping{animation:ping .35s ease}
+        @keyframes ping{50%{transform:scale(1.05)}}
+        .ai-head{display:flex;align-items:center;gap:10px;margin-bottom:8px;font-size:13px;color:var(--mute)}
+        .orb{
+          width:22px;height:22px;border-radius:50%;transition:box-shadow .5s;
+          background:conic-gradient(from var(--a),var(--accent),#ff7ad9,#5ce1e6,var(--accent));
+          animation:spin 3s linear infinite;
         }
-        @keyframes slide{to{background-position:-250% 0}}
+        .composer.busy .orb{animation-duration:.7s;box-shadow:0 0 20px var(--accent)}
+        .think{display:flex;gap:4px;opacity:0;transition:opacity .3s}
+        .think.on{opacity:1}
+        .think i{width:5px;height:5px;border-radius:50%;background:var(--accent);animation:bounce 1s infinite}
+        .think i:nth-child(2){animation-delay:.15s}
+        .think i:nth-child(3){animation-delay:.3s}
+        @keyframes bounce{40%{transform:translateY(-5px)}}
+        .answer{font-size:17px;line-height:1.55}
+        .w{
+          display:inline-block;white-space:pre;opacity:0;filter:blur(8px);transform:translateY(8px);
+          transition:opacity .5s,filter .6s,transform .5s cubic-bezier(.2,.8,.2,1);
+        }
+        .w.in{opacity:1;filter:none;transform:none}
+
         .composer-bottom{
-          display:flex;justify-content:space-between;align-items:center;
-          margin-top:18px;padding-top:16px;border-top:1px solid var(--line);gap:12px;flex-wrap:wrap;
+          display:flex;align-items:center;gap:10px;margin-top:18px;padding-top:16px;
+          border-top:1px solid var(--line);color:var(--mute);font-size:14px;
         }
-        .chips{display:flex;gap:8px;flex-wrap:wrap}
-        .chip{
-          font:500 13px "Onest",sans-serif;padding:7px 14px;border-radius:999px;cursor:pointer;
-          border:1px solid var(--line);background:none;color:var(--mute);
-          transition:all .3s;
-        }
-        .chip:hover{border-color:var(--accent);transform:translateY(-1px)}
-        .chip:active{transform:scale(.94)}
-        .chip.on{background:var(--accent-soft);border-color:var(--accent-soft);color:var(--accent)}
-        .send{padding:9px 20px;font-size:14px}
-        .send:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none}
-        .status{margin-top:12px;font-size:13px;color:var(--mute);transition:color .3s}
-        .status.done{color:var(--accent)}
+        .composer-bottom svg{width:18px;height:18px;color:var(--accent);flex:none}
 
         /* SECTIONS */
         .section{padding:80px 0}
@@ -267,25 +276,25 @@
                     <span class="dot"></span>
                     <span class="dot"></span>
                     <span class="dot"></span>
-                    <span class="composer-title">Новый пост</span>
+                    <span class="composer-title">Новый запрос к ИИ</span>
                 </div>
-                <div class="composer-text" id="textBox">
-                    <span id="typed"></span><span class="caret"></span>
-                </div>
-                <div class="media" id="media">
-                    <div class="media-inner">
-                        <div class="pic"></div>
+                
+                <div class="chat" id="chat">
+                    <div class="user"><span id="question"></span></div>
+                    <div class="ai">
+                        <div class="ai-head">
+                            <span class="orb"></span>
+                            <span>V-agent</span>
+                            <div class="think" id="think"><i></i><i></i><i></i></div>
+                        </div>
+                        <div class="answer" id="answer"></div>
                     </div>
                 </div>
+
                 <div class="composer-bottom">
-                    <div class="chips">
-                        <button class="chip on" data-act="text">Текст</button>
-                        <button class="chip" data-act="image">Картинка</button>
-                        <button class="chip" data-act="tg">Telegram</button>
-                    </div>
-                    <button class="btn primary send" id="send" disabled>Опубликовать</button>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5-6.5 4.5 2-7.5-5.5-4.5h7z"></path></svg>
+                    <span>Работает на базе искусственного интеллекта</span>
                 </div>
-                <div class="status" id="status"></div>
             </div>
         </section>
 
@@ -398,7 +407,6 @@
         const root = document.documentElement;
         const themeBtn = $('#theme');
 
-        // Проверяем сохраненную тему
         try {
             const savedTheme = localStorage.getItem('theme');
             if (savedTheme) root.dataset.theme = savedTheme;
@@ -450,69 +458,55 @@
         }), { threshold: 0.15 });
         $$('.reveal').forEach(el => io.observe(el));
 
-        // ---------- Демо-редактор поста ----------
-        const POST = 'Три идеи для контента на неделю уже готовы. Осталось выбрать время публикации.';
-        const typed = $('#typed'), textBox = $('#textBox'), media = $('#media');
-        const status = $('#status'), send = $('#send'), composer = $('#composer');
-        const state = { text: true, image: false, tg: false, busy: false };
-        let typingId = 0;
+        // ---------- Демо: ИИ отвечает на вопрос ----------
+        const QA = [
+          ['Придумай пост про запуск V-agent', 'V-agent запущен. Он пишет посты, подбирает время и сам публикует их в Telegram. Больше никакой рутины.'],
+          ['Что опубликовать на этой неделе?', 'Три идеи: разбор новой функции, подборка советов и короткий опрос для подписчиков. Расписание уже составлено.'],
+          ['Как часто выкладывать посты?', 'Для канала хватит одного поста в день. V-agent сам выберет время, когда подписчики онлайн.']
+        ];
+        const q = $('#question'), ans = $('#answer'), think = $('#think');
+        const chat = $('#chat'), comp = $('#composer');
 
-        async function typeText() {
-          const id = ++typingId;
-          typed.textContent = '';
-          if (reduce) { typed.textContent = POST; return; }
-          for (const ch of POST) {
-            if (id !== typingId) return;
-            typed.textContent += ch;
-            await sleep(28);
+        async function runChat() {
+          let i = 0;
+          while (true) {
+            const [Q, A] = QA[i++ % QA.length];
+            q.textContent = ''; ans.textContent = '';
+            chat.classList.remove('out');
+            await sleep(500);
+            for (const ch of Q) { q.textContent += ch; await sleep(32); }
+            q.parentElement.classList.add('ping');
+            await sleep(350);
+            q.parentElement.classList.remove('ping');
+
+            comp.classList.add('busy');
+            think.classList.add('on');
+            await sleep(1500);
+            think.classList.remove('on');
+
+            const words = A.split(' ');
+            for (const [k, w] of words.entries()) {
+              const s = document.createElement('span');
+              s.className = 'w';
+              s.textContent = w + (k < words.length - 1 ? ' ' : '');
+              ans.appendChild(s);
+              requestAnimationFrame(() => requestAnimationFrame(() => s.classList.add('in')));
+              await sleep(70);
+            }
+            await sleep(500);
+            comp.classList.remove('busy');
+            await sleep(3200);
+            chat.classList.add('out');
+            await sleep(600);
           }
         }
 
-        function refresh() {
-          const parts = [state.text && 'текст', state.image && 'картинка'].filter(Boolean);
-          const hasContent = parts.length > 0;
-          send.disabled = state.busy || !(state.tg && hasContent);
-          if (state.busy) return;
-          status.classList.remove('done');
-          if (!hasContent) status.textContent = 'Пост пустой: добавьте текст или картинку';
-          else if (!state.tg) status.textContent = 'В посте: ' + parts.join(' + ') + '. Выберите Telegram';
-          else status.textContent = 'Готово к отправке: ' + parts.join(' + ') + ' → Telegram';
+        if (reduce) {
+          q.textContent = QA[0][0];
+          ans.textContent = QA[0][1];
+        } else {
+          runChat();
         }
-
-        $$('.chip').forEach(c => c.addEventListener('click', () => {
-          if (state.busy) return;
-          const a = c.dataset.act;
-          state[a] = !state[a];
-          c.classList.toggle('on', state[a]);
-
-          if (a === 'text') {
-            textBox.classList.toggle('off', !state.text);
-            if (state.text) typeText();
-            else { typingId++; typed.textContent = 'Текста пока нет'; }
-          }
-          if (a === 'image') media.classList.toggle('open', state.image);
-          refresh();
-        }));
-
-        send.addEventListener('click', async () => {
-          state.busy = true;
-          send.disabled = true;
-          send.textContent = 'Отправка…';
-          status.classList.remove('done');
-          status.textContent = 'Отправляем в Telegram…';
-          await sleep(1200);
-          composer.classList.add('sent');
-          status.textContent = '✓ Опубликовано в Telegram';
-          status.classList.add('done');
-          send.textContent = 'Отправлено';
-          await sleep(2600);
-          composer.classList.remove('sent');
-          send.textContent = 'Опубликовать';
-          state.busy = false;
-          refresh();
-        });
-
-        typeText().then(refresh);
     </script>
 </body>
 </html>
