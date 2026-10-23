@@ -8,15 +8,21 @@
     <!-- Иконка сайта -->
     <link rel="icon" href="icon.ico" type="image/x-icon">
     
-    <!-- Подключаем шрифты -->
+    <!-- Шрифты -->
     <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600&family=Unbounded:wght@600&display=swap" rel="stylesheet">
     
     <style>
-        /* Твой CSS */
+        /* Твой CSS с добавлениями */
         :root{
           --bg:#F1F3F6; --card:#FFFFFF; --ink:#151A21; --mute:#667085;
           --line:#DCE1E8; --accent:#3D5AFE; --accent-soft:#E6EAFF;
-          --r:18px;
+          --r:18px; --nav:rgba(241,243,246,.85); --on:#fff; --shadow:rgba(21,26,33,.2);
+        }
+        [data-theme="dark"]{
+          --bg:#0E1116; --card:#171B22; --ink:#ECEFF4; --mute:#8B94A3;
+          --line:#272D37; --accent:#8794FF; --accent-soft:#222949;
+          --nav:rgba(14,17,22,.85); --on:#0E1116; --shadow:rgba(0,0,0,.6);
+          color-scheme:dark;
         }
         *{box-sizing:border-box;margin:0;padding:0}
         html{scroll-behavior:smooth}
@@ -33,22 +39,12 @@
           position:sticky;top:0;z-index:10;
           display:flex;justify-content:space-between;align-items:center;
           padding:18px max(24px,calc((100% - 1040px)/2));
-          background:rgba(241,243,246,.85);backdrop-filter:blur(12px);
+          background:var(--nav);backdrop-filter:blur(12px);
         }
         
-        /* Стили для логотипа в шапке */
-        .logo {
-            display: flex; 
-            align-items: center; 
-            gap: 10px;
-            font: 600 17px "Unbounded", sans-serif; 
-            letter-spacing: -.02em;
-        }
-        .logo img {
-            height: 32px; 
-            width: auto;
-        }
-
+        .logo{font:600 17px "Unbounded",sans-serif;letter-spacing:-.02em; display:flex; align-items:center; gap:10px;}
+        .logo img {height: 32px; width: auto;}
+        
         .nav nav{display:flex;gap:28px}
         .nav nav a{color:var(--mute);font-size:15px;transition:color .2s}
         .nav nav a:hover{color:var(--ink)}
@@ -81,36 +77,53 @@
         }
         .btn:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(21,26,33,.08)}
         .btn:active{transform:translateY(0) scale(.97)}
-        .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
-        .btn.primary:hover{box-shadow:0 10px 24px rgba(61,90,254,.35)}
+        .btn.primary{background:var(--accent);border-color:var(--accent);color:var(--on)}
+        .btn.primary:hover{box-shadow:0 10px 24px color-mix(in srgb,var(--accent) 40%,transparent)}
 
         /* COMPOSER (hero demo) */
         .composer{
           max-width:560px;margin:64px auto 0;text-align:left;
           background:var(--card);border:1px solid var(--line);border-radius:var(--r);
-          padding:20px 22px;box-shadow:0 30px 60px -30px rgba(21,26,33,.2);
+          padding:20px 22px;box-shadow:0 30px 60px -30px var(--shadow);
           animation:rise 1s .4s cubic-bezier(.2,.7,.2,1) both;
         }
+        .composer.sent{animation:sent .7s ease}
+        @keyframes sent{40%{transform:translateY(-10px) scale(1.015)}}
         .composer-top{display:flex;align-items:center;gap:6px;margin-bottom:16px}
         .dot{width:9px;height:9px;border-radius:50%;background:var(--line)}
         .composer-title{margin-left:10px;color:var(--mute);font-size:13px}
-        .composer-text{min-height:76px;font-size:17px;line-height:1.55}
+        .composer-text{min-height:60px;font-size:17px;line-height:1.55;transition:opacity .3s}
+        .composer-text.off{opacity:.35}
         .caret{
           display:inline-block;width:2px;height:1.1em;margin-left:2px;
           background:var(--accent);vertical-align:text-bottom;animation:blink 1s steps(2) infinite;
         }
         @keyframes blink{50%{opacity:0}}
+        .media{display:grid;grid-template-rows:0fr;transition:grid-template-rows .5s cubic-bezier(.3,.8,.2,1)}
+        .media.open{grid-template-rows:1fr}
+        .media-inner{overflow:hidden}
+        .pic{
+          height:150px;margin-top:14px;border-radius:12px;
+          background:linear-gradient(120deg,var(--accent-soft),var(--accent),var(--accent-soft));
+          background-size:250% 100%;animation:slide 5s linear infinite;
+        }
+        @keyframes slide{to{background-position:-250% 0}}
         .composer-bottom{
           display:flex;justify-content:space-between;align-items:center;
           margin-top:18px;padding-top:16px;border-top:1px solid var(--line);gap:12px;flex-wrap:wrap;
         }
         .chips{display:flex;gap:8px;flex-wrap:wrap}
         .chip{
-          font-size:13px;padding:5px 12px;border-radius:999px;
-          border:1px solid var(--line);color:var(--mute);transition:all .35s;
+          font:500 13px "Onest",sans-serif;padding:7px 14px;border-radius:999px;cursor:pointer;
+          border:1px solid var(--line);background:none;color:var(--mute);
+          transition:all .3s;
         }
+        .chip:hover{border-color:var(--accent);transform:translateY(-1px)}
+        .chip:active{transform:scale(.94)}
         .chip.on{background:var(--accent-soft);border-color:var(--accent-soft);color:var(--accent)}
-        .status{font-size:13px;color:var(--mute);transition:color .3s}
+        .send{padding:9px 20px;font-size:14px}
+        .send:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none}
+        .status{margin-top:12px;font-size:13px;color:var(--mute);transition:color .3s}
         .status.done{color:var(--accent)}
 
         /* SECTIONS */
@@ -143,7 +156,7 @@
           padding:9px 20px;border-radius:999px;font:500 15px "Onest",sans-serif;
           color:var(--mute);white-space:nowrap;transition:color .25s;
         }
-        .tab.active{color:#fff}
+        .tab.active{color:var(--on)}
         .tab-indicator{
           position:absolute;top:5px;left:0;height:calc(100% - 10px);width:0;
           background:var(--accent);border-radius:999px;
@@ -160,7 +173,7 @@
           padding:9px 18px;border-radius:999px;background:var(--bg);font-size:14px;font-weight:500;
           transition:background .2s,color .2s,transform .2s;
         }
-        .link:hover{background:var(--accent);color:#fff;transform:translateY(-2px)}
+        .link:hover{background:var(--accent);color:var(--on);transform:translateY(-2px)}
 
         /* SCROLL REVEAL */
         .reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.2,1)}
@@ -179,22 +192,63 @@
           *{animation:none!important;transition:none!important}
           .reveal{opacity:1;transform:none}
         }
+
+        /* THEME TOGGLE */
+        .nav-right{display:flex;align-items:center;gap:22px}
+        .theme{
+          position:relative;width:40px;height:40px;border-radius:50%;cursor:pointer;
+          border:1px solid var(--line);background:var(--card);color:var(--ink);
+          transition:transform .2s,border-color .2s;
+        }
+        .theme:hover{border-color:var(--accent)}
+        .theme:active{transform:scale(.92)}
+        .theme svg{
+          position:absolute;inset:9px;width:20px;height:20px;
+          transition:transform .6s cubic-bezier(.3,.8,.2,1),opacity .4s;
+        }
+        .sun{opacity:0;transform:rotate(-90deg) scale(.4)}
+        .moon{opacity:1;transform:none}
+        [data-theme="dark"] .sun{opacity:1;transform:none}
+        [data-theme="dark"] .moon{opacity:0;transform:rotate(90deg) scale(.4)}
+        ::view-transition-old(root),::view-transition-new(root){animation:none;mix-blend-mode:normal}
+        ::view-transition-old(root){z-index:1}
+        ::view-transition-new(root){z-index:2}
+        .fade-theme,.fade-theme *{transition:background-color .45s,color .45s,border-color .45s!important}
+
+        /* SOCIALS */
+        .socials{
+          position:fixed;left:20px;bottom:20px;z-index:20;
+          display:flex;gap:4px;padding:5px;
+          background:var(--card);border:1px solid var(--line);border-radius:999px;
+        }
+        .socials a{
+          width:40px;height:40px;display:grid;place-items:center;border-radius:50%;
+          color:var(--mute);transition:background .25s,color .25s,transform .25s;
+        }
+        .socials a:hover{background:var(--accent);color:var(--on);transform:translateY(-3px)}
+        .socials svg{width:20px;height:20px}
     </style>
 </head>
 <body>
 
     <!-- NAV -->
     <header class="nav">
-        <!-- ЛОГОТИП -->
         <div class="logo">
             <img src="logo_text.png" alt="V-AGENT">
             <span>V-AGENT</span>
         </div>
-        <nav>
-            <a href="#features">Возможности</a>
-            <a href="#download">Скачать</a>
-            <a href="#socials">Соцсети</a>
-        </nav>
+        <div class="nav-right">
+            <nav>
+                <a href="#features">Возможности</a>
+                <a href="#download">Скачать</a>
+                <a href="#socials">Соцсети</a>
+            </nav>
+            <!-- Кнопка смены темы -->
+            <button id="theme" class="theme" aria-label="Сменить тему">
+                <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+            </button>
+        </div>
     </header>
 
     <main>
@@ -208,24 +262,30 @@
             </div>
 
             <!-- ДЕМО-АНИМАЦИЯ -->
-            <div class="composer">
+            <div class="composer" id="composer">
                 <div class="composer-top">
                     <span class="dot"></span>
                     <span class="dot"></span>
                     <span class="dot"></span>
                     <span class="composer-title">Новый пост</span>
                 </div>
-                <div class="composer-text">
+                <div class="composer-text" id="textBox">
                     <span id="typed"></span><span class="caret"></span>
+                </div>
+                <div class="media" id="media">
+                    <div class="media-inner">
+                        <div class="pic"></div>
+                    </div>
                 </div>
                 <div class="composer-bottom">
                     <div class="chips">
-                        <span class="chip">Текст</span>
-                        <span class="chip">Картинка</span>
-                        <span class="chip">Telegram</span>
+                        <button class="chip on" data-act="text">Текст</button>
+                        <button class="chip" data-act="image">Картинка</button>
+                        <button class="chip" data-act="tg">Telegram</button>
                     </div>
-                    <span id="status" class="status">Черновик</span>
+                    <button class="btn primary send" id="send" disabled>Опубликовать</button>
                 </div>
+                <div class="status" id="status"></div>
             </div>
         </section>
 
@@ -259,7 +319,7 @@
                         <h3>Версия для Windows</h3>
                         <p>Файл: V-AGENT.exe (Windows 10/11)</p>
                     </div>
-                    <!-- ВСТАВЬ ССЫЛКУ НА EXE ИЗ РАЗДЕЛА RELEASES ВМЕСТО # -->
+                    <!-- ССЫЛКА НА EXE -->
                     <a href="https://github.com/lalalalalla1113-ai/vagent-site/releases/download/v1.0/V-AGENT.exe" class="btn primary">Скачать .exe</a>
                 </div>
                 <div class="file">
@@ -267,13 +327,13 @@
                         <h3>Версия для Android</h3>
                         <p>Файл: V-AGENT.apk (Android 8.0+)</p>
                     </div>
-                    <!-- ВСТАВЬ ССЫЛКУ НА APK ИЗ РАЗДЕЛА RELEASES ВМЕСТО # -->
+                    <!-- ССЫЛКА НА APK (пока заглушка) -->
                     <a href="#" class="btn primary">Скачать .apk</a>
                 </div>
             </div>
         </section>
 
-        <!-- SOCIALS -->
+        <!-- SOCIALS TABS -->
         <section id="socials" class="section reveal">
             <h2>Соцсети и поддержка</h2>
             <p class="sub">Следите за обновлениями или задайте вопрос.</p>
@@ -315,89 +375,144 @@
         <p>&copy; <span id="year"></span> V-AGENT. Все права защищены.</p>
     </footer>
 
+    <!-- Кнопки соцсетей внизу слева (фиксированные) -->
+    <div class="socials">
+        <a href="https://t.me/твой_канал" target="_blank" aria-label="Telegram">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+        </a>
+        <a href="https://github.com/lalalalalla1113-ai" target="_blank" aria-label="GitHub">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+        </a>
+    </div>
+
     <!-- Твой JS -->
     <script>
-        // Год в футере
-        document.getElementById('year').textContent = new Date().getFullYear();
-
-        // ---------- Вкладки с ползунком ----------
-        const tabsBox = document.querySelector('.tabs');
-        const tabs = document.querySelectorAll('.tab');
-        const panels = document.querySelectorAll('.panel');
-        const indicator = document.querySelector('.tab-indicator');
-
-        function moveIndicator(tab) {
-          indicator.style.width = tab.offsetWidth + 'px';
-          indicator.style.transform = `translateX(${tab.offsetLeft}px)`;
-        }
-
-        tabs.forEach(tab => {
-          tab.addEventListener('click', () => {
-            tabs.forEach(t => t.classList.remove('active'));
-            panels.forEach(p => p.classList.remove('active'));
-            tab.classList.add('active');
-            document.getElementById(tab.dataset.tab).classList.add('active');
-            moveIndicator(tab);
-          });
-        });
-
-        const start = () => moveIndicator(document.querySelector('.tab.active'));
-        window.addEventListener('load', start);
-        window.addEventListener('resize', start);
-
-        // ---------- Появление блоков при прокрутке ----------
-        const io = new IntersectionObserver(entries => {
-          entries.forEach(e => {
-            if (e.isIntersecting) {
-              e.target.classList.add('in');
-              io.unobserve(e.target);
-            }
-          });
-        }, { threshold: 0.15 });
-        document.querySelectorAll('.reveal').forEach(el => io.observe(el));
-
-        // ---------- Демо в шапке: печатается пост и "публикуется" ----------
-        const typed = document.getElementById('typed');
-        const status = document.getElementById('status');
-        const chips = document.querySelectorAll('.chip');
-        const posts = [
-          'Три идеи для контента на неделю уже готовы. Осталось выбрать время публикации.',
-          'Новый пост оформлен и ждёт своей очереди. V-agent отправит его сам.'
-        ];
+        const $ = s => document.querySelector(s);
+        const $$ = s => document.querySelectorAll(s);
         const sleep = ms => new Promise(r => setTimeout(r, ms));
         const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-        async function demo() {
-          let i = 0;
-          while (true) {
-            const text = posts[i++ % posts.length];
-            typed.textContent = '';
-            status.textContent = 'Черновик';
-            status.classList.remove('done');
-            chips.forEach(c => c.classList.remove('on'));
+        $('#year').textContent = new Date().getFullYear();
 
-            for (const ch of text) {
-              typed.textContent += ch;
-              await sleep(32);
-            }
-            await sleep(500);
-            for (const c of chips) {
-              c.classList.add('on');
-              await sleep(350);
-            }
-            status.textContent = 'Опубликовано';
-            status.classList.add('done');
-            await sleep(2600);
+        // ---------- Смена темы (круговой переход от кнопки) ----------
+        const root = document.documentElement;
+        const themeBtn = $('#theme');
+
+        // Проверяем сохраненную тему
+        try {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) root.dataset.theme = savedTheme;
+        } catch(e) {}
+
+        themeBtn.addEventListener('click', () => {
+          const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+          const apply = () => {
+            root.dataset.theme = next;
+            try { localStorage.setItem('theme', next); } catch (e) {}
+          };
+          if (!document.startViewTransition || reduce) {
+            root.classList.add('fade-theme');
+            apply();
+            setTimeout(() => root.classList.remove('fade-theme'), 500);
+            return;
+          }
+          const r = themeBtn.getBoundingClientRect();
+          const x = r.left + r.width / 2, y = r.top + r.height / 2;
+          const radius = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+          document.startViewTransition(apply).ready.then(() => {
+            root.animate(
+              { clipPath: [`circle(0 at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`] },
+              { duration: 700, easing: 'ease-in-out', pseudoElement: '::view-transition-new(root)' }
+            );
+          });
+        });
+
+        // ---------- Вкладки с ползунком ----------
+        const tabs = $$('.tab'), panels = $$('.panel'), indicator = $('.tab-indicator');
+        const moveIndicator = t => {
+          indicator.style.width = t.offsetWidth + 'px';
+          indicator.style.transform = `translateX(${t.offsetLeft}px)`;
+        };
+        tabs.forEach(tab => tab.addEventListener('click', () => {
+          tabs.forEach(t => t.classList.remove('active'));
+          panels.forEach(p => p.classList.remove('active'));
+          tab.classList.add('active');
+          document.getElementById(tab.dataset.tab).classList.add('active');
+          moveIndicator(tab);
+        }));
+        const place = () => moveIndicator($('.tab.active'));
+        addEventListener('load', place);
+        addEventListener('resize', place);
+
+        // ---------- Появление блоков при прокрутке ----------
+        const io = new IntersectionObserver(entries => entries.forEach(e => {
+          if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+        }), { threshold: 0.15 });
+        $$('.reveal').forEach(el => io.observe(el));
+
+        // ---------- Демо-редактор поста ----------
+        const POST = 'Три идеи для контента на неделю уже готовы. Осталось выбрать время публикации.';
+        const typed = $('#typed'), textBox = $('#textBox'), media = $('#media');
+        const status = $('#status'), send = $('#send'), composer = $('#composer');
+        const state = { text: true, image: false, tg: false, busy: false };
+        let typingId = 0;
+
+        async function typeText() {
+          const id = ++typingId;
+          typed.textContent = '';
+          if (reduce) { typed.textContent = POST; return; }
+          for (const ch of POST) {
+            if (id !== typingId) return;
+            typed.textContent += ch;
+            await sleep(28);
           }
         }
 
-        if (reduce) {
-          typed.textContent = posts[0];
-          chips.forEach(c => c.classList.add('on'));
-          status.textContent = 'Опубликовано';
-        } else {
-          demo();
+        function refresh() {
+          const parts = [state.text && 'текст', state.image && 'картинка'].filter(Boolean);
+          const hasContent = parts.length > 0;
+          send.disabled = state.busy || !(state.tg && hasContent);
+          if (state.busy) return;
+          status.classList.remove('done');
+          if (!hasContent) status.textContent = 'Пост пустой: добавьте текст или картинку';
+          else if (!state.tg) status.textContent = 'В посте: ' + parts.join(' + ') + '. Выберите Telegram';
+          else status.textContent = 'Готово к отправке: ' + parts.join(' + ') + ' → Telegram';
         }
+
+        $$('.chip').forEach(c => c.addEventListener('click', () => {
+          if (state.busy) return;
+          const a = c.dataset.act;
+          state[a] = !state[a];
+          c.classList.toggle('on', state[a]);
+
+          if (a === 'text') {
+            textBox.classList.toggle('off', !state.text);
+            if (state.text) typeText();
+            else { typingId++; typed.textContent = 'Текста пока нет'; }
+          }
+          if (a === 'image') media.classList.toggle('open', state.image);
+          refresh();
+        }));
+
+        send.addEventListener('click', async () => {
+          state.busy = true;
+          send.disabled = true;
+          send.textContent = 'Отправка…';
+          status.classList.remove('done');
+          status.textContent = 'Отправляем в Telegram…';
+          await sleep(1200);
+          composer.classList.add('sent');
+          status.textContent = '✓ Опубликовано в Telegram';
+          status.classList.add('done');
+          send.textContent = 'Отправлено';
+          await sleep(2600);
+          composer.classList.remove('sent');
+          send.textContent = 'Опубликовать';
+          state.busy = false;
+          refresh();
+        });
+
+        typeText().then(refresh);
     </script>
 </body>
 </html>
