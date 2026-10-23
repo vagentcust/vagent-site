@@ -4,8 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>V-AGENT — Твой помощник по созданию контента</title>
+    
+    <!-- Иконка сайта -->
+    <link rel="icon" href="icon.ico" type="image/x-icon">
+    
     <!-- Подключаем шрифты -->
     <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600&family=Unbounded:wght@600&display=swap" rel="stylesheet">
+    
     <style>
         /* Твой CSS */
         :root{
@@ -30,7 +35,20 @@
           padding:18px max(24px,calc((100% - 1040px)/2));
           background:rgba(241,243,246,.85);backdrop-filter:blur(12px);
         }
-        .logo{font:600 17px "Unbounded",sans-serif;letter-spacing:-.02em}
+        
+        /* Стили для логотипа в шапке */
+        .logo {
+            display: flex; 
+            align-items: center; 
+            gap: 10px;
+            font: 600 17px "Unbounded", sans-serif; 
+            letter-spacing: -.02em;
+        }
+        .logo img {
+            height: 32px; 
+            width: auto;
+        }
+
         .nav nav{display:flex;gap:28px}
         .nav nav a{color:var(--mute);font-size:15px;transition:color .2s}
         .nav nav a:hover{color:var(--ink)}
@@ -167,7 +185,11 @@
 
     <!-- NAV -->
     <header class="nav">
-        <div class="logo">V-AGENT</div>
+        <!-- ЛОГОТИП -->
+        <div class="logo">
+            <img src="logo_text.png" alt="V-AGENT">
+            <span>V-AGENT</span>
+        </div>
         <nav>
             <a href="#features">Возможности</a>
             <a href="#download">Скачать</a>
@@ -237,7 +259,7 @@
                         <h3>Версия для Windows</h3>
                         <p>Файл: V-AGENT.exe (Windows 10/11)</p>
                     </div>
-                    <!-- ЗАМЕНИ ССЫЛКУ # НА СВОЮ ИЗ РАЗДЕЛА RELEASES -->
+                    <!-- ВСТАВЬ ССЫЛКУ НА EXE ИЗ РАЗДЕЛА RELEASES ВМЕСТО # -->
                     <a href="https://github.com/lalalalalla1113-ai/vagent-site/releases/download/v1.0/V-AGENT.exe" class="btn primary">Скачать .exe</a>
                 </div>
                 <div class="file">
@@ -245,7 +267,7 @@
                         <h3>Версия для Android</h3>
                         <p>Файл: V-AGENT.apk (Android 8.0+)</p>
                     </div>
-                    <!-- ЗАМЕНИ ССЫЛКУ # НА СВОЮ ИЗ РАЗДЕЛА RELEASES -->
+                    <!-- ВСТАВЬ ССЫЛКУ НА APK ИЗ РАЗДЕЛА RELEASES ВМЕСТО # -->
                     <a href="#" class="btn primary">Скачать .apk</a>
                 </div>
             </div>
@@ -266,7 +288,6 @@
             <div id="tab-1" class="panel active">
                 <h3>Telegram-канал</h3>
                 <p>Там выходят анонсы новых версий и советы по контенту.</p>
-                <!-- ЗАМЕНИ ССЫЛКУ НА СВОЙ КАНАЛ -->
                 <div class="links">
                     <a href="https://t.me/твой_канал" class="link" target="_blank">Перейти в канал</a>
                 </div>
@@ -275,16 +296,14 @@
             <div id="tab-2" class="panel">
                 <h3>GitHub</h3>
                 <p>Исходный код проекта и сообщения об ошибках.</p>
-                <!-- ЗАМЕНИ ССЫЛКУ НА СВОЙ РЕПОЗИТОРИЙ -->
                 <div class="links">
-                    <a href="https://github.com/твой_ник/твой_репо" class="link" target="_blank">Открыть репозиторий</a>
+                    <a href="https://github.com/lalalalalla1113-ai" class="link" target="_blank">Открыть профиль</a>
                 </div>
             </div>
 
             <div id="tab-3" class="panel">
                 <h3>Нужна помощь?</h3>
                 <p>Если возникли вопросы при установке, напишите нам.</p>
-                <!-- ЗАМЕНИ ССЫЛКУ НА СВОЙ АККАУНТ -->
                 <div class="links">
                     <a href="https://t.me/твой_ник" class="link" target="_blank">Написать в Telegram</a>
                 </div>
@@ -382,4 +401,3 @@
     </script>
 </body>
 </html>
- 
