@@ -221,7 +221,7 @@
         ::view-transition-old(root),::view-transition-new(root){animation:none;mix-blend-mode:normal}
         ::view-transition-old(root){z-index:1}
         ::view-transition-new(root){z-index:2}
-        .fade-theme,.fade-theme *{transition:background-color .45s,color .45s,border-color .45s!important}
+        .fade-theme,.fade-theme *{transition:background-color .45s ease,color .45s ease,border-color .45s ease,fill .45s ease,box-shadow .45s ease!important}
 
         /* SOCIALS */
         .socials{
@@ -238,7 +238,8 @@
 
         /* ================= MOBILE ================= */
         html,body{overflow-x:clip}
-        html{-webkit-text-size-adjust:100%}
+        html{-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent}
+        button,a{touch-action:manipulation}
         img,svg{max-width:100%}
 
         @media (max-width:760px){
@@ -278,9 +279,9 @@
           .tab{padding:9px 16px;font-size:14px}
           .panel{padding:22px}
 
-          /* соцсети: компактная плашка по центру внизу */
+          /* соцсети: компактная плашка слева внизу */
           .socials{
-            left:50%;transform:translateX(-50%);
+            left:12px;transform:none;
             bottom:max(12px,env(safe-area-inset-bottom));
             gap:2px;padding:4px;
             background:color-mix(in srgb,var(--card) 88%,transparent);
@@ -471,14 +472,13 @@
         </a>
     </div>
 
-    <!-- Твой JS (с функцией safe) -->
+    <!-- Твой JS -->
     <script>
         const $ = s => document.querySelector(s);
         const $$ = s => document.querySelectorAll(s);
         const sleep = ms => new Promise(r => setTimeout(r, ms));
         const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-        // Каждый блок запускается отдельно
         const safe = fn => { try { fn(); } catch (e) { console.warn('V-agent script:', e); } };
 
         // ---------- Год в подвале ----------
@@ -489,33 +489,46 @@
           const root = document.documentElement;
           const btn = $('#theme');
           if (!btn) return;
-          
-          try {
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme) root.dataset.theme = savedTheme;
-          } catch(e) {}
+
+          let meta = $('meta[name="theme-color"]');
+          if (!meta) { meta = document.createElement('meta'); meta.name = 'theme-color'; document.head.appendChild(meta); }
+          const paintBar = () => { meta.content = root.dataset.theme === 'dark' ? '#0E1116' : '#F1F3F6'; };
+          paintBar();
+
+          const simple = matchMedia('(max-width: 760px), (hover: none)').matches;
+          let busy = false;
 
           btn.addEventListener('click', () => {
+            if (busy) return;
             const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
             const apply = () => {
               root.dataset.theme = next;
+              paintBar();
               try { localStorage.setItem('theme', next); } catch (e) {}
             };
-            if (!document.startViewTransition || reduce) {
+
+            if (simple || reduce || !document.startViewTransition) {
+              busy = true;
               root.classList.add('fade-theme');
-              apply();
-              setTimeout(() => root.classList.remove('fade-theme'), 500);
+              requestAnimationFrame(() => {
+                apply();
+                setTimeout(() => { root.classList.remove('fade-theme'); busy = false; }, 550);
+              });
               return;
             }
+
+            busy = true;
             const r = btn.getBoundingClientRect();
             const x = r.left + r.width / 2, y = r.top + r.height / 2;
             const radius = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
-            document.startViewTransition(apply).ready.then(() => {
+            const t = document.startViewTransition(apply);
+            t.ready.then(() => {
               root.animate(
                 { clipPath: [`circle(0 at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`] },
                 { duration: 700, easing: 'ease-in-out', pseudoElement: '::view-transition-new(root)' }
               );
-            });
+            }).catch(() => {});
+            t.finished.finally(() => { busy = false; });
           });
         });
 
