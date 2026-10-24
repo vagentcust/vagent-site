@@ -471,65 +471,136 @@
         </a>
     </div>
 
-    <!-- Твой JS -->
+    <!-- Твой JS (с функцией safe) -->
     <script>
         const $ = s => document.querySelector(s);
         const $$ = s => document.querySelectorAll(s);
         const sleep = ms => new Promise(r => setTimeout(r, ms));
         const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-        $('#year').textContent = new Date().getFullYear();
+        // Каждый блок запускается отдельно
+        const safe = fn => { try { fn(); } catch (e) { console.warn('V-agent script:', e); } };
+
+        // ---------- Год в подвале ----------
+        safe(() => { const y = $('#year'); if (y) y.textContent = new Date().getFullYear(); });
 
         // ---------- Смена темы ----------
-        const root = document.documentElement;
-        const themeBtn = $('#theme');
-
-        try {
+        safe(() => {
+          const root = document.documentElement;
+          const btn = $('#theme');
+          if (!btn) return;
+          
+          try {
             const savedTheme = localStorage.getItem('theme');
             if (savedTheme) root.dataset.theme = savedTheme;
-        } catch(e) {}
+          } catch(e) {}
 
-        themeBtn.addEventListener('click', () => {
-          const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
-          const apply = () => {
-            root.dataset.theme = next;
-            try { localStorage.setItem('theme', next); } catch (e) {}
-          };
-          if (!document.startViewTransition || reduce) {
-            root.classList.add('fade-theme');
-            apply();
-            setTimeout(() => root.classList.remove('fade-theme'), 500);
-            return;
-          }
-          const r = themeBtn.getBoundingClientRect();
-          const x = r.left + r.width / 2, y = r.top + r.height / 2;
-          const radius = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
-          document.startViewTransition(apply).ready.then(() => {
-            root.animate(
-              { clipPath: [`circle(0 at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`] },
-              { duration: 700, easing: 'ease-in-out', pseudoElement: '::view-transition-new(root)' }
-            );
+          btn.addEventListener('click', () => {
+            const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+            const apply = () => {
+              root.dataset.theme = next;
+              try { localStorage.setItem('theme', next); } catch (e) {}
+            };
+            if (!document.startViewTransition || reduce) {
+              root.classList.add('fade-theme');
+              apply();
+              setTimeout(() => root.classList.remove('fade-theme'), 500);
+              return;
+            }
+            const r = btn.getBoundingClientRect();
+            const x = r.left + r.width / 2, y = r.top + r.height / 2;
+            const radius = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+            document.startViewTransition(apply).ready.then(() => {
+              root.animate(
+                { clipPath: [`circle(0 at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`] },
+                { duration: 700, easing: 'ease-in-out', pseudoElement: '::view-transition-new(root)' }
+              );
+            });
           });
         });
 
-        // ---------- Вкладки ----------
-        const tabs = $$('.tab'), panels = $$('.panel'), indicator = $('.tab-indicator');
-        const moveIndicator = t => {
-          indicator.style.width = t.offsetWidth + 'px';
-          indicator.style.transform = `translateX(${t.offsetLeft}px)`;
-        };
-        tabs.forEach(tab => tab.addEventListener('click', () => {
-          tabs.forEach(t => t.classList.remove('active'));
-          panels.forEach(p => p.classList.remove('active'));
-          tab.classList.add('active');
-          document.getElementById(tab.dataset.tab).classList.add('active');
-          moveIndicator(tab);
-          tab.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' });
-        }));
-        const place = () => moveIndicator($('.tab.active'));
-        addEventListener('load', place);
-        addEventListener('resize', place);
+        // ---------- Вкладки с ползунком ----------
+        safe(() => {
+          const tabs = $$('.tab'), panels = $$('.panel'), indicator = $('.tab-indicator');
+          if (!tabs.length || !indicator) return;
+          const move = t => {
+            if (!t) return;
+            indicator.style.width = t.offsetWidth + 'px';
+            indicator.style.transform = `translateX(${t.offsetLeft}px)`;
+          };
+          tabs.forEach(tab => tab.addEventListener('click', () => {
+            tabs.forEach(t => t.classList.remove('active'));
+            panels.forEach(p => p.classList.remove('active'));
+            tab.classList.add('active');
+            const panel = document.getElementById(tab.dataset.tab);
+            if (panel) panel.classList.add('active');
+            move(tab);
+            tab.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' });
+          }));
+          const place = () => move($('.tab.active'));
+          addEventListener('load', place);
+          addEventListener('resize', place);
+          place();
+        });
 
-        // ---------- Появление блоков ----------
-        const io = new IntersectionObserver(entries => entries.forEach(e => {
-          if (e.is
+        // ---------- Появление блоков при прокрутке ----------
+        safe(() => {
+          const items = $$('.reveal');
+          if (!('IntersectionObserver' in window)) { items.forEach(el => el.classList.add('in')); return; }
+          const io = new IntersectionObserver(entries => entries.forEach(e => {
+            if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+          }), { threshold: 0.1 });
+          items.forEach(el => io.observe(el));
+        });
+
+        // ---------- Демо: ИИ отвечает на вопрос ----------
+        const QA = [
+          ['Придумай пост про запуск V-agent', 'V-agent запущен. Он пишет посты, подбирает время и сам публикует их в Telegram. Больше никакой рутины.'],
+          ['Что опубликовать на этой неделе?', 'Три идеи: разбор новой функции, подборка советов и короткий опрос для подписчиков. Расписание уже составлено.'],
+          ['Как часто выкладывать посты?', 'Для канала хватит одного поста в день. V-agent сам выберет время, когда подписчики онлайн.']
+        ];
+
+        async function runChat() {
+          const q = $('#question'), ans = $('#answer'), think = $('#think');
+          const chat = $('#chat'), comp = $('#composer');
+          if (!q || !ans) return;
+          const bubble = q.parentElement;
+
+          if (reduce) { q.textContent = QA[0][0]; ans.textContent = QA[0][1]; return; }
+
+          let i = 0;
+          while (true) {
+            const [Q, A] = QA[i++ % QA.length];
+            q.textContent = ''; ans.textContent = '';
+            if (chat) chat.classList.remove('out');
+            await sleep(500);
+            for (const ch of Q) { q.textContent += ch; await sleep(32); }
+            bubble.classList.add('ping');
+            await sleep(350);
+            bubble.classList.remove('ping');
+
+            if (comp) comp.classList.add('busy');
+            if (think) think.classList.add('on');
+            await sleep(1500);
+            if (think) think.classList.remove('on');
+
+            const words = A.split(' ');
+            for (const [k, w] of words.entries()) {
+              const s = document.createElement('span');
+              s.className = 'w';
+              s.textContent = w + (k < words.length - 1 ? ' ' : '');
+              ans.appendChild(s);
+              requestAnimationFrame(() => requestAnimationFrame(() => s.classList.add('in')));
+              await sleep(70);
+            }
+            await sleep(500);
+            if (comp) comp.classList.remove('busy');
+            await sleep(3200);
+            if (chat) chat.classList.add('out');
+            await sleep(600);
+          }
+        }
+        runChat().catch(e => console.warn('V-agent chat:', e));
+    </script>
+</body>
+</html>
