@@ -12,7 +12,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600&family=Unbounded:wght@600&display=swap" rel="stylesheet">
     
     <style>
-        /* Твой CSS */
         :root{
           --bg:#F1F3F6; --card:#FFFFFF; --ink:#151A21; --mute:#667085;
           --line:#DCE1E8; --accent:#3D5AFE; --accent-soft:#E6EAFF;
@@ -41,10 +40,8 @@
           padding:18px max(24px,calc((100% - 1040px)/2));
           background:var(--nav);backdrop-filter:blur(12px);
         }
-        
         .logo{display:inline-flex;align-items:center;gap:10px;font:600 17px "Unbounded",sans-serif;letter-spacing:-.02em}
-        .logo img{width:28px;height:28px;border-radius:7px;object-fit:contain;}
-        
+        .logo img{width:28px;height:28px;border-radius:7px;object-fit:cover}
         .nav nav{display:flex;gap:28px}
         .nav nav a{color:var(--mute);font-size:15px;transition:color .2s}
         .nav nav a:hover{color:var(--ink)}
@@ -238,6 +235,70 @@
         }
         .socials a:hover{background:var(--accent);color:var(--on);transform:translateY(-3px)}
         .socials svg{width:20px;height:20px}
+
+        /* ================= MOBILE ================= */
+        html,body{overflow-x:clip}
+        html{-webkit-text-size-adjust:100%}
+        img,svg{max-width:100%}
+
+        @media (max-width:760px){
+          .nav{padding:12px 18px}
+          .nav-right{gap:12px}
+          .nav nav{gap:14px}
+          .nav nav a{font-size:14px}
+          main{padding:0 18px}
+          .hero{padding:48px 0 44px}
+          .lead{font-size:16px;margin-top:18px}
+          .cta{flex-wrap:wrap;margin-top:26px}
+          .section{padding:52px 0}
+          h2{margin-bottom:26px}
+          .card{padding:22px}
+          .composer{margin-top:40px}
+        }
+
+        @media (max-width:600px){
+          /* в шапке остаётся логотип, "Скачать" и переключатель темы */
+          .nav nav a:not([href="#download"]){display:none}
+          h1{font-size:clamp(26px,8.4vw,40px);overflow-wrap:anywhere}
+          h2{font-size:clamp(22px,6.6vw,30px)}
+          .logo{font-size:15px}
+          .logo img{width:24px;height:24px}
+          .btn{padding:12px 22px}
+          .cta .btn{flex:1 1 140px;text-align:center}
+
+          .composer{padding:16px}
+          .chat{min-height:270px;gap:16px}
+          .user{max-width:94%;font-size:14px}
+          .answer{font-size:16px}
+          .composer-bottom{font-size:13px;gap:8px}
+
+          .file{flex-direction:column;align-items:stretch;padding:20px}
+          .file .btn{text-align:center}
+          .tabs{display:flex;width:100%}
+          .tab{padding:9px 16px;font-size:14px}
+          .panel{padding:22px}
+
+          /* соцсети: компактная плашка по центру внизу */
+          .socials{
+            left:50%;transform:translateX(-50%);
+            bottom:max(12px,env(safe-area-inset-bottom));
+            gap:2px;padding:4px;
+            background:color-mix(in srgb,var(--card) 88%,transparent);
+            backdrop-filter:blur(10px);
+          }
+          .socials a{width:38px;height:38px}
+          .footer{padding-bottom:96px}
+        }
+
+        @media (max-width:360px){
+          .nav nav{display:none}
+          .composer-title{display:none}
+        }
+
+        /* на тач-экранах не залипает hover */
+        @media (hover:none){
+          .btn:hover,.link:hover,.socials a:hover,.chip:hover{transform:none;box-shadow:none}
+        }
     </style>
 </head>
 <body>
@@ -463,6 +524,7 @@
           tab.classList.add('active');
           document.getElementById(tab.dataset.tab).classList.add('active');
           moveIndicator(tab);
+          tab.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' });
         }));
         const place = () => moveIndicator($('.tab.active'));
         addEventListener('load', place);
@@ -470,59 +532,4 @@
 
         // ---------- Появление блоков ----------
         const io = new IntersectionObserver(entries => entries.forEach(e => {
-          if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
-        }), { threshold: 0.15 });
-        $$('.reveal').forEach(el => io.observe(el));
-
-        // ---------- Демо: ИИ ----------
-        const QA = [
-          ['Придумай пост про запуск V-agent', 'V-agent запущен. Он пишет посты, подбирает время и сам публикует их в Telegram. Больше никакой рутины.'],
-          ['Что опубликовать на этой неделе?', 'Три идеи: разбор новой функции, подборка советов и короткий опрос для подписчиков. Расписание уже составлено.'],
-          ['Как часто выкладывать посты?', 'Для канала хватит одного поста в день. V-agent сам выберет время, когда подписчики онлайн.']
-        ];
-        const q = $('#question'), ans = $('#answer'), think = $('#think');
-        const chat = $('#chat'), comp = $('#composer');
-
-        async function runChat() {
-          let i = 0;
-          while (true) {
-            const [Q, A] = QA[i++ % QA.length];
-            q.textContent = ''; ans.textContent = '';
-            chat.classList.remove('out');
-            await sleep(500);
-            for (const ch of Q) { q.textContent += ch; await sleep(32); }
-            q.parentElement.classList.add('ping');
-            await sleep(350);
-            q.parentElement.classList.remove('ping');
-
-            comp.classList.add('busy');
-            think.classList.add('on');
-            await sleep(1500);
-            think.classList.remove('on');
-
-            const words = A.split(' ');
-            for (const [k, w] of words.entries()) {
-              const s = document.createElement('span');
-              s.className = 'w';
-              s.textContent = w + (k < words.length - 1 ? ' ' : '');
-              ans.appendChild(s);
-              requestAnimationFrame(() => requestAnimationFrame(() => s.classList.add('in')));
-              await sleep(70);
-            }
-            await sleep(500);
-            comp.classList.remove('busy');
-            await sleep(3200);
-            chat.classList.add('out');
-            await sleep(600);
-          }
-        }
-
-        if (reduce) {
-          q.textContent = QA[0][0];
-          ans.textContent = QA[0][1];
-        } else {
-          runChat();
-        }
-    </script>
-</body>
-</html>
+          if (e.is
