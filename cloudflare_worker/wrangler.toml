@@ -1,0 +1,8 @@
+name = "vagent-backend"
+main = "src/entry.js"
+compatibility_date = "2024-03-20"
+compatibility_flags = ["python_workers"]
+
+[[kv_namespaces]]
+binding = "VAGENT_USERS"
+id = "437113370ad242cebf918892f7beb39e"

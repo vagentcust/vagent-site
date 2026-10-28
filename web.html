@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>V-AGENT — Вход в веб-версию</title>
+    <link rel="icon" href="icon.ico" type="image/x-icon">
+
+    <!-- Шрифты -->
+    <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600&family=Unbounded:wght@600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #0E1116;
+            --card: rgba(23, 27, 34, 0.6);
+            --ink: #ECEFF4;
+            --mute: #8B94A3;
+            --line: rgba(255, 255, 255, 0.15);
+            --accent: #8794FF;
+            --accent-hover: #6A7AFF;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background-color: var(--bg);
+            color: var(--ink);
+            font-family: "Onest", system-ui, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* --- ФОН: Цветные шары (как в приложении) --- */
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: 0;
+            opacity: 0.6;
+        }
+        .orb-1 { width: 400px; height: 400px; background: #3D5AFE; top: -10%; left: -10%; }
+        .orb-2 { width: 300px; height: 300px; background: #C026D3; bottom: -10%; right: -10%; }
+        .orb-3 { width: 250px; height: 250px; background: #00BCD4; top: 40%; left: 30%; opacity: 0.3; }
+
+        /* --- СТЕКЛЯННАЯ КАРТОЧКА --- */
+        .glass-container {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 420px;
+            padding: 20px;
+            animation: appear 0.8s cubic-bezier(.2,.7,.2,1) both;
+        }
+        @keyframes appear {
+            from { opacity: 0; transform: translateY(30px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .glass-card {
+            background: var(--card);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--line);
+            border-radius: 24px;
+            padding: 40px 30px;
+            box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Логотип */
+        .logo-block {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        .logo-img {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            margin-bottom: 15px;
+            /* Если хочешь, чтобы картинка была в кружке, раскомментируй строки ниже */
+            /* border-radius: 50%; background: rgba(255,255,255,0.05); padding: 10px; border: 1px solid var(--line); */
+        }
+        .logo-text {
+            font-family: "Unbounded", sans-serif;
+            font-size: 24px;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+        }
+
+        /* Поля ввода */
+        .input-group {
+            width: 100%;
+            margin-bottom: 16px;
+            position: relative;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 14px 16px;
+            border-radius: 14px;
+            border: 1px solid var(--line);
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--ink);
+            font-size: 15px;
+            font-family: "Onest", sans-serif;
+            outline: none;
+            transition: all 0.3s;
+        }
+        .input-group input:focus {
+            border-color: var(--accent);
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 0 3px rgba(135, 148, 255, 0.2);
+        }
+
+        /* Кнопки */
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border-radius: 14px;
+            border: none;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: "Onest", sans-serif;
+            text-align: center;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), #6A7AFF);
+            color: #fff;
+            box-shadow: 0 8px 20px rgba(135, 148, 255, 0.3);
+            margin-top: 10px;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(135, 148, 255, 0.4);
+        }
+        .btn-primary:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .btn-link {
+            background: none;
+            color: var(--mute);
+            font-size: 13px;
+            margin-top: 16px;
+            padding: 5px;
+        }
+        .btn-link:hover {
+            color: var(--ink);
+        }
+
+        /* Ошибки */
+        .error-msg {
+            color: #FF5252;
+            font-size: 13px;
+            margin-bottom: 10px;
+            display: none;
+            text-align: center;
+            background: rgba(255, 82, 82, 0.1);
+            padding: 8px;
+            border-radius: 8px;
+            width: 100%;
+        }
+
+        .back-link {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: var(--mute);
+            text-decoration: none;
+            font-size: 14px;
+            z-index: 20;
+            transition: color 0.3s;
+        }
+        .back-link:hover { color: var(--ink); }
+
+    </style>
+</head>
+<body>
+
+    <!-- Фоновые шары -->
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <a href="index.html" class="back-link">← На главную</a>
+
+    <div class="glass-container">
+        <div class="glass-card">
+
+            <div class="logo-block">
+                <img src="logo_text.png" alt="V-AGENT Logo" class="logo-img">
+                <div class="logo-text">V-AGENT</div>
+            </div>
+
+            <div id="error-box" class="error-msg"></div>
+
+            <!-- Поля ввода -->
+            <div class="input-group">
+                <input type="text" id="username" placeholder="Логин">
+            </div>
+            <div class="input-group">
+                <input type="password" id="password" placeholder="Пароль">
+            </div>
+            <!-- Кнопка действия -->
+            <button id="submit-btn" class="btn btn-primary">Войти</button>
+
+            <!-- Переключатель режимов -->
+            <button id="switch-btn" class="btn btn-link">Нет аккаунта? Зарегистрироваться</button>
+
+        </div>
+    </div>
+
+    <script>
+        let isLoginMode = true;
+        const submitBtn = document.getElementById('submit-btn');
+        const switchBtn = document.getElementById('switch-btn');
+        const errorBox = document.getElementById('error-box');
+
+        // Переключение между Входом и Регистрацией
+        switchBtn.addEventListener('click', () => {
+            isLoginMode = !isLoginMode;
+            errorBox.style.display = 'none';
+
+            if (isLoginMode) {
+                submitBtn.textContent = "Войти";
+                switchBtn.textContent = "Нет аккаунта? Зарегистрироваться";
+            } else {
+                submitBtn.textContent = "Создать аккаунт";
+                switchBtn.textContent = "Уже есть аккаунт? Войти";
+            }
+        });
+
+        // Отправка данных
+        submitBtn.addEventListener('click', async () => {
+            const user = document.getElementById('username').value.trim();
+            const pass = document.getElementById('password').value.trim();
+
+            if (!user || !pass) {
+                showError("Заполни все поля");
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = "Загрузка...";
+
+            const url = isLoginMode
+                ? 'https://vagent-backend.novalaim11.workers.dev/login'
+                : 'https://vagent-backend.novalaim11.workers.dev/register';
+
+            try {
+                const res = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: user, password: pass })
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    // Успех
+                    errorBox.style.display = 'none';
+                    // Тут можно сохранить логин в localStorage и перекинуть куда-то
+                    localStorage.setItem('vagent_user', user);
+                    alert(isLoginMode ? `Добро пожаловать, ${user}!` : `Аккаунт ${user} создан!`);
+
+                    // Если хочешь после входа перекинуть на главную:
+                    // window.location.href = "index.html";
+                } else {
+                    showError(data.error || "Ошибка авторизации");
+                }
+            } catch (e) {
+                showError("Нет связи с сервером. Попробуй позже.");
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = isLoginMode ? "Войти" : "Создать аккаунт";
+            }
+        });
+
+        function showError(msg) {
+            errorBox.textContent = msg;
+            errorBox.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
