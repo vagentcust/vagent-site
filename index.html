@@ -184,23 +184,28 @@
           border-color: var(--accent);
         }
 
-        /* Растягиваем кнопки в блоке скачивания */
+        /* Вернули компактные кнопки в блоках скачивания */
         .file .btn {
-          width: 100%;
-          text-align: center;
-          padding: 16px 26px; /* Сделали кнопку чуть выше */
+          width: auto;
+          flex-shrink: 0;
         }
 
         /* TABS */
         .tabs{
-          position:relative;display:inline-flex;gap:4px;padding:5px;
+          position:relative;
+          display:flex; /* Изменили на flex */
+          width: 100%; /* Растянули на всю ширину */
+          gap:4px;padding:5px;
           background:var(--card);border:1px solid var(--line);border-radius:999px;
-          max-width:100%;overflow-x:auto;
+          overflow-x:auto;
         }
         .tab{
           position:relative;z-index:1;border:0;background:none;cursor:pointer;
-          padding:9px 20px;border-radius:999px;font:500 15px "Onest",sans-serif;
+          flex: 1; /* Растягиваем каждую вкладку поровну */
+          padding:12px 10px; /* Увеличили отступы для высоты */
+          border-radius:999px;font:500 15px "Onest",sans-serif;
           color:var(--mute);white-space:nowrap;transition:color .25s;
+          text-align: center;
         }
         .tab.active{color:var(--on)}
         .tab-indicator{
@@ -232,7 +237,7 @@
         @media (max-width:640px){
           .nav nav{gap:16px}
           .hero{padding-top:40px}
-          .file{flex-direction:column;align-items:stretch}
+          .file{flex-direction:column;align-items:stretch; gap:15px;} /* На мобилке кнопка под текстом */
         }
         @media (prefers-reduced-motion:reduce){
           *{animation:none!important;transition:none!important}
@@ -311,9 +316,9 @@
           .composer-bottom{font-size:13px;gap:8px}
 
           .file{flex-direction:column;align-items:stretch;padding:20px}
-          .file .btn{margin-top: 10px; padding: 14px 22px;} /* На мобилках кнопка тоже растянута */
-          .tabs{display:flex;width:100%}
-          .tab{padding:9px 16px;font-size:14px}
+          .file .btn{margin-top: 5px;}
+          .tabs{display:flex;width:100%; overflow-x: auto; padding-bottom: 0;}
+          .tab{font-size:13px; padding:10px 6px; flex: 0 0 auto;}
           .panel{padding:22px}
 
           .socials{
@@ -424,13 +429,13 @@
             <p class="sub">Работает в браузере, на Windows и Android.</p>
             <div class="downloads">
                 
-                <!-- Веб-версия (ТЕПЕРЬ ПЕРВАЯ) -->
+                <!-- Веб-версия (ПЕРВАЯ) -->
                 <div class="file">
                     <div>
                         <h3>Веб-версия</h3>
                         <p>Работает прямо в браузере (без установки)</p>
                     </div>
-                    <a href="web.html" class="btn primary">Открыть Web</a>
+                    <a href="web.html" id="web-btn" class="btn primary">Открыть Web</a>
                 </div>
 
                 <!-- Windows -->
@@ -530,6 +535,21 @@
 
         // ---------- Год в подвале ----------
         safe(() => { const y = $('#year'); if (y) y.textContent = new Date().getFullYear(); });
+
+        // ---------- Определение устройства (ПК или Телефон) ----------
+        safe(() => {
+          const webBtn = $('#web-btn');
+          if (!webBtn) return;
+          
+          // Проверяем User-Agent на мобильные устройства
+          const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+          
+          if (isMobile) {
+            webBtn.textContent = "Открыть Web (Телефон)";
+          } else {
+            webBtn.textContent = "Открыть Web (ПК)";
+          }
+        });
 
         // ---------- Смена темы ----------
         safe(() => {
