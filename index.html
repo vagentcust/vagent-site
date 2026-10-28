@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" data-theme="dark"> <!-- Включили темную тему по умолчанию -->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -184,9 +184,10 @@
           border-color: var(--accent);
         }
 
-        /* Кнопки в блоках скачивания (маленькие на ПК) */
+        /* Кнопки в блоках скачивания - делаем их одинакового размера */
         .file .btn {
-          width: auto;
+          min-width: 180px; /* Фиксированная минимальная ширина для всех кнопок */
+          text-align: center;
           flex-shrink: 0;
           padding: 13px 26px;
         }
@@ -317,7 +318,7 @@
 
           /* На телефонах кнопки в блоках скачивания растягиваются и падают вниз */
           .file{flex-direction:column;align-items:stretch;padding:20px; gap: 15px;}
-          .file .btn{width: 100%; text-align: center;}
+          .file .btn{min-width: 0; width: 100%; text-align: center;}
           
           .tabs{display:flex;width:100%; overflow-x: auto; padding-bottom: 0;}
           .tab{font-size:13px; padding:10px 6px; flex: 0 0 auto;}
@@ -559,6 +560,7 @@
           const btn = $('#theme');
           if (!btn) return;
 
+          // Если тема уже задана в HTML (data-theme="dark"), просто красим бар
           let meta = $('meta[name="theme-color"]');
           if (!meta) { meta = document.createElement('meta'); meta.name = 'theme-color'; document.head.appendChild(meta); }
           const paintBar = () => { meta.content = root.dataset.theme === 'dark' ? '#0E1116' : '#F1F3F6'; };
