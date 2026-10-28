@@ -184,25 +184,26 @@
           border-color: var(--accent);
         }
 
-        /* Вернули компактные кнопки в блоках скачивания */
+        /* Кнопки в блоках скачивания (маленькие на ПК) */
         .file .btn {
           width: auto;
           flex-shrink: 0;
+          padding: 13px 26px;
         }
 
-        /* TABS */
+        /* TABS (Растянутые вкладки) */
         .tabs{
           position:relative;
-          display:flex; /* Изменили на flex */
-          width: 100%; /* Растянули на всю ширину */
+          display:flex;
+          width: 100%;
           gap:4px;padding:5px;
           background:var(--card);border:1px solid var(--line);border-radius:999px;
           overflow-x:auto;
         }
         .tab{
           position:relative;z-index:1;border:0;background:none;cursor:pointer;
-          flex: 1; /* Растягиваем каждую вкладку поровну */
-          padding:12px 10px; /* Увеличили отступы для высоты */
+          flex: 1;
+          padding:12px 10px;
           border-radius:999px;font:500 15px "Onest",sans-serif;
           color:var(--mute);white-space:nowrap;transition:color .25s;
           text-align: center;
@@ -237,7 +238,6 @@
         @media (max-width:640px){
           .nav nav{gap:16px}
           .hero{padding-top:40px}
-          .file{flex-direction:column;align-items:stretch; gap:15px;} /* На мобилке кнопка под текстом */
         }
         @media (prefers-reduced-motion:reduce){
           *{animation:none!important;transition:none!important}
@@ -315,8 +315,10 @@
           .answer{font-size:16px}
           .composer-bottom{font-size:13px;gap:8px}
 
-          .file{flex-direction:column;align-items:stretch;padding:20px}
-          .file .btn{margin-top: 5px;}
+          /* На телефонах кнопки в блоках скачивания растягиваются и падают вниз */
+          .file{flex-direction:column;align-items:stretch;padding:20px; gap: 15px;}
+          .file .btn{width: 100%; text-align: center;}
+          
           .tabs{display:flex;width:100%; overflow-x: auto; padding-bottom: 0;}
           .tab{font-size:13px; padding:10px 6px; flex: 0 0 auto;}
           .panel{padding:22px}
