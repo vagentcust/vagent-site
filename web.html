@@ -2,20 +2,99 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>V-AGENT Web</title>
+    <link rel="icon" href="icon.ico" type="image/x-icon">
     <style>
-        body { background: #0E1116; color: #ECEFF4; font-family: sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; text-align: center; }
-        h1 { font-size: 2rem; margin-bottom: 10px; }
-        p { color: #8B94A3; margin-bottom: 20px; }
-        a { color: #8794FF; text-decoration: none; border: 1px solid #8794FF; padding: 10px 20px; border-radius: 8px; transition: 0.3s; }
-        a:hover { background: #8794FF; color: #0E1116; }
+        :root {
+            --bg: #0E1116;
+            --card: #171B22;
+            --ink: #ECEFF4;
+            --mute: #8B94A3;
+            --line: #272D37;
+            --accent: #8794FF;
+        }
+        body {
+            background: var(--bg);
+            color: var(--ink);
+            font-family: "Onest", system-ui, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+        .container {
+            max-width: 500px;
+            padding: 20px;
+        }
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        p {
+            color: var(--mute);
+            margin-bottom: 25px;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        .badge {
+            display: inline-block;
+            background: rgba(135, 148, 255, 0.15);
+            color: var(--accent);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            border: 1px solid rgba(135, 148, 255, 0.3);
+        }
+        a {
+            display: inline-block;
+            color: var(--accent);
+            text-decoration: none;
+            border: 1px solid var(--accent);
+            padding: 12px 24px;
+            border-radius: 12px;
+            transition: 0.3s;
+            font-weight: 500;
+        }
+        a:hover {
+            background: var(--accent);
+            color: var(--bg);
+        }
     </style>
 </head>
 <body>
-    <div>
-        <h1>Веб-версия в разработке</h1>
-        <p>Мы уже пишем облачную версию V-AGENT. Она появится здесь совсем скоро.</p>
+    <div class="container">
+        <!-- Сюда скрипт вставит текст "ПК" или "Телефон" -->
+        <div class="badge" id="device-badge">Загрузка...</div>
+        
+        <h1 id="title">Веб-версия в разработке</h1>
+        <p>Мы уже пишем облачную версию V-AGENT для <span id="device-text">вашего устройства</span>. Она появится здесь совсем скоро.</p>
+        
         <a href="index.html">Вернуться на главную</a>
     </div>
+
+    <script>
+        // Определяем устройство
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        
+        const badge = document.getElementById('device-badge');
+        const deviceText = document.getElementById('device-text');
+        
+        if (isMobile) {
+            badge.textContent = "Версия для Телефона";
+            deviceText.textContent = "мобильных устройств";
+            // Можно даже поменять заголовок, если хочешь
+            // document.getElementById('title').textContent = "Мобильная версия в разработке";
+        } else {
+            badge.textContent = "Версия для ПК";
+            deviceText.textContent = "компьютеров";
+            // document.getElementById('title').textContent = "Десктопная версия в разработке";
+        }
+    </script>
 </body>
 </html>
