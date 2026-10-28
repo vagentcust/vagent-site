@@ -134,6 +134,64 @@
         }
         .composer-bottom svg{width:18px;height:18px;color:var(--accent);flex:none}
 
+        /* ================= WEB BANNER ================= */
+        .web-banner {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 20px;
+          max-width: 720px;
+          margin: 0 auto 40px;
+          padding: 24px 32px;
+          background: linear-gradient(135deg, var(--card) 0%, var(--accent-soft) 100%);
+          border: 1px solid var(--line);
+          border-radius: var(--r);
+          box-shadow: 0 12px 30px -10px var(--shadow);
+          text-align: left;
+          position: relative;
+          overflow: hidden;
+          animation: rise 0.9s 0.36s cubic-bezier(.2,.7,.2,1) both;
+          transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .web-banner:hover {
+          transform: translateY(-3px);
+          box-shadow: 0 20px 40px -10px var(--shadow);
+          border-color: var(--accent);
+        }
+
+        /* Свечение внутри карточки */
+        .web-banner::before {
+          content: ""; position: absolute; top: -50%; right: -20%;
+          width: 200px; height: 200px;
+          background: var(--accent); filter: blur(80px); opacity: 0.15;
+          border-radius: 50%; pointer-events: none;
+        }
+
+        .web-banner-left { display: flex; align-items: center; gap: 18px; z-index: 1; }
+        
+        .web-icon {
+          width: 48px; height: 48px; border-radius: 14px;
+          background: var(--accent); color: var(--on);
+          display: grid; place-items: center; flex-shrink: 0;
+          box-shadow: 0 6px 16px color-mix(in srgb, var(--accent) 40%, transparent);
+        }
+        .web-icon svg { width: 24px; height: 24px; }
+        
+        .web-text h3 { font-size: 19px; margin: 0 0 4px; color: var(--ink); }
+        .web-text p { font-size: 14px; color: var(--mute); margin: 0; line-height: 1.4; }
+        
+        .web-banner .btn {
+          flex-shrink: 0; z-index: 1;
+          background: var(--accent); color: var(--on); border: none;
+          padding: 12px 24px; font-weight: 600;
+          box-shadow: 0 4px 12px color-mix(in srgb, var(--accent) 30%, transparent);
+        }
+        .web-banner .btn:hover {
+          background: var(--ink); color: var(--bg);
+          box-shadow: 0 6px 16px var(--shadow);
+        }
+
         /* SECTIONS */
         .section{padding:80px 0}
         h2{font:600 clamp(26px,4vw,38px)/1.2 "Unbounded",sans-serif;letter-spacing:-.03em;margin-bottom:36px}
@@ -273,6 +331,11 @@
           .answer{font-size:16px}
           .composer-bottom{font-size:13px;gap:8px}
 
+          /* Адаптив для веб-карточки */
+          .web-banner { flex-direction: column; text-align: center; gap: 16px; padding: 24px; margin-top: 10px; }
+          .web-banner-left { flex-direction: column; gap: 12px; }
+          .web-banner .btn { width: 100%; text-align: center; }
+
           .file{flex-direction:column;align-items:stretch;padding:20px}
           .file .btn{text-align:center}
           .tabs{display:flex;width:100%}
@@ -361,6 +424,24 @@
                     <span>Работает на базе искусственного интеллекта</span>
                 </div>
             </div>
+
+            <!-- WEB VERSION BANNER -->
+            <a href="web.html" class="web-banner">
+                <div class="web-banner-left">
+                    <div class="web-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="2" y1="12" x2="22" y2="12"></line>
+                            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                        </svg>
+                    </div>
+                    <div class="web-text">
+                        <h3>V-AGENT в браузере</h3>
+                        <p>Не нужно ничего скачивать. Попробуйте прямо сейчас.</p>
+                    </div>
+                </div>
+                <span class="btn">Открыть Web <span style="font-size: 18px;">&rarr;</span></span>
+            </a>
         </section>
 
         <!-- FEATURES -->
@@ -464,7 +545,7 @@
 
     <!-- Кнопки соцсетей внизу слева (фиксированные) -->
     <div class="socials">
-        <a href="https://t.me/твой_канал" target="_blank" aria-label="Telegram">
+        <a href="https://t.me/FirstMediaTeam" target="_blank" aria-label="Telegram">
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
         </a>
         <a href="https://github.com/vagentcust" target="_blank" aria-label="GitHub">
