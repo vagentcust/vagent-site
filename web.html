@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -28,6 +28,17 @@
         .container {
             max-width: 500px;
             padding: 20px;
+        }
+        /* Стили для большой иконки */
+        .device-icon {
+            font-size: 64px;
+            margin-bottom: 10px;
+            display: inline-block;
+            animation: pop 0.5s cubic-bezier(.2,.8,.2,1);
+        }
+        @keyframes pop {
+            from { transform: scale(0.5); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
         }
         h1 {
             font-size: 2rem;
@@ -69,7 +80,10 @@
 </head>
 <body>
     <div class="container">
-        <!-- Сюда скрипт вставит текст "ПК" или "Телефон" -->
+        <!-- Иконка устройства -->
+        <div class="device-icon" id="device-icon">💻</div>
+
+        <!-- Бейдж с текстом -->
         <div class="badge" id="device-badge">Загрузка...</div>
         
         <h1 id="title">Веб-версия в разработке</h1>
@@ -82,18 +96,20 @@
         // Определяем устройство
         const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
         
+        const icon = document.getElementById('device-icon');
         const badge = document.getElementById('device-badge');
         const deviceText = document.getElementById('device-text');
         
         if (isMobile) {
+            // Если телефон
+            icon.textContent = "📱";
             badge.textContent = "Версия для Телефона";
             deviceText.textContent = "мобильных устройств";
-            // Можно даже поменять заголовок, если хочешь
-            // document.getElementById('title').textContent = "Мобильная версия в разработке";
         } else {
+            // Если ПК
+            icon.textContent = "💻";
             badge.textContent = "Версия для ПК";
             deviceText.textContent = "компьютеров";
-            // document.getElementById('title').textContent = "Десктопная версия в разработке";
         }
     </script>
 </body>
