@@ -1,493 +1,438 @@
 <!DOCTYPE html>
 <html lang="ru" data-theme="dark">
-<script>document.documentElement.dataset.theme=localStorage.getItem("vagent_theme")||"dark"</script>
 <head>
+<script>document.documentElement.dataset.theme=localStorage.getItem("vagent_theme")||"dark"</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#07080D">
 <title>V-Agent</title>
 <link rel="icon" href="icon.ico" type="image/x-icon">
 <link rel="manifest" href="manifest.json">
-<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600&family=Unbounded:wght@600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600&family=Unbounded:wght@500;600&display=swap" rel="stylesheet">
 <style>
-:root{--sf:rgba(0,0,0,.55);--sf2:rgba(0,0,0,.7);--bub:rgba(23,27,34,.85);--hov:rgba(255,255,255,.05);--gh:rgba(255,255,255,.07);--sheet:#14141c;--bg:#050508;--card:rgba(0,0,0,.55);--ink:#ECEFF4;--mute:#8B94A3;--line:rgba(255,255,255,.1);--ac:#8794FF;--ac2:#6A7AFF;--nav:rgba(10,10,15,.85)}
+:root{
+ --bg:#07080D;--p1:#0D0F17;--p2:#141722;--p3:#1B1F2E;
+ --ink:#EEF0F7;--mute:#8A91A6;--dim:#5A6178;
+ --line:rgba(255,255,255,.07);--line2:rgba(255,255,255,.13);
+ --ac:#8794FF;--ac2:#6A7AFF;--vio:#9B6BFF;
+ --ok:#6EE7A8;--err:#FF8A8A;--gold:#F2C14E;
+ --glass:rgba(13,15,23,.78);--hov:rgba(255,255,255,.05);
+ --shadow:0 24px 60px -24px rgba(0,0,0,.8);
+ --r:20px;
+}
+[data-theme=light]{
+ --bg:#EFF1F7;--p1:#FFFFFF;--p2:#F6F7FB;--p3:#E9ECF4;
+ --ink:#141826;--mute:#5E6679;--dim:#8F96A8;
+ --line:rgba(20,24,38,.08);--line2:rgba(20,24,38,.16);
+ --ac:#5B6BFF;--ac2:#4757F0;--vio:#7C4DFF;
+ --ok:#16915B;--err:#D93A3A;--gold:#B7791F;
+ --glass:rgba(255,255,255,.82);--hov:rgba(20,24,38,.05);
+ --shadow:0 24px 60px -28px rgba(30,40,90,.35);
+}
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;background:var(--bg);color:var(--ink);font:400 15px/1.5 Onest,system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:var(--bg);color:var(--ink);font:400 15px/1.5 Onest,system-ui,sans-serif;-webkit-tap-highlight-color:transparent;-webkit-font-smoothing:antialiased}
+body{overflow:hidden}
 button,input,textarea{font:inherit;color:inherit}
-[data-theme=light]{--bg:#EEF0F5;--card:rgba(255,255,255,.85);--ink:#151A21;--mute:#667085;--line:rgba(21,26,33,.12);--nav:rgba(10,10,15,.85);--sf:rgba(255,255,255,.8);--sf2:rgba(255,255,255,.95);--bub:#fff;--hov:rgba(21,26,33,.05);--gh:rgba(21,26,33,.07);--sheet:#fff}
-[data-theme=light] .glow{background:radial-gradient(circle at 0 0,rgba(135,148,255,.28),transparent 50%),radial-gradient(circle at 100% 100%,rgba(192,38,211,.14),transparent 50%)}
-[data-theme=light] .nav,[data-theme=light] .tabs{box-shadow:0 10px 30px rgba(21,26,33,.12)}
-.glow{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(circle at 0 0,rgba(30,40,90,.45),transparent 50%),radial-gradient(circle at 100% 100%,rgba(60,15,70,.35),transparent 50%)}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+svg{display:block}
+.aurora{position:fixed;inset:0;z-index:0;pointer-events:none;background:
+ radial-gradient(60% 50% at 0% 0%,rgba(106,122,255,.20),transparent 70%),
+ radial-gradient(50% 45% at 100% 100%,rgba(155,107,255,.15),transparent 70%)}
+[data-theme=light] .aurora{background:
+ radial-gradient(60% 50% at 0% 0%,rgba(106,122,255,.18),transparent 70%),
+ radial-gradient(50% 45% at 100% 100%,rgba(192,38,211,.08),transparent 70%)}
 
-/* ПАНЕЛЬ (1000px) */
-.nav{
-  position:fixed;top:20px;left:50%;transform:translateX(-50%);
-  width:calc(100% - 40px);max-width:1000px;
-  z-index:30;display:flex;justify-content:space-between;align-items:center;
-  height:64px;padding:0 24px;
-  background:var(--nav);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-  border:1px solid var(--line);border-radius:24px;
-  box-shadow:0 10px 30px rgba(0,0,0,.6)
-}
+/* shell */
+.shell{position:relative;z-index:1;display:flex;height:100dvh}
+.stage{flex:1;min-width:0;display:flex;flex-direction:column;height:100dvh}
+main{flex:1;min-height:0;display:flex;flex-direction:column;width:100%;max-width:880px;margin:0 auto;padding:0 16px}
+.scroll{flex:1;min-height:0;overflow:auto;padding:4px 0 28px;scrollbar-width:none}
+.scroll::-webkit-scrollbar{display:none}
 
-.logo{display:flex;align-items:center;text-decoration:none}
-/* ЛОГО В ПАНЕЛИ (50px) */
-.logo img{height:50px;width:auto;object-fit:contain;display:block}
+/* sidebar */
+.side{display:none;width:272px;flex:none;flex-direction:column;padding:18px 14px 14px;background:var(--glass);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-right:1px solid var(--line);height:100dvh}
+.brand{display:flex;align-items:center;gap:11px;padding:2px 8px 18px;text-decoration:none;color:var(--ink);font:600 17px Unbounded,sans-serif}
+.brand img{width:32px;height:32px;border-radius:10px}
+.nav{display:flex;flex-direction:column;gap:2px;overflow:auto;scrollbar-width:none;flex:1}
+.nav::-webkit-scrollbar{display:none}
+.grp{font-size:12px;font-weight:500;color:var(--dim);padding:16px 12px 6px}
+.si{position:relative;display:flex;align-items:center;gap:12px;width:100%;padding:9px 12px;border:0;border-radius:14px;background:none;color:var(--mute);font-size:14px;font-weight:500;text-align:left;transition:background .15s,color .15s}
+.si:hover{background:var(--hov);color:var(--ink)}
+.si.on{background:var(--p3);color:var(--ink)}
+.si.on:before{content:"";position:absolute;left:-14px;top:10px;bottom:10px;width:3px;border-radius:0 3px 3px 0;background:var(--c,var(--ac))}
+.ib{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;flex:none;color:var(--c,var(--ac));background:color-mix(in srgb,var(--c,var(--ac)) 14%,transparent)}
+.si .lk{margin-left:auto;color:var(--gold);opacity:.9}
+.foot{display:flex;flex-direction:column;gap:8px;padding-top:12px;border-top:1px solid var(--line)}
+.usr{display:flex;align-items:center;gap:10px;padding:8px;border-radius:16px;background:var(--p2);border:1px solid var(--line);cursor:pointer;text-align:left;width:100%;transition:border-color .15s}
+.usr:hover{border-color:var(--line2)}
+.usr b{display:block;font-size:14px;font-weight:600;line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:120px}
+.usr small{color:var(--mute);font-size:12px}
+.ava{width:36px;height:36px;border-radius:12px;background:linear-gradient(135deg,var(--ac),var(--vio));display:grid;place-items:center;font:600 15px Unbounded,sans-serif;color:#fff;flex:none}
+.ibtn{width:36px;height:36px;border-radius:12px;border:1px solid var(--line);background:var(--p2);color:var(--mute);display:grid;place-items:center;flex:none;transition:color .15s,border-color .15s}
+.ibtn:hover{color:var(--ink);border-color:var(--line2)}
+.usr .sp{flex:1;min-width:0}
 
-.nr{display:flex;align-items:center;gap:16px}
+/* mobile top bar */
+.top{display:flex;align-items:center;gap:10px;padding:max(10px,env(safe-area-inset-top)) 16px 10px;flex:none}
+.top .brand{padding:0;font-size:16px;flex:1}
+.top .brand img{width:28px;height:28px;border-radius:9px}
+.top .ava{width:34px;height:34px;border-radius:11px;font-size:14px;border:0}
 
-/* ССЫЛКИ */
-.lnk{background:none;border:0;color:var(--mute);cursor:pointer;font-size:14px;font-weight:500;padding:6px 8px;border-radius:8px;text-decoration:none;transition:all 0.3s;}
-.lnk:hover{color:var(--ink);background:rgba(255,255,255,.06)}
+/* tab bar */
+.tabs{flex:none;display:flex;gap:4px;padding:8px 10px max(8px,env(safe-area-inset-bottom));background:var(--glass);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-top:1px solid var(--line)}
+.tb{flex:1;position:relative;display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 2px;border:0;border-radius:16px;background:none;color:var(--mute);font-size:11px;font-weight:500;transition:color .15s}
+.tb .pl{display:grid;place-items:center;width:52px;height:30px;border-radius:15px;transition:background .2s}
+.tb.on{color:var(--ink)}
+.tb.on .pl{background:color-mix(in srgb,var(--ac) 22%,transparent);color:var(--ac)}
+.tb .lk{position:absolute;top:3px;left:calc(50% + 10px);width:15px;height:15px;border-radius:8px;background:var(--gold);color:#1A1405;display:grid;place-items:center}
 
-/* КОЛОКОЛЬЧИК (ЯРКО-КРАСНЫЙ) */
-.bell-wrapper { position: relative; }
-.nav-bell {
-    display: flex; align-items: center; justify-content: center;
-    width: 38px; height: 38px; border-radius: 50%;
-    background: rgba(255, 255, 255, 0.05); border: 1px solid var(--line);
-    cursor: pointer; transition: all 0.3s; position: relative;
-}
-.nav-bell:hover { background: rgba(255, 255, 255, 0.15); border-color: var(--ac); transform: scale(1.05); }
-.nav-bell svg { width: 18px; height: 18px; stroke: #FF3B30; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.bell-badge { position: absolute; top: 2px; right: 2px; width: 10px; height: 10px; background: #FF3B30; border-radius: 50%; border: 2px solid var(--bg); display: none; }
-.bell-badge.show { display: block; }
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:14px;padding:11px 18px;font-weight:600;font-size:14px;background:linear-gradient(135deg,var(--ac),var(--ac2));color:#fff;text-decoration:none;box-shadow:0 8px 22px -8px var(--ac2);transition:transform .12s,filter .15s}
+.btn:hover{filter:brightness(1.08)}.btn:active{transform:scale(.97)}
+.btn.g{background:var(--p3);color:var(--ink);box-shadow:none;border:1px solid var(--line)}
+.btn.w{background:#fff;color:#15183A;box-shadow:none}
+.btn.sm{padding:8px 14px;font-size:13px;border-radius:12px}
 
-/* МЕНЮ УВЕДОМЛЕНИЙ (НОВЫЙ ДИЗАЙН) */
-.notif-dropdown {
-    display: none; position: absolute; top: 48px; right: 0; width: 320px; max-width: calc(100vw - 40px);
-    background: #12141A; border: 1px solid rgba(255,255,255,0.15); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); padding: 12px; z-index: 50; flex-direction: column; gap: 8px;
-}
-.notif-dropdown.show { display: flex; }
-.notif-header { font-size: 14px; font-weight: 600; color: #fff; padding: 4px 8px 8px; border-bottom: 1px solid rgba(255,255,255,0.1); }
-.notif-list { display: flex; flex-direction: column; gap: 8px; max-height: 300px; overflow-y: auto; }
+/* home */
+.hello{padding:14px 2px 16px}
+.hello h1{font:600 26px/1.2 Unbounded,sans-serif;letter-spacing:-.01em}
+.hello p{color:var(--mute);margin-top:6px}
+.hero{position:relative;overflow:hidden;border-radius:28px;padding:26px;background:
+ radial-gradient(90% 120% at 100% 0%,rgba(155,107,255,.55),transparent 60%),
+ radial-gradient(80% 100% at 0% 100%,rgba(75,107,255,.5),transparent 60%),#0E1233;
+ border:1px solid rgba(135,148,255,.35);color:#fff;box-shadow:var(--shadow)}
+.hero h2{font:600 24px/1.2 Unbounded,sans-serif;max-width:420px;margin:0 0 8px}
+.hero p{color:rgba(255,255,255,.72);max-width:400px;margin-bottom:18px;font-size:14px}
+.hero .pl{position:absolute;right:-14px;bottom:-22px;width:170px;height:170px;opacity:.16;transform:rotate(-14deg)}
+.hero .row{display:flex;gap:8px;flex-wrap:wrap;position:relative}
+.hero .btn.g{background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.18)}
+.sec{display:flex;align-items:baseline;justify-content:space-between;margin:26px 2px 12px}
+.sec h3{font:600 16px Onest,sans-serif}
+.bento{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.qc{position:relative;text-align:left;border:1px solid var(--line);border-radius:24px;padding:16px;min-height:150px;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;background:
+ radial-gradient(120% 90% at 0% 0%,color-mix(in srgb,var(--c) 16%,transparent),transparent 70%),var(--p1);transition:transform .18s,border-color .2s}
+.qc:hover{border-color:color-mix(in srgb,var(--c) 55%,transparent);transform:translateY(-2px)}
+.qc:active{transform:scale(.98)}
+.qc .ib{width:46px;height:46px;border-radius:15px;background:color-mix(in srgb,var(--c) 20%,transparent)}
+.qc b{display:block;font-size:17px;font-weight:600}
+.qc small{display:block;color:var(--mute);font-size:13px;margin-top:2px}
+.qc.wide{grid-column:span 2;min-height:120px}
+.qc.off{border-style:dashed}
+.qc.off .ib{color:var(--mute);background:var(--p3)}
+.qc .go{position:absolute;top:16px;right:16px;color:var(--dim)}
 
-.notif-item {
-    display: flex; align-items: flex-start; gap: 12px;
-    padding: 12px; background: rgba(255, 255, 255, 0.03); border-radius: 12px;
-    border-left: 4px solid #FF3B30; /* Красная полоса */
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    transition: transform 0.2s;
-}
-.notif-item.success {
-    border-left-color: #F2C14E; /* Желтая полоса */
-}
-.notif-item .n-icon {
-    color: #FF3B30; flex-shrink: 0; margin-top: 2px;
-}
-.notif-item.success .n-icon {
-    color: #F2C14E;
-}
-.notif-item .n-text {
-    flex: 1; line-height: 1.4; font-size: 13px; color: #ECEFF4;
-}
-.notif-empty {
-    text-align: center; color: #8B94A3; font-size: 13px; padding: 20px 10px;
-}
+/* chat */
+.mh{display:flex;align-items:center;gap:10px;padding:6px 0 10px;flex:none}
+.pill{display:flex;align-items:center;gap:11px;padding:5px 14px 5px 5px;border-radius:18px;background:var(--p1);border:1px solid var(--line);text-align:left;color:var(--ink)}
+.pill .ib{width:38px;height:38px;border-radius:13px}
+.pill b{display:block;font-size:15px;line-height:1.15;font-weight:600}
+.pill small{color:var(--mute);font-size:12px}
+.pill .cv{color:var(--mute);margin-left:2px}
+.box{flex:1;min-height:0;overflow:auto;display:flex;flex-direction:column;gap:14px;padding:8px 0 10px;scrollbar-width:thin;scrollbar-color:var(--p3) transparent}
+.m{display:flex;gap:10px;max-width:100%;animation:pop .22s ease both}
+.m.u{justify-content:flex-end}
+.m .bd{max-width:min(82%,680px);white-space:pre-wrap;word-break:break-word;font-size:15px;line-height:1.55}
+.m.u .bd{padding:10px 15px;border-radius:20px 20px 6px 20px;background:linear-gradient(135deg,var(--ac2),var(--vio));color:#fff}
+.m.a .av{width:30px;height:30px;border-radius:10px;flex:none;display:grid;place-items:center;color:var(--c,var(--ac));background:color-mix(in srgb,var(--c,var(--ac)) 16%,transparent);margin-top:2px}
+.m.a .bd{padding:10px 15px;border-radius:6px 20px 20px 20px;background:var(--p1);border:1px solid var(--line)}
+.m.e .bd{border-color:color-mix(in srgb,var(--err) 50%,transparent);color:var(--err)}
+.m.a.think .bd{color:var(--mute)}
+.bd img{max-width:100%;border-radius:14px;display:block}
+.act{display:flex;gap:6px;margin-top:8px}
+.act a,.act button{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--p2);color:var(--mute);border-radius:10px;padding:5px 10px;font-size:12px;text-decoration:none}
+.act a:hover,.act button:hover{color:var(--ink);border-color:var(--line2)}
+@keyframes pop{from{opacity:0;transform:translateY(6px)}}
+.dots{display:inline-flex;gap:4px;margin-left:6px;vertical-align:middle}
+.dots i{width:5px;height:5px;border-radius:50%;background:var(--mute);animation:bl 1.1s infinite both}
+.dots i:nth-child(2){animation-delay:.15s}.dots i:nth-child(3){animation-delay:.3s}
+@keyframes bl{0%,80%,100%{opacity:.25;transform:scale(.8)}40%{opacity:1;transform:scale(1)}}
+.empty{margin:auto;text-align:center;max-width:420px;padding:12px}
+.empty .ib{width:72px;height:72px;border-radius:24px;margin:0 auto 14px}
+.empty h3{font:600 22px Unbounded,sans-serif;margin-bottom:6px}
+.empty p{color:var(--mute);font-size:14px;margin-bottom:16px}
+.ex{display:block;width:100%;margin:6px 0;padding:11px 16px;border-radius:16px;background:var(--p1);border:1px solid var(--line);color:var(--mute);font-size:14px;text-align:left;transition:color .15s,border-color .15s}
+.ex:hover{color:var(--ink);border-color:var(--c,var(--ac))}
+.warn{display:flex;align-items:center;gap:10px;margin:0 0 8px;padding:10px 14px;border-radius:16px;background:color-mix(in srgb,var(--gold) 12%,transparent);border:1px solid color-mix(in srgb,var(--gold) 40%,transparent);color:var(--gold);font-size:13px;text-align:left;width:100%;flex:none}
+.opts{display:flex;gap:6px;overflow:auto;padding:2px 0 8px;scrollbar-width:none;flex:none}
+.opts::-webkit-scrollbar{display:none}
+.op{flex:none;padding:7px 14px;border-radius:12px;background:var(--p1);border:1px solid var(--line);color:var(--mute);font-size:13px;font-weight:500;transition:all .15s}
+.op:hover{color:var(--ink)}
+.op.on{background:color-mix(in srgb,var(--c,var(--ac)) 18%,transparent);border-color:var(--c,var(--ac));color:var(--ink)}
+.inp{flex:none;display:flex;align-items:flex-end;gap:8px;padding:6px 6px 6px 18px;margin:0 0 14px;border-radius:26px;background:var(--p1);border:1px solid var(--line2);box-shadow:var(--shadow);transition:border-color .2s}
+.inp:focus-within{border-color:var(--c,var(--ac))}
+.inp textarea{flex:1;resize:none;max-height:140px;padding:10px 0;border:0;background:none;outline:0;line-height:1.45}
+.inp textarea::placeholder{color:var(--dim)}
+.send{width:44px;height:44px;border-radius:50%;border:0;background:linear-gradient(135deg,var(--ac),var(--vio));color:#fff;display:grid;place-items:center;flex:none;transition:transform .12s,opacity .15s}
+.send:active{transform:scale(.92)}.send:disabled{opacity:.4}
 
-/* ПРОФИЛЬ */
-.chip{position:relative;display:flex;align-items:center;gap:8px;padding:3px;border-radius:30px;background:none;font-size:13px;cursor:pointer;user-select:none;transition:background 0.3s;}
-.chip:hover{background:rgba(255,255,255,.1)}
-.ava{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--ac),#c026d3);display:grid;place-items:center;font-weight:600;font-size:15px;color:#fff}
-.pmenu{position:absolute;top:46px;right:0;min-width:200px;background:var(--sheet);border:1px solid var(--line);border-radius:16px;box-shadow:0 20px 50px rgba(0,0,0,.6);padding:6px;display:none;z-index:60}
-.pmenu.on{display:block;animation:up .18s ease both}
-.pmenu button{display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;border:0;background:none;color:var(--ink);font-size:14px;border-radius:10px;cursor:pointer;text-align:left;font-family:"Onest",sans-serif;}
-.pmenu button:hover{background:var(--hov)}
-.pmenu button svg{color:var(--ink)}
-.pmenu .sep{height:1px;background:var(--line);margin:4px 6px}
+/* cards (profile + locked) */
+.cards{display:grid;gap:12px}
+.card{padding:20px;border-radius:24px;background:var(--p1);border:1px solid var(--line)}
+.card h3{font-size:16px;font-weight:600;margin-bottom:4px;display:flex;align-items:center;gap:10px}
+.card>p{color:var(--mute);font-size:13px;margin-bottom:12px}
+.who{position:relative;overflow:hidden;display:flex;gap:16px;align-items:center;padding:22px;border-radius:26px;border:1px solid var(--line);background:
+ radial-gradient(90% 140% at 100% 0%,rgba(155,107,255,.28),transparent 60%),radial-gradient(80% 120% at 0% 100%,rgba(106,122,255,.25),transparent 60%),var(--p1)}
+.who .ava{width:64px;height:64px;border-radius:20px;font-size:26px}
+.who h2{font:600 20px Unbounded,sans-serif;line-height:1.2}
+.who p{color:var(--mute);font-size:13px;margin-top:2px}
+.badge{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:500;padding:3px 10px;border-radius:20px;background:var(--p3);color:var(--mute)}
+.badge i{width:7px;height:7px;border-radius:50%;background:var(--dim)}
+.badge.ok{color:var(--ok);background:color-mix(in srgb,var(--ok) 14%,transparent)}.badge.ok i{background:var(--ok)}
+.f{width:100%;margin:5px 0;padding:12px 14px;border-radius:14px;background:var(--p2);border:1px solid var(--line);outline:0;transition:border-color .15s}
+.f:focus{border-color:var(--ac)}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.st{font-size:13px;margin-top:8px;min-height:18px}.st.ok{color:var(--ok)}.st.er{color:var(--err)}
+.lockp{text-align:center;max-width:460px;margin:7vh auto 0;padding:10px}
+.lockp .ib{width:84px;height:84px;border-radius:28px;margin:0 auto 18px;--c:var(--gold)}
+.lockp h3{font:600 24px Unbounded,sans-serif;margin-bottom:10px}
+.lockp p{color:var(--mute);margin-bottom:20px}
+.feat{display:grid;gap:8px;text-align:left;margin:0 0 22px}
+.feat div{display:flex;gap:12px;align-items:center;padding:12px 14px;border-radius:16px;background:var(--p1);border:1px solid var(--line);font-size:14px}
+.feat .ib{width:34px;height:34px;border-radius:11px}
 
-.app{position:relative;z-index:1;height:100dvh;padding:100px 12px 0;display:flex;gap:16px;max-width:1180px;margin:0 auto}
-.side{width:230px;flex:none;display:none;flex-direction:column;gap:4px;padding:10px;background:var(--card);border:1px solid var(--line);border-radius:22px;align-self:flex-start;max-height:calc(100dvh - 120px);overflow:auto}
-.si{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:14px;background:none;border:0;cursor:pointer;text-align:left;color:var(--mute);font-size:14px;font-weight:500}
-.si:hover{background:var(--hov);color:var(--ink)}.si.on{background:rgba(135,148,255,.16);color:var(--ink)}
-.ic{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;background:linear-gradient(135deg,#5b6cff,#8794FF);color:#fff;flex:none}.ic svg,.tb svg{display:block}
-.sep{height:1px;background:var(--line);margin:6px 8px}
-main{flex:1;min-width:0;display:flex;flex-direction:column;height:calc(100dvh - 112px);overflow:hidden}
-.scroll{flex:1;overflow:auto;padding-bottom:96px;scrollbar-width:none}.scroll::-webkit-scrollbar{display:none}
-.tabs{position:fixed;left:12px;right:12px;bottom:max(10px,env(safe-area-inset-bottom));z-index:30;display:flex;padding:6px;background:var(--nav);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--line);border-radius:28px}
-.tb{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 2px;border:0;background:none;border-radius:22px;color:var(--mute);font-size:11px;cursor:pointer;position:relative}
-.tb span{line-height:1;display:block}.tb.on{background:rgba(135,148,255,.22);color:#fff;font-weight:600}
-.lock{position:absolute;top:3px;right:calc(50% - 22px);background:#F2C14E;color:#1A1405;border-radius:8px;width:15px;height:15px;display:grid;place-items:center}
-.hero{position:relative;overflow:hidden;border-radius:26px;padding:22px;background:linear-gradient(135deg,#0B0E22,#141C4A 60%,#0A0D1E);border:1px solid rgba(75,107,255,.45);box-shadow:0 20px 50px -20px rgba(59,91,255,.45)}
-.hero:after{content:"";position:absolute;right:22px;bottom:6px;width:90px;height:90px;opacity:.3;transform:rotate(-12deg);background:no-repeat center/contain url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M22 2L11 13'/%3E%3Cpath d='M22 2l-7 20-4-9-9-4z'/%3E%3C/svg%3E")}
-.hero h2{font:600 22px/1.25 Unbounded,sans-serif;margin:12px 0 16px;position:relative}.hero h2 b{color:#9EC1FF;font-weight:600}
-.tag{display:inline-block;padding:4px 12px;border-radius:20px;background:rgba(255,255,255,.08);border:1px solid var(--line);font-size:12px}
-.btn{border:0;cursor:pointer;border-radius:16px;padding:12px 20px;font-weight:600;background:linear-gradient(135deg,var(--ac),var(--ac2));color:#fff;box-shadow:0 8px 24px rgba(135,148,255,.35);text-decoration:none;display:inline-block}
-.btn.w{background:#EEF0FF;color:#14163A;box-shadow:none;position:relative}
-.btn.g{background:var(--gh);box-shadow:none;color:var(--ink)}
-.lab{font-size:12px;font-weight:700;color:var(--mute);letter-spacing:.06em;margin:20px 4px 10px}
-.grid{display:grid;gap:10px;grid-template-columns:1fr 1fr}
-.qc{text-align:left;cursor:pointer;min-height:132px;padding:14px;border-radius:24px;background:var(--sf2);border:1px solid var(--line);display:flex;flex-direction:column;justify-content:space-between;transition:transform .15s,border-color .2s}
-.qc:hover{border-color:rgba(135,148,255,.5);transform:translateY(-2px)}.qc:active{transform:scale(.97)}
-.qc .ic{width:50px;height:50px;border-radius:17px}
-.qc b{display:block;font-size:17px;font-weight:600}.qc small{color:var(--mute);font-size:12px;display:block}
-.qc.off{opacity:.6}
-.pc{display:none}.ph{display:block}
-.mh{display:flex;align-items:center;gap:10px;padding:2px 2px 10px}
-.pill{display:flex;align-items:center;gap:10px;padding:6px 12px 6px 6px;background:var(--sf);border:1px solid var(--line);border-radius:22px;cursor:pointer}
-.pill b{display:block;font-size:15px;line-height:1.1}.pill small{color:var(--mute);font-size:11px}
-.pill .ic{width:36px;height:36px}
-.box{flex:1;overflow:auto;display:flex;flex-direction:column;gap:8px;padding:6px 2px}
-.m{max-width:min(78%,900px);padding:10px 14px;border-radius:18px;white-space:pre-wrap;word-break:break-word;font-size:15px}
-.m.u{align-self:flex-end;background:linear-gradient(135deg,var(--ac2),#7C5CFF);color:#fff;border-bottom-right-radius:6px}
-.m.a{align-self:flex-start;background:var(--bub);border:1px solid var(--line);border-bottom-left-radius:6px}
-.m.e{border-color:#FF5252;color:#ff8a80}.m img{max-width:100%;border-radius:12px;display:block}
-.m .act{display:flex;gap:12px;margin-top:6px;font-size:12px;color:var(--mute)}.m .act a,.m .act button{background:none;border:0;color:var(--mute);cursor:pointer;text-decoration:underline;font-size:12px}
-.empty{margin:auto;text-align:center;max-width:380px;padding:10px}.empty .ic{width:78px;height:78px;border-radius:26px;margin:0 auto 12px}
-.empty h3{font:600 22px Unbounded,sans-serif;margin-bottom:6px}.empty p{color:var(--mute);font-size:13px;margin-bottom:12px}
-.ex{display:block;width:100%;margin:6px 0;padding:9px 14px;border-radius:16px;background:var(--sf);border:1px solid var(--line);color:var(--mute);cursor:pointer;font-size:13px}.ex:hover{color:var(--ink);border-color:var(--ac)}
-.opts{display:flex;gap:8px;overflow:auto;padding:6px 2px;scrollbar-width:none}.opts::-webkit-scrollbar{display:none}
-.op{flex:none;padding:8px 14px;border-radius:18px;background:var(--sf);border:1px solid var(--line);color:var(--mute);font-size:12px;font-weight:600;cursor:pointer}.op.on{background:rgba(135,148,255,.22);border-color:var(--ac);color:#fff}
-.inp{display:flex;gap:8px;align-items:flex-end;padding:6px 0 4px}
-.inp textarea{flex:1;resize:none;max-height:140px;padding:13px 16px;border-radius:22px;background:var(--sf);border:1px solid var(--line);outline:0}.inp textarea:focus{border-color:var(--ac)}
-.send{width:48px;height:48px;border-radius:50%;border:0;background:var(--ac2);color:#fff;font-size:20px;cursor:pointer;flex:none}.send:disabled{opacity:.5}
-.warn{margin:6px 0;padding:10px 14px;border-radius:16px;background:rgba(242,193,78,.12);border:1px solid rgba(242,193,78,.4);color:#F2C14E;font-size:13px;cursor:pointer}
-.card{padding:18px;border-radius:24px;background:var(--card);border:1px solid var(--line);margin-bottom:12px}
-.card h3{font-size:16px;margin-bottom:4px}.card p{color:var(--mute);font-size:13px;margin-bottom:10px}
-.f{width:100%;margin:5px 0;padding:12px 14px;border-radius:14px;background:var(--sf);border:1px solid var(--line);outline:0}.f:focus{border-color:var(--ac)}
-.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
-.st{font-size:12px;margin-top:6px;min-height:16px}.st.ok{color:#81C784}.st.er{color:#ff8a80}
-.sheet{position:fixed;inset:0;z-index:60;display:none;background:rgba(0,0,0,.6);align-items:flex-end}.sheet.on{display:flex}
-.sh{width:100%;max-width:560px;margin:0 auto;background:var(--sheet);border:1px solid var(--line);border-radius:28px 28px 0 0;padding:10px 14px calc(30px + env(safe-area-inset-bottom));animation:up .25s ease both;max-height:85dvh;overflow:auto}
-.sh i{display:block;width:44px;height:4px;border-radius:2px;background:rgba(255,255,255,.25);margin:0 auto 12px}.sh .si{width:100%}
-@keyframes up{from{transform:translateY(60px);opacity:0}}
-.pwa{display:none;position:fixed;left:12px;right:12px;bottom:92px;max-width:400px;margin:0 auto;z-index:50;background:var(--nav);backdrop-filter:blur(20px);border:1px solid var(--line);border-radius:20px;padding:12px;align-items:center;gap:12px}.pwa.on{display:flex}.pwa img{width:42px;height:42px;border-radius:11px}.pwa div{flex:1;font-size:12px;color:var(--mute)}.pwa b{display:block;color:var(--ink);font-size:14px}
+/* sheet */
+.sheet{position:fixed;inset:0;z-index:60;display:none;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);align-items:flex-end}
+.sheet.on{display:flex}
+.sh{width:100%;max-width:560px;margin:0 auto;background:var(--p1);border:1px solid var(--line2);border-radius:28px 28px 0 0;padding:10px 12px calc(24px + env(safe-area-inset-bottom));animation:up .26s cubic-bezier(.2,.8,.2,1) both;max-height:86dvh;overflow:auto}
+.sh .grab{display:block;width:42px;height:4px;border-radius:2px;background:var(--line2);margin:0 auto 14px}
+.sh h3{font:600 20px Unbounded,sans-serif;margin:0 6px 4px}
+.sh>p{color:var(--mute);font-size:13px;margin:0 6px 10px}
+.sh .si{padding:10px 12px;color:var(--ink)}.sh .si.on:before{display:none}
+.sh .si b{display:block;font-weight:600}.sh .si small{color:var(--mute);font-weight:400;font-size:12px}
+.sh .tk{margin-left:auto;color:var(--c)}
+@keyframes up{from{transform:translateY(70px);opacity:0}}
 
-/* МОДАЛЬНОЕ ОКНО */
-.modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 1000; align-items: center; justify-content: center; }
-.modal-content { background: var(--bg); padding: 30px; border-radius: 20px; border: 1px solid var(--line); max-width: 500px; width: 90%; position: relative; max-height: 80vh; overflow-y: auto; }
-.modal-close { position: absolute; top: 15px; right: 15px; background: none; border: none; color: var(--mute); font-size: 24px; cursor: pointer; }
-.modal-content h3 { font-size: 16px; color: var(--ac); margin: 15px 0 5px; }
-.modal-content p { color: var(--mute); font-size: 14px; line-height: 1.5; margin-bottom: 10px; }
+/* pwa */
+.pwa{display:none;position:fixed;left:12px;right:12px;bottom:calc(86px + env(safe-area-inset-bottom));max-width:420px;margin:0 auto;z-index:50;background:var(--glass);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid var(--line2);border-radius:20px;padding:12px;align-items:center;gap:12px;box-shadow:var(--shadow);animation:up .3s ease both}
+.pwa.on{display:flex}
+.pwa img{width:42px;height:42px;border-radius:12px}
+.pwa div{flex:1;font-size:12px;color:var(--mute)}.pwa b{display:block;color:var(--ink);font-size:14px}
+.pwa .x{background:none;border:0;color:var(--mute);width:32px;height:32px}
 
 @media(min-width:900px){
- .side{display:flex}.tabs{display:none}.pc{display:block}.ph{display:none}.pill{cursor:default}.pill small{display:none}
- .grid{grid-template-columns:repeat(auto-fill,minmax(280px,1fr))}.qc{min-height:150px}.app{max-width:none;padding-left:24px;padding-right:24px;padding-top:110px}.nav{max-width:1000px;width:calc(100% - 48px)}.side{width:240px}.me.scroll{display:grid;grid-template-columns:repeat(auto-fit,minmax(380px,1fr));gap:14px;align-content:start}.me .card{margin:0}
- .hero{display:flex;justify-content:space-between;align-items:center;padding:28px 32px}.hero h2{font-size:26px;max-width:460px}
- main{height:calc(100dvh - 120px)}.scroll{padding-bottom:20px}
- .pwa{bottom:20px}
+ .side{display:flex}.tabs,.top{display:none}
+ main{padding:0 32px;max-width:960px}
+ .hello{padding-top:28px}.hello h1{font-size:30px}
+ .hero{padding:34px 36px}.hero h2{font-size:28px;max-width:480px}
+ .bento{grid-template-columns:repeat(6,1fr)}
+ .qc{grid-column:span 2;min-height:168px}.qc.big{grid-column:span 3}.qc.wide{grid-column:span 6;min-height:110px;flex-direction:row;align-items:center;gap:16px;justify-content:flex-start}
+ .qc.wide .go{top:50%;transform:translateY(-50%)}
+ .mh{padding-top:22px}.pill{cursor:default}.pill .cv{display:none}
+ .cards{grid-template-columns:1fr 1fr}.cards .who,.cards .span2{grid-column:span 2}
+ .pwa{display:none!important}
 }
-@media(max-width:899px){
-  .nav{top:10px;width:calc(100% - 20px);height:52px;padding:0 14px;border-radius:16px}
-  .lnk.pcl{display:none}
-  .m{max-width:88%}
-  .logo img{height:32px}
-  .app{padding-top:80px}
-  main{height:calc(100dvh - 92px)}
-  .nav-bell { width: 32px; height: 32px; }
-  .nav-bell svg { width: 16px; height: 16px; }
-  .bell-badge { width: 8px; height: 8px; top: 2px; right: 2px; border-width: 1.5px; }
-  .notif-dropdown { position: fixed; top: 70px; left: 50%; transform: translateX(-50%); width: calc(100vw - 30px); max-width: 340px; }
-  .ava { width: 32px; height: 32px; font-size: 13px; }
-}
+@media(max-width:899px){.qc.big{grid-column:span 1}.qc:first-child{grid-column:span 2}.m .bd{max-width:90%}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
-<div class="glow"></div>
-<nav class="nav">
- <a class="logo" href="index.html"><img src="logo_text.png" alt="V-Agent"></a>
- <div class="nr">
-  <a class="lnk pcl" href="index.html#download">Скачать</a>
-  <a class="lnk pcl" href="javascript:void(0)" onclick="openModal('privacy')">Безопасность</a>
-  <a class="lnk pcl" href="javascript:void(0)" onclick="openModal('rules')">Правила</a>
-
-  <!-- Колокольчик уведомлений -->
-  <div class="bell-wrapper">
-      <button class="nav-bell" id="bell-btn">
-          <svg viewBox="0 0 24 24">
-              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-          </svg>
-          <div class="bell-badge" id="bell-badge"></div>
-      </button>
-      <div class="notif-dropdown" id="notif-menu">
-          <div class="notif-header">Уведомления</div>
-          <div class="notif-list" id="notif-list">
-              <!-- Сюда будут падать уведомления -->
-          </div>
-      </div>
-  </div>
-
-  <!-- Аватарка с меню -->
-  <div class="chip" id="chip" onclick="togglePMenu(event)">
-    <div class="ava" id="ava"></div>
-  </div>
-  <div class="pmenu" id="pmenu">
-    <button onclick="closePMenu();go('me')"><span id="pm-ic1"></span>Настройки</button>
-    <div class="sep"></div>
-    <button onclick="closePMenu();logout()"><span id="pm-ic2"></span>Выйти</button>
-  </div>
+<div class="aurora"></div>
+<div class="shell">
+ <aside class="side">
+  <a class="brand" href="index.html"><img src="icon.png" alt=""><span>V-Agent</span></a>
+  <nav class="nav" id="side"></nav>
+  <div class="foot" id="foot"></div>
+ </aside>
+ <div class="stage">
+  <header class="top">
+   <a class="brand" href="index.html"><img src="icon.png" alt=""><span>V-Agent</span></a>
+   <button class="ibtn" id="tsm" onclick="toggleTheme()" aria-label="Сменить тему"></button>
+   <button class="ava" id="avm" onclick="go('me')" aria-label="Профиль"></button>
+  </header>
+  <main id="main"></main>
+  <div class="tabs" id="tabs"></div>
  </div>
-</nav>
-
-<div class="app">
- <aside class="side" id="side"></aside>
- <main id="main"></main>
 </div>
 
-<div class="tabs" id="tabs"></div>
 <div class="sheet" id="sheet" onclick="if(event.target===this)closeSheet()"><div class="sh" id="sh"></div></div>
-<div class="pwa" id="pwa"><img src="icon.png" alt=""><div><b>Установить V-Agent</b>Добавь на главный экран</div><button class="btn" id="pwab">Добавить</button><button class="lnk" onclick="closePwa()">✕</button></div>
-
-<!-- МОДАЛЬНОЕ ОКНО -->
-<div id="info-modal" class="modal">
-    <div class="modal-content">
-        <button class="modal-close" onclick="closeModal()">×</button>
-        <h2 id="modal-title" style="margin-bottom: 15px; font-family: 'Unbounded';">Заголовок</h2>
-        <div id="modal-text" style="color: var(--mute); line-height: 1.6; font-size: 14px;"></div>
-    </div>
-</div>
+<div class="pwa" id="pwa"><img src="icon.png" alt=""><div><b>Установить V-Agent</b>Добавь на главный экран</div><button class="btn sm" id="pwab">Добавить</button><button class="x" onclick="closePwa()" aria-label="Закрыть">✕</button></div>
 
 <script>
-// Защита от бесконечного цикла перезагрузки
-let USER = null;
-try { USER = localStorage.getItem('vagent_user'); } catch(e) { console.warn('LocalStorage is disabled'); }
+const API='https://vagent-backend.novalaim11.workers.dev';
+const USER=localStorage.getItem('vagent_user');
+if(!USER)location.href='web.html';
+const $=s=>document.querySelector(s);
+const el=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e};
+const P={home:'<path d="M3 11l9-8 9 8"/><path d="M5 10v10h5v-6h4v6h5V10"/>',chat:'<path d="M21 12a8 8 0 0 1-11.6 7.1L3 21l1.9-5.4A8 8 0 1 1 21 12z"/>',image:'<rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="1.6"/><path d="M21 16l-5-5-9 9"/>',bulb:'<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/>',grid:'<rect x="3" y="3" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="2"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="2"/>',hash:'<path d="M5 9h15M4 15h15M10 3L8 21M16 3l-2 18"/>',send:'<path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4z"/>',user:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',film:'<rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M3 9h18M3 15h18M8 4v16M16 4v16"/>',lock:'<rect x="5" y="11" width="14" height="10" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',spark:'<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8z"/>',sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',moon:'<path d="M21 13A9 9 0 1 1 11 3a7 7 0 0 0 10 10z"/>',up:'<path d="M12 19V5M5 12l7-7 7 7"/>',plus:'<path d="M12 5v14M5 12h14"/>',chev:'<path d="M6 9l6 6 6-6"/>',arrow:'<path d="M7 17L17 7M8 7h9v9"/>',copy:'<rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/>',down:'<path d="M12 4v12M6 11l6 6 6-6M5 21h14"/>',out:'<path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3M10 8l-4 4 4 4M6 12h11"/>',check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',key:'<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M16 7l3 3"/>',alert:'<path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18v.01"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',zap:'<path d="M13 2L4 14h7l-1 8 9-12h-7z"/>'};
+const svg=(n,s=20)=>`<svg viewBox="0 0 24 24" width="${s}" height="${s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${P[n]}</svg>`;
+function paintTheme(){const d=document.documentElement.dataset.theme==='dark';const h=svg(d?'sun':'moon',18);const a=$('#tsm');if(a)a.innerHTML=h;const b=$('#tsd');if(b)b.innerHTML=h}
+function toggleTheme(){const r=document.documentElement;r.dataset.theme=r.dataset.theme==='dark'?'light':'dark';localStorage.setItem('vagent_theme',r.dataset.theme);const m=document.querySelector('meta[name=theme-color]');if(m)m.content=r.dataset.theme==='dark'?'#07080D':'#EFF1F7';paintTheme()}
+const MODES={
+ chat:{t:'Чат с ИИ',s:'Спроси что угодно',i:'chat',c:'#8794FF',h:'Напиши сообщение…',w:'Нейро думает',intro:'Задай любой вопрос или попроси написать текст.',ex:['Придумай название для кофейни','Объясни простыми словами, что такое NFT','Напиши пост про утреннюю пробежку']},
+ image:{t:'Картинки',s:'7 стилей генерации',i:'image',c:'#E879F9',h:'Опиши картинку…',w:'Рисую',intro:'Опиши, что нарисовать, и выбери стиль ниже.',ex:['Уютный домик в лесу на закате','Кот-космонавт на Луне','Неоновый город под дождём']},
+ ideas:{t:'Идеи',s:'10 идей для постов',i:'bulb',c:'#FBBF24',h:'Тема для идей…',w:'Придумываю идеи',intro:'Напиши тему — получишь 10 идей для постов.',ex:['Кофейня у дома','Фитнес для новичков','Путешествия по России']},
+ templates:{t:'Шаблоны',s:'Готовые структуры',i:'grid',c:'#34D399',h:'О чём пост?',w:'Пишу пост',intro:'Выбери шаблон ниже и напиши тему.',ex:['Как выбрать беговые кроссовки','Обзор беспроводных наушников']},
+ hashtags:{t:'Хештеги',s:'Подбор тегов по теме',i:'hash',c:'#38BDF8',h:'Тема для хештегов…',w:'Подбираю хештеги',intro:'Напиши тему — подберу 20 хештегов.',ex:['кошки','здоровое питание','путешествия']}
+};
+const STY={photo:['Реализм','photorealistic photograph, DSLR, 85mm lens, natural lighting, sharp focus, high detail'],anime:['Аниме','anime artwork, Studio Ghibli style, soft cel shading, vibrant pastel colors'],'3d':['3D','3D render, octane render, cinematic lighting, highly detailed'],cyberpunk:['Киберпанк','cyberpunk style, neon lights, rainy night city, purple and cyan glow'],fantasy:['Фэнтези','epic fantasy art, magical atmosphere, dramatic lighting, concept art'],sketch:['Скетч','pencil sketch, graphite illustration, cross-hatching, monochrome'],minimal:['Минимализм','minimalist flat vector illustration, clean lines, solid colors, poster style']};
+const TPL=[['instruction','Инструкция','Заголовок с эмодзи «Как сделать…»; короткое вступление; 3-7 шагов с эмодзи; один важный совет; вопрос читателю'],['review','Обзор','Цепляющий заголовок; вступление; плюсы (✅); минусы (❌); итог-рекомендация; вопрос «А вы пробовали?»'],['facts','10 фактов','Заголовок «10 фактов о…»; вступление; ровно 10 фактов с эмодзи; самый удивительный факт отдельно; вопрос'],['case','Кейс','Заголовок с результатом; Было; Что сделали (3-4 шага); Стало; вывод; вопрос'],['mistakes','Ошибки','Заголовок «5 ошибок в…»; почему важно; список ошибок с объяснением; как правильно; вопрос'],['top','ТОП-N','Заголовок «ТОП-5…»; критерии; нумерованный список с описанием; победитель; вопрос']];
+const SYS='Ты — полезный ассистент. Отвечай кратко и по делу, на русском языке. Помогаешь писать тексты, отвечать на вопросы, объяснять сложное простыми словами. Не используй Markdown-разметку.';
+const LKEY='vagent_c_'+USER, CKEY='vagent_cf_'+USER;
+let st={view:'home',mode:'chat',style:'photo',tpl:'instruction',busy:false,chats:{}};
+try{st.chats=JSON.parse(localStorage.getItem(LKEY)||'{}')}catch(e){}
+const save=()=>{try{localStorage.setItem(LKEY,JSON.stringify(st.chats))}catch(e){for(const k in st.chats)st.chats[k].forEach(m=>delete m.img);try{localStorage.setItem(LKEY,JSON.stringify(st.chats))}catch(_){}}};
+const cf=()=>{try{return JSON.parse(localStorage.getItem(CKEY)||'null')}catch(e){return null}};
+const isDesk=()=>innerWidth>=900;
+$('#avm').textContent=USER[0].toUpperCase();
 
-if (!USER || USER === 'null' || USER === 'undefined') {
-    // Если мы не на web.html, перекидываем
-    if (!window.location.href.includes('web.html')) {
-        window.location.href = 'web.html';
-    }
-} else {
-    // Основной код приложения
-    const API='https://vagent-backend.novalaim11.workers.dev';
-    const $=s=>document.querySelector(s);
-    const el=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e};
-    const P={home:'<path d="M3 11l9-8 9 8"/><path d="M5 10v10h5v-6h4v6h5V10"/>',chat:'<path d="M21 12a8 8 0 0 1-11.6 7.1L3 21l1.9-5.4A8 8 0 1 1 21 12z"/>',image:'<rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="1.6"/><path d="M21 16l-5-5-9 9"/>',bulb:'<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/>',grid:'<rect x="3" y="3" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="2"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="2"/>',hash:'<path d="M5 9h15M4 15h15M10 3L8 21M16 3l-2 18"/>',send:'<path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4z"/>',user:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',film:'<rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M3 9h18M3 15h18M8 4v16M16 4v16"/>',lock:'<rect x="5" y="11" width="14" height="10" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',spark:'<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8z"/>'};
-    const svg=(n,s=20)=>`<svg viewBox="0 0 24 24" width="${s}" height="${s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${P[n]}</svg>`;
-    const MODES={
-     chat:{t:'Чат с ИИ',s:'Спроси что угодно',i:'chat',h:'Напиши сообщение...',w:'Нейро думает',intro:'Задай любой вопрос или попроси написать текст.',ex:['Придумай название для кофейни','Объясни простыми словами, что такое NFT','Напиши пост про утреннюю пробежку']},
-     image:{t:'Картинки',s:'7 стилей генерации',i:'image',h:'Опиши картинку...',w:'Рисую',intro:'Опиши, что нарисовать, и выбери стиль ниже.',ex:['Уютный домик в лесу на закате','Кот-космонавт на Луне','Неоновый город под дождём']},
-     ideas:{t:'Идеи',s:'10 идей для постов',i:'bulb',h:'Тема для идей...',w:'Придумываю идеи',intro:'Напиши тему — получишь 10 идей для постов.',ex:['Кофейня у дома','Фитнес для новичков','Путешествия по России']},
-     templates:{t:'Шаблоны',s:'Готовые структуры',i:'grid',h:'О чём пост?',w:'Пишу пост',intro:'Выбери шаблон ниже и напиши тему.',ex:['Как выбрать беговые кроссовки','Обзор беспроводных наушников']},
-     hashtags:{t:'Хештеги',s:'Подбор тегов по теме',i:'hash',h:'Тема для хештегов...',w:'Подбираю хештеги',intro:'Напиши тему — подберу 20 хештегов.',ex:['кошки','здоровое питание','путешествия']}
-    };
-    const STY={photo:['Реализм','photorealistic photograph, DSLR, 85mm lens, natural lighting, sharp focus, high detail'],anime:['Аниме','anime artwork, Studio Ghibli style, soft cel shading, vibrant pastel colors'],'3d':['3D','3D render, octane render, cinematic lighting, highly detailed'],cyberpunk:['Киберпанк','cyberpunk style, neon lights, rainy night city, purple and cyan glow'],fantasy:['Фэнтези','epic fantasy art, magical atmosphere, dramatic lighting, concept art'],sketch:['Скетч','pencil sketch, graphite illustration, cross-hatching, monochrome'],minimal:['Минимализм','minimalist flat vector illustration, clean lines, solid colors, poster style']};
-    const TPL=[['instruction','Инструкция','Заголовок с эмодзи «Как сделать…»; короткое вступление; 3-7 шагов с эмодзи; один важный совет; вопрос читателю'],['review','Обзор','Цепляющий заголовок; вступление; плюсы (✅); минусы (❌); итог-рекомендация; вопрос «А вы пробовали?»'],['facts','10 фактов','Заголовок «10 фактов о…»; вступление; ровно 10 фактов с эмодзи; самый удивительный факт отдельно; вопрос'],['case','Кейс','Заголовок с результатом; Было; Что сделали (3-4 шага); Стало; вывод; вопрос'],['mistakes','Ошибки','Заголовок «5 ошибок в…»; почему важно; список ошибок с объяснением; как правильно; вопрос'],['top','ТОП-N','Заголовок «ТОП-5…»; критерии; нумерованный список с описанием; победитель; вопрос']];
-    const SYS='Ты — полезный ассистент. Отвечай кратко и по делу, на русском языке. Помогаешь писать тексты, отвечать на вопросы, объяснять сложное простыми словами. Не используй Markdown-разметку.';
-    const LKEY='vagent_c_'+USER, CKEY='vagent_cf_'+USER;
-    let st={view:'home',mode:'chat',style:'photo',tpl:'instruction',busy:false,chats:{}};
-    try{st.chats=JSON.parse(localStorage.getItem(LKEY)||'{}')}catch(e){}
-    const save=()=>{try{localStorage.setItem(LKEY,JSON.stringify(st.chats))}catch(e){for(const k in st.chats)st.chats[k].forEach(m=>delete m.img);try{localStorage.setItem(LKEY,JSON.stringify(st.chats))}catch(_){}}};
-    const cf=()=>{try{return JSON.parse(localStorage.getItem(CKEY)||'null')}catch(e){return null}};
-    $('#ava').textContent=USER[0].toUpperCase();
-
-    /* --- УВЕДОМЛЕНИЯ --- */
-    const bellBtn = document.getElementById('bell-btn');
-    const notifMenu = document.getElementById('notif-menu');
-    const notifList = document.getElementById('notif-list');
-    const bellBadge = document.getElementById('bell-badge');
-
-    // Функция добавления уведомления
-    function addNotification(text, type = 'error') {
-        const item = document.createElement('div');
-        item.className = 'notif-item ' + (type === 'success' ? 'success' : '');
-
-        const iconSvg = `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>`;
-        item.innerHTML = `<div class="n-icon">${iconSvg}</div><div class="n-text">${text}</div>`;
-
-        // Удаляем заглушку, если есть
-        const empty = notifList.querySelector('.notif-empty');
-        if (empty) empty.remove();
-
-        notifList.prepend(item);
-        bellBadge.classList.add('show');
-
-        // Обрезаем лишние уведомления
-        if (notifList.children.length > 10) {
-            notifList.lastElementChild.remove();
-        }
-    }
-
-    // Инициализация списка (заглушка)
-    function checkEmptyNotifs() {
-        if (notifList.children.length === 0) {
-            notifList.innerHTML = `<div class="notif-empty">У вас нет новых уведомлений</div>`;
-        }
-    }
-    checkEmptyNotifs(); // Вызываем при старте
-
-    bellBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        notifMenu.classList.toggle('show');
-        if (notifMenu.classList.contains('show')) {
-            bellBadge.classList.remove('show');
-        }
-    });
-
-    document.addEventListener('click', (e) => {
-        if (!notifMenu.contains(e.target) && e.target !== bellBtn) {
-            notifMenu.classList.remove('show');
-        }
-    });
-
-    /* --- МОДАЛЬНОЕ ОКНО --- */
-    function openModal(type) {
-        const modal = document.getElementById('info-modal');
-        modal.style.display = 'flex';
-        const title = document.getElementById('modal-title');
-        const text = document.getElementById('modal-text');
-
-        if (type === 'privacy') {
-            title.textContent = 'Конфиденциальность и Безопасность';
-            text.innerHTML = `<p>Мы серьезно относимся к защите ваших данных...</p>`;
-        } else if (type === 'rules') {
-            title.textContent = 'Правила использования';
-            text.innerHTML = `<p>Добро пожаловать в V-Agent! Чтобы всем было комфортно, соблюдайте простые правила...</p>`;
-        }
-    }
-    function closeModal() { document.getElementById('info-modal').style.display = 'none'; }
-    document.getElementById('info-modal').addEventListener('click', (e) => {
-        if (e.target.id === 'info-modal') closeModal();
-    });
-
-    /* --- ПРОФИЛЬ --- */
-    function togglePMenu(e){e.stopPropagation();$('#pmenu').classList.toggle('on')}
-    function closePMenu(){$('#pmenu').classList.remove('on')}
-    document.addEventListener('click',e=>{if(!e.target.closest('#chip')&&!e.target.closest('#pmenu'))closePMenu()});
-    $('#pm-ic1').outerHTML=svg('user',16);
-    $('#pm-ic2').outerHTML=svg('lock',16);
-
-    async function ai(path,body){
-     const k=cf();if(!k)throw new Error('Добавь ключ Cloudflare в разделе «Профиль»');
-     let r;try{r=await fetch(API+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...body,token:k.token,account_id:k.account})})}catch(e){throw new Error('Нет связи с сервером')}
-     const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||'Ошибка ИИ');return d;
-    }
-    const chatAI=(messages,max)=>ai('/ai/text',{messages,max_tokens:max||900}).then(d=>(d.text||'').trim());
-
-    const NAV=[['home','home','Главная'],['chat','chat','Чат с ИИ'],['image','image','Картинки'],['ideas','bulb','Идеи'],['templates','grid','Шаблоны'],['hashtags','hash','Хештеги'],['tg','send','Telegram',1],['me','user','Профиль']];
-    function go(v,mode){if(mode)st.mode=mode;st.view=v;drawNav();draw()}
-    function drawNav(){
-     const on=n=>st.view==='neuro'?n===st.mode:n===st.view;
-     $('#side').innerHTML='';
-     NAV.forEach(([id,ic,t,lock],i)=>{
-      if(i===1||id==='tg')$('#side').append(el('div','sep'));
-      const b=el('button','si'+(on(id)?' on':''));const ib=el('span','ic');ib.innerHTML=svg(ic,18);const lb=el('span','',t);if(lock){const l=el('span');l.innerHTML=svg('lock',13);l.style.cssText='display:inline-block;vertical-align:-2px;margin-left:6px;opacity:.7';lb.append(l)}b.append(ib,lb);
-      b.onclick=()=>MODES[id]?go('neuro',id):go(id);$('#side').append(b);
-     });
-     const T=[['home','home','Главная'],['neuro','spark','Нейросети'],['tg','send','Telegram',1],['me','user','Профиль']];
-     $('#tabs').innerHTML='';
-     T.forEach(([id,ic,t,lock])=>{const b=el('button','tb'+(st.view===id?' on':''));const ib=el('span');ib.innerHTML=svg(ic,22);b.append(ib,el('div','',t));if(lock){const l=el('i','lock');l.innerHTML=svg('lock',10);b.append(l)}b.onclick=()=>go(id);$('#tabs').append(b)});
-    }
-    function draw(){
-     const m=$('#main');m.innerHTML='';
-     if(st.view==='home')home(m);else if(st.view==='neuro')neuro(m);else if(st.view==='tg')tg(m);else me(m);
-    }
-    function home(m){
-     const sc=el('div','scroll');
-     const h=el('div','pc');const hr=new Date().getHours();
-     h.innerHTML=`<h1 style="font:600 28px Unbounded,sans-serif;margin:4px 4px 14px">${hr<5?'Доброй ночи':hr<12?'Доброе утро':hr<18?'Добрый день':'Добрый вечер'}, <span style="color:var(--ac)"></span></h1>`;h.querySelector('span').textContent=USER;sc.append(h);
-     const hero=el('div','hero');
-     hero.innerHTML='<div style="position:relative"><span class="tag">Telegram-канал</span><h2>Автоматизируй<br>свой <b>Telegram-канал</b></h2><a class="btn w" href="index.html#download">Скачать приложение →</a></div>';
-     sc.append(hero,el('div','lab','БЫСТРЫЙ ДОСТУП'));
-     const g=el('div','grid');
-     Object.entries(MODES).forEach(([id,c])=>{const b=el('button','qc');b.innerHTML=`<span class="ic">${svg(c.i,26)}</span><div><b>${c.t}</b><small>${c.s}</small></div>`;b.onclick=()=>go('neuro',id);g.append(b)});
-     const v=el('button','qc off');v.innerHTML='<span class="ic">'+svg('film',26)+'</span><div><b>Видео</b><small>Пересказ и промпт — в приложении</small></div>';v.onclick=()=>go('tg');g.append(v);
-     sc.append(g);m.append(sc);
-    }
-    function tg(m){
-     const sc=el('div','scroll');
-     sc.innerHTML=`<div class="empty" style="margin-top:40px"><div class="ic" style="background:linear-gradient(135deg,#F2C14E,#E0963A);color:#1A1405">${svg('lock',36)}</div><h3>Только в приложении</h3><p>Автоведение Telegram-канала (автопостинг по расписанию), автосоздание постов и разбор видео работают в приложении V-Agent и доступны по Premium-подписке.</p><a class="btn" href="index.html#download">Скачать приложение</a></div>`;
-     m.append(sc);
-    }
-    function neuro(m){
-     const c=MODES[st.mode],list=st.chats[st.mode]||(st.chats[st.mode]=[]);
-     const hd=el('div','mh');const pill=el('div','pill');pill.innerHTML=`<span class="ic">${svg(c.i,19)}</span><div><b>${c.t}</b><small>${c.s}</small></div><span class="ph" style="color:var(--mute)">⌄</span>`;pill.onclick=()=>{if(innerWidth<900)openSheet()};
-     const nw=el('button','btn g','＋ Новый чат');nw.style.marginLeft='auto';nw.onclick=()=>{if(st.busy)return;st.chats[st.mode]=[];save();draw()};
-     hd.append(pill,nw);m.append(hd);
-     const box=el('div','box');box.id='box';m.append(box);
-     if(!cf()){const w=el('div','warn','⚠ Добавь ключ Cloudflare в разделе «Профиль», чтобы ИИ заработал →');w.onclick=()=>go('me');m.append(w)}
-     if(st.mode==='image'||st.mode==='templates'){
-      const o=el('div','opts');
-      (st.mode==='image'?Object.entries(STY).map(([k,v])=>[k,v[0]]):TPL.map(t=>[t[0],t[1]])).forEach(([k,t])=>{const cur=st.mode==='image'?st.style:st.tpl;const b=el('button','op'+(k===cur?' on':''),t);b.onclick=()=>{st[st.mode==='image'?'style':'tpl']=k;[...o.children].forEach(x=>x.classList.remove('on'));b.classList.add('on')};o.append(b)});m.append(o);
-     }
-     const f=el('div','inp');const ta=el('textarea');ta.rows=1;ta.placeholder=c.h;ta.id='ta';
-     const sb=el('button','send','↑');sb.id='sb';sb.onclick=send;
-     ta.onkeydown=e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send()}};
-     ta.oninput=()=>{ta.style.height='auto';ta.style.height=Math.min(ta.scrollHeight,140)+'px'};
-     f.append(ta,sb);m.append(f);
-     paint();
-    }
-    function paint(){
-     const box=$('#box');if(!box)return;box.innerHTML='';const c=MODES[st.mode],list=st.chats[st.mode]||[];
-     if(!list.length){
-      const e=el('div','empty');e.innerHTML=`<div class="ic">${svg(c.i,38)}</div><h3>${c.t}</h3><p>${c.intro}</p>`;
-      c.ex.forEach(x=>{const b=el('button','ex',x);b.onclick=()=>{$('#ta').value=x;$('#ta').focus()};e.append(b)});box.append(e);return;
-     }
-     list.forEach(msg=>box.append(bubble(msg)));box.scrollTop=box.scrollHeight;
-    }
-    function bubble(msg){
-     const b=el('div','m '+(msg.r==='u'?'u':'a')+(msg.e?' e':''));
-     if(msg.img){const i=el('img');i.src='data:image/jpeg;base64,'+msg.img;b.append(i);const a=el('div','act');const dl=el('a','','Скачать');dl.href=i.src;dl.download='v-agent.jpg';a.append(dl);b.append(a)}
-     else{b.append(document.createTextNode(msg.t));if(msg.r==='a'&&!msg.e){const a=el('div','act');const cp=el('button','','Копировать');cp.onclick=()=>{navigator.clipboard&&navigator.clipboard.writeText(msg.t);cp.textContent='Скопировано'};a.append(cp);b.append(a)}}
-     return b;
-    }
-    async function send(){
-     const ta=$('#ta');const text=(ta.value||'').trim();if(!text||st.busy)return;
-     const mode=st.mode,list=st.chats[mode]||(st.chats[mode]=[]);
-     list.push({r:'u',t:text});ta.value='';ta.style.height='auto';st.busy=true;$('#sb').disabled=true;paint();
-     const th=el('div','m a',MODES[mode].w+'…');th.style.fontStyle='italic';$('#box').append(th);$('#box').scrollTop=1e9;
-     let n=0;const iv=setInterval(()=>{th.textContent=MODES[mode].w+'.'.repeat(n++%3+1)},450);
-     const msg={r:'a',t:''};
-     try{
-      if(mode==='chat'){
-       const ctx=list.slice(-10).filter(x=>!x.e&&x.t).map(x=>({role:x.r==='u'?'user':'assistant',content:x.t}));
-       msg.t=await chatAI([{role:'system',content:SYS},...ctx],1200);
-      }else if(mode==='image'){
-       let p=text;if(/[а-яё]/i.test(p))p=await chatAI([{role:'system',content:'Translate the user text to English for an image generator. Output only the translation.'},{role:'user',content:p}],200)||p;
-       const d=await ai('/ai/image',{prompt:p+', '+STY[st.style][1]});msg.img=d.image;msg.t='Картинка';
-      }else if(mode==='ideas'){
-       msg.t=await chatAI([{role:'system',content:'Ты креативный SMM-редактор. Выдаёшь только нумерованный список, без пояснений.'},{role:'user',content:`Придумай 10 свежих, конкретных идей для постов в соцсетях на тему: «${text}». Каждая идея — одна строка: цепляющий заголовок и короткая суть. Нумерованный список 1–10, на русском.`}],900);
-      }else if(mode==='templates'){
-       const t=TPL.find(x=>x[0]===st.tpl)||TPL[0];
-       msg.t=await chatAI([{role:'system',content:'Ты SMM-редактор. Выдаёшь только готовый пост без комментариев.'},{role:'user',content:`Напиши пост по шаблону «${t[1]}».\nТема: ${text}\nСтруктура: ${t[2]}.\nПиши на русском, живым языком, без HTML и Markdown.`}],1200);
-      }else{
-       const r=await chatAI([{role:'system',content:'Ты помогаешь подбирать хештеги для соцсетей.'},{role:'user',content:`Тема: «${text}». Сгенерируй РОВНО 20 хештегов по теме. Каждый хештег — одно обычное русское слово, слова не склеивать. Выведи только хештеги через пробел.`}],400);
-       const tags=[...new Set((r.match(/#[\p{L}\d_]+/gu)||[]).map(x=>x.toLowerCase()))].slice(0,20);msg.t=tags.length?tags.join(' '):r;
-      }
-      msg.t=(msg.t||'').replace(/\*\*/g,'').trim();if(!msg.t&&!msg.img)throw new Error('Пустой ответ, попробуй ещё раз');
-     }catch(e){msg.t='❌ '+e.message;msg.e=true}
-     clearInterval(iv);list.push(msg);if(list.length>40)list.splice(0,list.length-40);save();st.busy=false;
-     if(st.mode===mode&&st.view==='neuro'){$('#sb').disabled=false;paint()}
-    }
-    function openSheet(){
-     const sh=$('#sh');sh.innerHTML='<i></i><h3 style="margin:0 4px 4px;font:600 20px Unbounded,sans-serif">Что делаем?</h3><p style="color:var(--mute);font-size:12px;margin:0 4px 10px">Выбери режим — чат останется тем же.</p>';
-     Object.entries(MODES).forEach(([id,c])=>{const b=el('button','si'+(id===st.mode?' on':''));b.innerHTML=`<span class="ic">${svg(c.i,19)}</span><span style="flex:1"><b style="display:block;color:var(--ink)">${c.t}</b><small>${c.s}</small></span>${id===st.mode?'✓':''}`;b.onclick=()=>{closeSheet();setTimeout(()=>{st.mode=id;drawNav();draw()},180)};sh.append(b)});
-     $('#sheet').classList.add('on');let y0=0;sh.ontouchstart=e=>y0=e.touches[0].clientY;sh.ontouchend=e=>{if(e.changedTouches[0].clientY-y0>70&&sh.scrollTop<=0)closeSheet()};
-    }
-    const closeSheet=()=>$('#sheet').classList.remove('on');
-    function me(m){
-     const sc=el('div','scroll me');const k=cf();
-     sc.innerHTML=`<div class="card" style="display:flex;gap:14px;align-items:center"><div class="ava" style="width:56px;height:56px;font-size:24px" id="ava2"></div><div><h3 id="nm2" style="font-size:20px;margin:0"></h3><p style="margin:0">Аккаунт V-Agent</p></div></div>
-     <div class="card"><h3>Ключ Cloudflare</h3><p>Нужен для работы ИИ (текст и картинки). Хранится только в этом браузере.</p>
-     <input class="f" id="tk" type="password" placeholder="API токен (cfut_…)" value="${k?'••••••••':''}"><input class="f" id="ac" placeholder="Account ID (32 символа или вся ссылка)" value="${k?k.account:''}">
-     <div class="row"><button class="btn" onclick="saveKey()">Сохранить и проверить</button>${k?'<button class="btn g" onclick="delKey()">Удалить</button>':''}</div><div class="st" id="ks"></div></div>
-     <div class="card"><h3>Сменить пароль</h3><p>Введи старый и новый пароль.</p><input class="f" id="op" type="password" placeholder="Старый пароль"><input class="f" id="np" type="password" placeholder="Новый пароль (от 4 символов)"><div class="row"><button class="btn" onclick="chPass()">Сменить пароль</button></div><div class="st" id="ps"></div></div>
-     <div class="card"><h3>О V-Agent</h3><p>Помощник для авторов и админов каналов: чат с ИИ, картинки, идеи, шаблоны постов и хештеги. Автопостинг в Telegram и разбор видео — в приложении.</p><div class="row"><a class="btn g" href="index.html#download">Скачать приложение</a><button class="btn g" onclick="logout()">Выйти</button></div></div>`;
-     m.append(sc);$('#ava2').textContent=USER[0].toUpperCase();$('#nm2').textContent=USER;
-    }
-    async function saveKey(){
-     const s=$('#ks');let tk=$('#tk').value.trim();const old=cf();if(tk.startsWith('•')&&old)tk=old.token;
-     const a=($('#ac').value.match(/[a-f0-9]{32}/i)||[''])[0];
-     if(tk.length<20||!a){s.className='st er';s.textContent='Проверь токен и Account ID';return}
-     localStorage.setItem(CKEY,JSON.stringify({token:tk,account:a}));s.className='st';s.textContent='Проверяю…';
-     try{await chatAI([{role:'user',content:'Ответь одним словом: привет'}],20);s.className='st ok';s.textContent='Ключ работает ✓'; addNotification('Ключ Cloudflare успешно сохранен!', 'success')}catch(e){s.className='st er';s.textContent=e.message; addNotification('Ошибка ключа Cloudflare: ' + e.message, 'error')}
-    }
-    function delKey(){localStorage.removeItem(CKEY);draw()}
-    async function chPass(){
-     const s=$('#ps'),o=$('#op').value,n=$('#np').value;if(!o||n.length<4){s.className='st er';s.textContent='Заполни поля (новый пароль от 4 символов)';return}
-     try{const r=await fetch(API+'/change-password',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:USER,old_password:o,new_password:n})});const d=await r.json();s.className='st '+(r.ok?'ok':'er');s.textContent=r.ok?'Пароль изменён ✓':(d.error||'Ошибка'); if(r.ok) addNotification('Пароль успешно изменен!', 'success'); else addNotification('Ошибка смены пароля: '+(d.error||''), 'error')}catch(e){s.className='st er';s.textContent='Нет связи с сервером'}
-    }
-    function logout(){localStorage.removeItem('vagent_user');location.href='web.html'}
-
-    let dp;const ios=/iPad|iPhone|iPod/.test(navigator.userAgent),sa=matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
-    const showPwa=()=>{if(!sa&&!localStorage.getItem('pwa_dismissed')&&innerWidth<900)setTimeout(()=>$('#pwa').classList.add('on'),2500)};
-    if(ios){$('#pwab').textContent='Как?';showPwa()}
-    addEventListener('beforeinstallprompt',e=>{e.preventDefault();dp=e;showPwa()});
-    $('#pwab').onclick=()=>{if(ios)alert('Нажми «Поделиться» внизу экрана → «На экран Домой» → «Добавить».');else if(dp){dp.prompt();dp=null}};
-    function closePwa(){$('#pwa').classList.remove('on');localStorage.setItem('pwa_dismissed','1')}
-    addEventListener('resize',()=>{drawNav()});
-    drawNav();draw();
+async function ai(path,body){
+ const k=cf();if(!k)throw new Error('Добавь ключ Cloudflare в разделе «Профиль»');
+ let r;try{r=await fetch(API+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...body,token:k.token,account_id:k.account})})}catch(e){throw new Error('Нет связи с сервером')}
+ const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||'Ошибка ИИ');return d;
 }
+const chatAI=(messages,max)=>ai('/ai/text',{messages,max_tokens:max||900}).then(d=>(d.text||'').trim());
+
+const SIDE=[['home','home','Главная'],['grp','Нейросети'],['chat','chat'],['image','image'],['ideas','bulb'],['templates','grid'],['hashtags','hash'],['grp','Ещё'],['tg','send','Telegram',1],['me','user','Профиль']];
+const TABS=[['home','home','Главная'],['neuro','spark','Нейросети'],['tg','send','Telegram',1],['me','user','Профиль']];
+function go(v,mode){if(mode)st.mode=mode;st.view=v;drawNav();draw()}
+function drawNav(){
+ const on=n=>st.view==='neuro'?n===st.mode:n===st.view;
+ const sd=$('#side');sd.innerHTML='';
+ SIDE.forEach(([id,a,b,lock])=>{
+  if(id==='grp'){sd.append(el('div','grp',a));return}
+  const M=MODES[id],ic=M?M.i:a,t=M?M.t:b;
+  const bt=el('button','si'+(on(id)?' on':''));if(M)bt.style.setProperty('--c',M.c);
+  const i=el('span','ib');i.innerHTML=svg(ic,17);bt.append(i,el('span','',t));
+  if(lock){const l=el('span','lk');l.innerHTML=svg('lock',14);bt.append(l)}
+  bt.onclick=()=>M?go('neuro',id):go(id);sd.append(bt);
+ });
+ const ft=$('#foot');ft.innerHTML='';
+ const u=el('button','usr');u.innerHTML='<span class="ava"></span><span class="sp"><b></b><small>Профиль</small></span>';
+ u.querySelector('.ava').textContent=USER[0].toUpperCase();u.querySelector('b').textContent=USER;u.onclick=()=>go('me');
+ const r=el('div');r.style.cssText='display:flex;gap:8px';
+ const th=el('button','ibtn');th.id='tsd';th.setAttribute('aria-label','Сменить тему');th.onclick=toggleTheme;
+ const lo=el('button','ibtn');lo.innerHTML=svg('out',17);lo.setAttribute('aria-label','Выйти');lo.onclick=logout;
+ u.style.flex='1';r.append(u,th,lo);ft.append(r);
+ const tb=$('#tabs');tb.innerHTML='';
+ TABS.forEach(([id,ic,t,lock])=>{const b=el('button','tb'+(st.view===id?' on':''));const p=el('span','pl');p.innerHTML=svg(ic,21);b.append(p,el('span','',t));if(lock){const l=el('i','lk');l.innerHTML=svg('lock',9);b.append(l)}b.onclick=()=>go(id);tb.append(b)});
+ paintTheme();
+}
+function draw(){
+ const m=$('#main');m.innerHTML='';
+ if(st.view==='home')home(m);else if(st.view==='neuro')neuro(m);else if(st.view==='tg')tg(m);else me(m);
+}
+function home(m){
+ const sc=el('div','scroll');const hr=new Date().getHours();
+ const h=el('div','hello');
+ h.innerHTML=`<h1>${hr<5?'Доброй ночи':hr<12?'Доброе утро':hr<18?'Добрый день':'Добрый вечер'}, <span></span></h1><p>Что будем делать сегодня?</p>`;h.querySelector('span').textContent=USER;sc.append(h);
+ const hero=el('div','hero');
+ hero.innerHTML=`<span class="pl">${svg('send',170)}</span><h2>Автоматизируй свой Telegram-канал</h2><p>Автопостинг по расписанию, посты и разбор видео — в приложении V-Agent.</p><div class="row"><a class="btn w" href="index.html#download">Скачать приложение</a><button class="btn g" id="hl">Подробнее</button></div>`;
+ hero.querySelector('#hl').onclick=()=>go('tg');sc.append(hero);
+ const s=el('div','sec');s.innerHTML='<h3>Быстрый доступ</h3>';sc.append(s);
+ const g=el('div','bento');
+ Object.entries(MODES).forEach(([id,c],i)=>{const b=el('button','qc'+(i<2?' big':''));b.style.setProperty('--c',c.c);b.innerHTML=`<span class="ib">${svg(c.i,24)}</span><div><b>${c.t}</b><small>${c.s}</small></div><span class="go">${svg('arrow',18)}</span>`;b.onclick=()=>go('neuro',id);g.append(b)});
+ const v=el('button','qc wide off');v.innerHTML=`<span class="ib">${svg('film',24)}</span><div><b>Видео</b><small>Пересказ и промпт — в приложении</small></div><span class="go">${svg('lock',18)}</span>`;v.onclick=()=>go('tg');g.append(v);
+ sc.append(g);m.append(sc);
+}
+function tg(m){
+ const sc=el('div','scroll');
+ sc.innerHTML=`<div class="lockp"><div class="ib">${svg('lock',38)}</div><h3>Только в приложении</h3><p>Эти функции работают в приложении V-Agent и доступны по Premium-подписке.</p>
+ <div class="feat"><div><span class="ib" style="--c:#38BDF8">${svg('clock',17)}</span>Автопостинг в Telegram по расписанию</div><div><span class="ib" style="--c:#FBBF24">${svg('zap',17)}</span>Автосоздание постов для канала</div><div><span class="ib" style="--c:#E879F9">${svg('film',17)}</span>Разбор видео: текст, пересказ и промпт</div></div>
+ <a class="btn" href="index.html#download">Скачать приложение</a></div>`;
+ m.append(sc);
+}
+function neuro(m){
+ const c=MODES[st.mode];st.chats[st.mode]||(st.chats[st.mode]=[]);
+ m.style.setProperty('--c',c.c);
+ const hd=el('div','mh');const pill=el('button','pill');pill.innerHTML=`<span class="ib">${svg(c.i,19)}</span><div><b>${c.t}</b><small>${c.s}</small></div><span class="cv">${svg('chev',16)}</span>`;pill.onclick=()=>{if(!isDesk())openSheet()};
+ const nw=el('button','btn g sm');nw.innerHTML=svg('plus',16)+'<span>Новый чат</span>';nw.style.marginLeft='auto';nw.onclick=()=>{if(st.busy)return;st.chats[st.mode]=[];save();draw()};
+ hd.append(pill,nw);m.append(hd);
+ const box=el('div','box');box.id='box';m.append(box);
+ if(!cf()){const w=el('button','warn');w.innerHTML=svg('alert',18)+'<span>Добавь ключ Cloudflare в разделе «Профиль», чтобы ИИ заработал</span>';w.onclick=()=>go('me');m.append(w)}
+ if(st.mode==='image'||st.mode==='templates'){
+  const o=el('div','opts');
+  (st.mode==='image'?Object.entries(STY).map(([k,v])=>[k,v[0]]):TPL.map(t=>[t[0],t[1]])).forEach(([k,t])=>{const cur=st.mode==='image'?st.style:st.tpl;const b=el('button','op'+(k===cur?' on':''),t);b.onclick=()=>{st[st.mode==='image'?'style':'tpl']=k;[...o.children].forEach(x=>x.classList.remove('on'));b.classList.add('on')};o.append(b)});m.append(o);
+ }
+ const f=el('div','inp');const ta=el('textarea');ta.rows=1;ta.placeholder=c.h;ta.id='ta';
+ const sb=el('button','send');sb.id='sb';sb.innerHTML=svg('up',20);sb.setAttribute('aria-label','Отправить');sb.onclick=send;
+ ta.onkeydown=e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send()}};
+ ta.oninput=()=>{ta.style.height='auto';ta.style.height=Math.min(ta.scrollHeight,140)+'px'};
+ f.append(ta,sb);m.append(f);
+ paint();
+}
+function paint(){
+ const box=$('#box');if(!box)return;box.innerHTML='';const c=MODES[st.mode],list=st.chats[st.mode]||[];
+ if(!list.length){
+  const e=el('div','empty');e.innerHTML=`<div class="ib">${svg(c.i,34)}</div><h3>${c.t}</h3><p>${c.intro}</p>`;
+  c.ex.forEach(x=>{const b=el('button','ex',x);b.onclick=()=>{$('#ta').value=x;$('#ta').focus()};e.append(b)});box.append(e);return;
+ }
+ list.forEach(msg=>box.append(bubble(msg)));box.scrollTop=box.scrollHeight;
+}
+function bubble(msg){
+ const u=msg.r==='u';const w=el('div','m '+(u?'u':'a')+(msg.e?' e':''));
+ if(!u){const av=el('span','av');av.innerHTML=svg(MODES[st.mode].i,16);w.append(av)}
+ const b=el('div','bd');
+ if(msg.img){const i=el('img');i.src='data:image/jpeg;base64,'+msg.img;b.append(i);const a=el('div','act');const dl=el('a');dl.innerHTML=svg('down',14)+'Скачать';dl.href=i.src;dl.download='v-agent.jpg';a.append(dl);b.append(a)}
+ else{b.append(document.createTextNode(msg.t));if(!u&&!msg.e){const a=el('div','act');const cp=el('button');cp.innerHTML=svg('copy',14)+'<span>Копировать</span>';cp.onclick=()=>{navigator.clipboard&&navigator.clipboard.writeText(msg.t);cp.querySelector('span').textContent='Скопировано'};a.append(cp);b.append(a)}}
+ w.append(b);return w;
+}
+async function send(){
+ const ta=$('#ta');const text=(ta.value||'').trim();if(!text||st.busy)return;
+ const mode=st.mode,list=st.chats[mode]||(st.chats[mode]=[]);
+ list.push({r:'u',t:text});ta.value='';ta.style.height='auto';st.busy=true;$('#sb').disabled=true;paint();
+ const th=el('div','m a think');const av=el('span','av');av.innerHTML=svg(MODES[mode].i,16);const tb=el('div','bd');tb.append(document.createTextNode(MODES[mode].w));const dt=el('span','dots');dt.innerHTML='<i></i><i></i><i></i>';tb.append(dt);th.append(av,tb);$('#box').append(th);$('#box').scrollTop=1e9;
+ const msg={r:'a',t:''};
+ try{
+  if(mode==='chat'){
+   const ctx=list.slice(-10).filter(x=>!x.e&&x.t).map(x=>({role:x.r==='u'?'user':'assistant',content:x.t}));
+   msg.t=await chatAI([{role:'system',content:SYS},...ctx],1200);
+  }else if(mode==='image'){
+   let p=text;if(/[а-яё]/i.test(p))p=await chatAI([{role:'system',content:'Translate the user text to English for an image generator. Output only the translation.'},{role:'user',content:p}],200)||p;
+   const d=await ai('/ai/image',{prompt:p+', '+STY[st.style][1]});msg.img=d.image;msg.t='Картинка';
+  }else if(mode==='ideas'){
+   msg.t=await chatAI([{role:'system',content:'Ты креативный SMM-редактор. Выдаёшь только нумерованный список, без пояснений.'},{role:'user',content:`Придумай 10 свежих, конкретных идей для постов в соцсетях на тему: «${text}». Каждая идея — одна строка: цепляющий заголовок и короткая суть. Нумерованный список 1–10, на русском.`}],900);
+  }else if(mode==='templates'){
+   const t=TPL.find(x=>x[0]===st.tpl)||TPL[0];
+   msg.t=await chatAI([{role:'system',content:'Ты SMM-редактор. Выдаёшь только готовый пост без комментариев.'},{role:'user',content:`Напиши пост по шаблону «${t[1]}».\nТема: ${text}\nСтруктура: ${t[2]}.\nПиши на русском, живым языком, без HTML и Markdown.`}],1200);
+  }else{
+   const r=await chatAI([{role:'system',content:'Ты помогаешь подбирать хештеги для соцсетей.'},{role:'user',content:`Тема: «${text}». Сгенерируй РОВНО 20 хештегов по теме. Каждый хештег — одно обычное русское слово, слова не склеивать. Выведи только хештеги через пробел.`}],400);
+   const tags=[...new Set((r.match(/#[\p{L}\d_]+/gu)||[]).map(x=>x.toLowerCase()))].slice(0,20);msg.t=tags.length?tags.join(' '):r;
+  }
+  msg.t=(msg.t||'').replace(/\*\*/g,'').trim();if(!msg.t&&!msg.img)throw new Error('Пустой ответ, попробуй ещё раз');
+ }catch(e){msg.t='❌ '+e.message;msg.e=true}
+ list.push(msg);if(list.length>40)list.splice(0,list.length-40);save();st.busy=false;
+ if(st.mode===mode&&st.view==='neuro'){$('#sb').disabled=false;paint()}
+}
+function openSheet(){
+ const sh=$('#sh');sh.innerHTML='<span class="grab"></span><h3>Что делаем?</h3><p>Выбери режим — чат останется тем же.</p>';
+ Object.entries(MODES).forEach(([id,c])=>{const b=el('button','si'+(id===st.mode?' on':''));b.style.setProperty('--c',c.c);b.innerHTML=`<span class="ib">${svg(c.i,19)}</span><span><b>${c.t}</b><small>${c.s}</small></span>${id===st.mode?'<span class="tk">'+svg('check',18)+'</span>':''}`;b.onclick=()=>{closeSheet();setTimeout(()=>{st.mode=id;drawNav();draw()},180)};sh.append(b)});
+ $('#sheet').classList.add('on');let y0=0;sh.ontouchstart=e=>y0=e.touches[0].clientY;sh.ontouchend=e=>{if(e.changedTouches[0].clientY-y0>70&&sh.scrollTop<=0)closeSheet()};
+}
+const closeSheet=()=>$('#sheet').classList.remove('on');
+function me(m){
+ const sc=el('div','scroll');const k=cf();
+ sc.innerHTML=`<div class="cards" style="padding-top:12px">
+ <div class="who"><div class="ava" id="ava2"></div><div><h2 id="nm2"></h2><p>Аккаунт V-Agent</p></div></div>
+ <div class="card"><h3>Ключ Cloudflare <span class="badge ${k?'ok':''}"><i></i>${k?'Подключён':'Не добавлен'}</span></h3><p>Нужен для работы ИИ (текст и картинки). Хранится только в этом браузере.</p>
+ <input class="f" id="tk" type="password" placeholder="API токен (cfut_…)" value="${k?'••••••••':''}" autocomplete="off"><input class="f" id="ac" placeholder="Account ID (32 символа или вся ссылка)" value="${k?k.account:''}" autocomplete="off">
+ <div class="row"><button class="btn" onclick="saveKey()">Сохранить и проверить</button>${k?'<button class="btn g" onclick="delKey()">Удалить</button>':''}</div><div class="st" id="ks"></div></div>
+ <div class="card"><h3>Сменить пароль</h3><p>Введи старый и новый пароль.</p><input class="f" id="op" type="password" placeholder="Старый пароль" autocomplete="current-password"><input class="f" id="np" type="password" placeholder="Новый пароль (от 4 символов)" autocomplete="new-password"><div class="row"><button class="btn" onclick="chPass()">Сменить пароль</button></div><div class="st" id="ps"></div></div>
+ <div class="card span2"><h3>О V-Agent</h3><p>Помощник для авторов и админов каналов: чат с ИИ, картинки, идеи, шаблоны постов и хештеги. Автопостинг в Telegram и разбор видео — в приложении.</p><div class="row"><a class="btn g" href="index.html#download">Скачать приложение</a><button class="btn g" onclick="logout()">${svg('out',16)}Выйти</button></div></div></div>`;
+ m.append(sc);$('#ava2').textContent=USER[0].toUpperCase();$('#nm2').textContent=USER;
+}
+async function saveKey(){
+ const s=$('#ks');let tk=$('#tk').value.trim();const old=cf();if(tk.startsWith('•')&&old)tk=old.token;
+ const a=($('#ac').value.match(/[a-f0-9]{32}/i)||[''])[0];
+ if(tk.length<20||!a){s.className='st er';s.textContent='Проверь токен и Account ID';return}
+ localStorage.setItem(CKEY,JSON.stringify({token:tk,account:a}));s.className='st';s.textContent='Проверяю…';
+ try{await chatAI([{role:'user',content:'Ответь одним словом: привет'}],20);s.className='st ok';s.textContent='Ключ работает ✓'}catch(e){s.className='st er';s.textContent=e.message}
+}
+function delKey(){localStorage.removeItem(CKEY);draw()}
+async function chPass(){
+ const s=$('#ps'),o=$('#op').value,n=$('#np').value;if(!o||n.length<4){s.className='st er';s.textContent='Заполни поля (новый пароль от 4 символов)';return}
+ try{const r=await fetch(API+'/change-password',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:USER,old_password:o,new_password:n})});const d=await r.json();s.className='st '+(r.ok?'ok':'er');s.textContent=r.ok?'Пароль изменён ✓':(d.error||'Ошибка')}catch(e){s.className='st er';s.textContent='Нет связи с сервером'}
+}
+function logout(){localStorage.removeItem('vagent_user');location.href='web.html'}
+
+let dp;const ios=/iPad|iPhone|iPod/.test(navigator.userAgent),sa=matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+const showPwa=()=>{if(!sa&&!localStorage.getItem('pwa_dismissed')&&innerWidth<900)setTimeout(()=>$('#pwa').classList.add('on'),2500)};
+if(ios){$('#pwab').textContent='Как?';showPwa()}
+addEventListener('beforeinstallprompt',e=>{e.preventDefault();dp=e;showPwa()});
+$('#pwab').onclick=()=>{if(ios)alert('Нажми «Поделиться» внизу экрана → «На экран Домой» → «Добавить».');else if(dp){dp.prompt();dp=null}};
+function closePwa(){$('#pwa').classList.remove('on');localStorage.setItem('pwa_dismissed','1')}
+let wasDesk=isDesk();addEventListener('resize',()=>{if(isDesk()!==wasDesk){wasDesk=isDesk();drawNav()}});
+drawNav();draw();
 </script>
 </body>
 </html>
