@@ -13,7 +13,7 @@
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;background:var(--bg);color:var(--ink);font:400 15px/1.5 Onest,system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
 button,input,textarea{font:inherit;color:inherit}
-[data-theme=light]{--bg:#EEF0F5;--card:rgba(255,255,255,.85);--ink:#151A21;--mute:#667085;--line:rgba(21,26,33,.12);--nav:rgba(255,255,255,.88);--sf:rgba(255,255,255,.8);--sf2:rgba(255,255,255,.95);--bub:#fff;--hov:rgba(21,26,33,.05);--gh:rgba(21,26,33,.07);--sheet:#fff}
+[data-theme=light]{--bg:#EEF0F5;--card:rgba(255,255,255,.85);--ink:#151A21;--mute:#667085;--line:rgba(21,26,33,.12);--nav:rgba(10,10,15,.85);--sf:rgba(255,255,255,.8);--sf2:rgba(255,255,255,.95);--bub:#fff;--hov:rgba(21,26,33,.05);--gh:rgba(21,26,33,.07);--sheet:#fff}
 [data-theme=light] .glow{background:radial-gradient(circle at 0 0,rgba(135,148,255,.28),transparent 50%),radial-gradient(circle at 100% 100%,rgba(192,38,211,.14),transparent 50%)}
 [data-theme=light] .nav,[data-theme=light] .tabs{box-shadow:0 10px 30px rgba(21,26,33,.12)}
 .tsw{position:relative;width:56px;height:30px;border-radius:15px;border:1px solid var(--line);background:var(--gh);cursor:pointer;padding:0;flex:none;display:none}
@@ -25,12 +25,18 @@ button,input,textarea{font:inherit;color:inherit}
 .tsw.in{display:none}@media(min-width:900px){.tsw.in{display:block}}
 .glow{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(circle at 0 0,rgba(30,40,90,.45),transparent 50%),radial-gradient(circle at 100% 100%,rgba(60,15,70,.35),transparent 50%)}
 .nav{position:fixed;top:12px;left:50%;transform:translateX(-50%);width:calc(100% - 24px);max-width:1180px;z-index:30;display:flex;justify-content:space-between;align-items:center;padding:9px 16px;background:var(--nav);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--line);border-radius:22px;box-shadow:0 10px 30px rgba(0,0,0,.6)}
-.logo{display:flex;align-items:center;gap:10px;font:600 17px Unbounded,sans-serif;color:var(--ink);text-decoration:none}
-.logo img{width:30px;height:30px;border-radius:8px}
+.logo{display:flex;align-items:center;text-decoration:none}
+.logo img{height:28px;width:auto;object-fit:contain;display:block}
 .nr{display:flex;align-items:center;gap:10px}
-.chip{display:flex;align-items:center;gap:8px;padding:5px 12px 5px 5px;border:1px solid var(--line);border-radius:30px;background:rgba(255,255,255,.04);font-size:13px}
+.chip{position:relative;display:flex;align-items:center;gap:8px;padding:5px 12px 5px 5px;border:1px solid var(--line);border-radius:30px;background:rgba(255,255,255,.04);font-size:13px;cursor:pointer;user-select:none}
 .ava{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--ac),#c026d3);display:grid;place-items:center;font-weight:600;font-size:13px;color:#fff}
 .lnk{background:none;border:0;color:var(--mute);cursor:pointer;font-size:13px;padding:6px 8px;border-radius:8px;text-decoration:none}.lnk:hover{color:var(--ink);background:rgba(255,255,255,.06)}
+.pmenu{position:absolute;top:46px;right:0;min-width:200px;background:var(--sheet);border:1px solid var(--line);border-radius:16px;box-shadow:0 20px 50px rgba(0,0,0,.6);padding:6px;display:none;z-index:60}
+.pmenu.on{display:block;animation:up .18s ease both}
+.pmenu button{display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;border:0;background:none;color:var(--ink);font-size:14px;border-radius:10px;cursor:pointer;text-align:left}
+.pmenu button:hover{background:var(--hov)}
+.pmenu button svg{color:var(--mute)}
+.pmenu .sep{height:1px;background:var(--line);margin:4px 6px}
 .app{position:relative;z-index:1;height:100dvh;padding:76px 12px 0;display:flex;gap:16px;max-width:1180px;margin:0 auto}
 .side{width:230px;flex:none;display:none;flex-direction:column;gap:4px;padding:10px;background:var(--card);border:1px solid var(--line);border-radius:22px;align-self:flex-start;max-height:calc(100dvh - 92px);overflow:auto}
 .si{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:14px;background:none;border:0;cursor:pointer;text-align:left;color:var(--mute);font-size:14px;font-weight:500}
@@ -94,18 +100,25 @@ main{flex:1;min-width:0;display:flex;flex-direction:column;height:calc(100dvh - 
  .app{padding-top:84px}main{height:calc(100dvh - 96px)}.scroll{padding-bottom:20px}
  .nav{top:16px}.pwa{bottom:20px}
 }
-@media(max-width:899px){.nav .lnk.pcl,.chip span.nm{display:none}.chip{padding:3px}.m{max-width:88%}}
+@media(max-width:899px){.nav .lnk.pcl,.chip span.nm{display:none}.chip{padding:3px}.m{max-width:88%}.logo img{height:22px}}
 </style>
 </head>
 <body>
 <div class="glow"></div>
 <nav class="nav">
- <a class="logo" href="index.html"><img src="icon.png" alt=""><span>V-Agent</span></a>
+ <a class="logo" href="index.html"><img src="img.png" alt="V-Agent"></a>
  <div class="nr">
   <button class="tsw in pcl" id="tsw" onclick="toggleTheme()" aria-label="Тема"><span class="k"></span><span id="tsi"></span></button>
   <a class="lnk pcl" href="index.html#download">Скачать</a>
-  <div class="chip"><div class="ava" id="ava"></div><span class="nm" id="nm"></span></div>
-  <button class="lnk" onclick="logout()">Выйти</button>
+  <div class="chip" id="chip" onclick="togglePMenu(event)">
+    <div class="ava" id="ava"></div>
+    <span class="nm" id="nm"></span>
+  </div>
+  <div class="pmenu" id="pmenu">
+    <button onclick="closePMenu();go('me')"><span id="pm-ic1"></span>Настройки</button>
+    <div class="sep"></div>
+    <button onclick="closePMenu();logout()"><span id="pm-ic2"></span>Выйти</button>
+  </div>
  </div>
 </nav>
 
@@ -144,6 +157,12 @@ try{st.chats=JSON.parse(localStorage.getItem(LKEY)||'{}')}catch(e){}
 const save=()=>{try{localStorage.setItem(LKEY,JSON.stringify(st.chats))}catch(e){for(const k in st.chats)st.chats[k].forEach(m=>delete m.img);try{localStorage.setItem(LKEY,JSON.stringify(st.chats))}catch(_){}}};
 const cf=()=>{try{return JSON.parse(localStorage.getItem(CKEY)||'null')}catch(e){return null}};
 $('#nm').textContent=USER;$('#ava').textContent=USER[0].toUpperCase();
+
+function togglePMenu(e){e.stopPropagation();$('#pmenu').classList.toggle('on')}
+function closePMenu(){$('#pmenu').classList.remove('on')}
+document.addEventListener('click',e=>{if(!e.target.closest('#chip')&&!e.target.closest('#pmenu'))closePMenu()});
+$('#pm-ic1').outerHTML=svg('user',16);
+$('#pm-ic2').outerHTML=svg('lock',16);
 
 async function ai(path,body){
  const k=cf();if(!k)throw new Error('Добавь ключ Cloudflare в разделе «Профиль»');

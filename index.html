@@ -11,7 +11,7 @@
         :root{
           --bg:#F1F3F6; --card:#FFFFFF; --ink:#151A21; --mute:#667085;
           --line:#DCE1E8; --accent:#3D5AFE; --accent-soft:#E6EAFF;
-          --r:18px; --nav:rgba(241,243,246,.85); --on:#fff; --shadow:rgba(21,26,33,.2);
+          --r:18px; --nav:rgba(14,17,22,.85); --on:#fff; --shadow:rgba(21,26,33,.2);
         }
         [data-theme="dark"]{
           --bg:#0E1116; --card:#171B22; --ink:#ECEFF4; --mute:#8B94A3;
@@ -29,20 +29,20 @@
         a{color:inherit;text-decoration:none}
         code{background:var(--accent-soft);padding:1px 7px;border-radius:6px;font-size:.9em}
 
-        /* NAV */
         .nav{
           position:sticky;top:0;z-index:10;
           display:flex;justify-content:space-between;align-items:center;
-          padding:18px max(24px,calc((100% - 1040px)/2));
+          height:64px;
+          padding:0 max(24px,calc((100% - 1040px)/2));
           background:var(--nav);backdrop-filter:blur(12px);
+          border-bottom:1px solid var(--line);
         }
-        .logo{display:inline-flex;align-items:center;gap:10px;font:600 17px "Unbounded",sans-serif;letter-spacing:-.02em}
-        .logo img{width:28px;height:28px;border-radius:7px;object-fit:cover}
-        .nav nav{display:flex;gap:28px}
-        .nav nav a{color:var(--mute);font-size:15px;transition:color .2s}
-        .nav nav a:hover{color:var(--ink)}
+        .logo{display:inline-flex;align-items:center;gap:10px}
+        .logo img{height:28px;width:auto;object-fit:contain;display:block}
+        .nav nav{display:flex;gap:28px;height:100%;align-items:center}
+        .nav nav a{color:#fff;opacity:.75;font-size:15px;transition:opacity .2s,color .2s;display:flex;align-items:center}
+        .nav nav a:hover{color:#fff;opacity:1}
 
-        /* USER BLOCK */
         .user-block {
             display: flex;
             align-items: center;
@@ -52,44 +52,23 @@
             border-radius: 20px;
             transition: background 0.3s;
         }
-        .user-block:hover {
-            background: var(--accent-soft);
-        }
+        .user-block:hover { background: rgba(255,255,255,.1); }
         .user-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: var(--accent);
-            color: var(--on);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            font-size: 14px;
+            width: 32px;height: 32px;border-radius: 50%;
+            background: var(--accent);color: #fff;
+            display: flex;align-items: center;justify-content: center;
+            font-weight: 600;font-size: 14px;
         }
-        .user-name {
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--ink);
-        }
+        .user-name { font-size: 14px;font-weight: 500;color: #fff; }
         .btn-login {
-            background: var(--accent);
-            color: var(--on);
-            border: none;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: transform 0.2s;
+            background: var(--accent);color: #fff;border: none;
+            padding: 8px 16px;border-radius: 20px;font-size: 14px;font-weight: 500;
+            cursor: pointer;transition: transform 0.2s;
         }
-        .btn-login:hover {
-            transform: scale(1.05);
-        }
+        .btn-login:hover { transform: scale(1.05); }
 
         main{max-width:1040px;margin:0 auto;padding:0 24px}
 
-        /* HERO */
         .hero{padding:60px 0 70px;text-align:center}
         h1{
           font:600 clamp(34px,6vw,64px)/1.1 "Unbounded",sans-serif;
@@ -106,7 +85,6 @@
         }
         @keyframes rise{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
 
-        /* BUTTONS */
         .btn{
           display:inline-block;padding:13px 26px;border-radius:999px;
           border:1px solid var(--line);background:var(--card);
@@ -116,28 +94,20 @@
         }
         .btn:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(21,26,33,.08)}
         .btn:active{transform:translateY(0) scale(.97)}
-        .btn.primary{background:var(--accent);border-color:var(--accent);color:var(--on)}
+        .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
         .btn.primary:hover{box-shadow:0 10px 24px color-mix(in srgb,var(--accent) 40%,transparent)}
 
-        /* AI CHAT DEMO */
         @property --a{syntax:"<angle>";initial-value:0deg;inherits:false}
         @keyframes spin{to{--a:360deg}}
 
         .composer{
-          position:relative;
-          max-width: 680px;
-          min-height: 380px;
-          margin: 54px auto 0;
-          text-align:left;
-          background:var(--card);
-          border:1px solid var(--line);
-          border-radius:var(--r);
-          padding:24px 28px;
+          position:relative;max-width: 680px;min-height: 380px;margin: 54px auto 0;
+          text-align:left;background:var(--card);border:1px solid var(--line);
+          border-radius:var(--r);padding:24px 28px;
           box-shadow:0 30px 60px -30px var(--shadow);
           transition:box-shadow .6s;
           animation:rise 1s .4s cubic-bezier(.2,.7,.2,1) both;
-          display: flex;
-          flex-direction: column;
+          display: flex;flex-direction: column;
         }
         .composer::before{
           content:"";position:absolute;inset:-1px;border-radius:inherit;padding:1.5px;pointer-events:none;
@@ -153,13 +123,7 @@
         .dot{width:9px;height:9px;border-radius:50%;background:var(--line)}
         .composer-title{margin-left:10px;color:var(--mute);font-size:13px}
 
-        .chat{
-          flex: 1;
-          display:flex;
-          flex-direction:column;
-          gap:24px;
-          transition:opacity .5s,transform .5s;
-        }
+        .chat{flex: 1;display:flex;flex-direction:column;gap:24px;transition:opacity .5s,transform .5s;}
         .chat.out{opacity:0;transform:translateY(-8px)}
 
         .user-bubble{
@@ -172,19 +136,13 @@
         .ai-head{display:flex;align-items:center;gap:10px;margin-bottom:8px;font-size:13px;color:var(--mute)}
 
         .orb{
-          width: 24px;
-          height: 24px;
-          border-radius: 50%;
-          background-image: url('icon.png');
-          background-size: contain;
-          background-position: center;
-          background-repeat: no-repeat;
+          width: 24px;height: 24px;border-radius: 50%;
+          background-image: url('img.png');
+          background-size: contain;background-position: center;background-repeat: no-repeat;
           background-color: var(--accent-soft);
           transition: box-shadow .5s;
         }
-        .composer.busy .orb{
-          box-shadow: 0 0 20px var(--accent);
-        }
+        .composer.busy .orb{ box-shadow: 0 0 20px var(--accent); }
 
         .think{display:flex;gap:4px;opacity:0;transition:opacity .3s}
         .think.on{opacity:1}
@@ -193,10 +151,7 @@
         .think i:nth-child(3){animation-delay:.3s}
         @keyframes bounce{40%{transform:translateY(-5px)}}
 
-        .answer{
-          font-size: 18px;
-          line-height: 1.6;
-        }
+        .answer{font-size: 18px;line-height: 1.6;}
         .w{
           display:inline-block;white-space:pre;opacity:0;filter:blur(8px);transform:translateY(8px);
           transition:opacity .5s,filter .6s,transform .5s cubic-bezier(.2,.8,.2,1);
@@ -205,13 +160,11 @@
 
         .composer-bottom{
           display:flex;align-items:center;gap:10px;
-          margin-top: auto;
-          padding-top:16px;
+          margin-top: auto;padding-top:16px;
           border-top:1px solid var(--line);color:var(--mute);font-size:14px;
         }
         .composer-bottom svg{width:18px;height:18px;color:var(--accent);flex:none}
 
-        /* SECTIONS */
         .section{padding:80px 0}
         h2{font:600 clamp(26px,4vw,38px)/1.2 "Unbounded",sans-serif;letter-spacing:-.03em;margin-bottom:36px}
         h3{font-weight:600;font-size:18px;margin-bottom:6px}
@@ -223,7 +176,6 @@
         }
         .card p,.file p,.panel p{color:var(--mute)}
 
-        /* DOWNLOADS */
         .downloads{display:grid;gap:14px}
         .file{
           display:flex;justify-content:space-between;align-items:center;gap:20px;
@@ -235,32 +187,20 @@
           box-shadow: 0 8px 20px rgba(21,26,33,.08);
           border-color: var(--accent);
         }
+        .file .btn { min-width: 180px;text-align: center;flex-shrink: 0;padding: 13px 26px; }
 
-        .file .btn {
-          min-width: 180px;
-          text-align: center;
-          flex-shrink: 0;
-          padding: 13px 26px;
-        }
-
-        /* TABS */
         .tabs{
-          position:relative;
-          display:flex;
-          width: 100%;
-          gap:4px;padding:5px;
+          position:relative;display:flex;width: 100%;gap:4px;padding:5px;
           background:var(--card);border:1px solid var(--line);border-radius:999px;
           overflow-x:auto;
         }
         .tab{
           position:relative;z-index:1;border:0;background:none;cursor:pointer;
-          flex: 1 1 0px;
-          padding:12px 10px;
-          border-radius:999px;font:500 15px "Onest",sans-serif;
-          color:var(--mute);white-space:nowrap;transition:color .25s;
-          text-align: center;
+          flex: 1 1 0px;padding:12px 10px;border-radius:999px;
+          font:500 15px "Onest",sans-serif;color:var(--mute);white-space:nowrap;
+          transition:color .25s;text-align: center;
         }
-        .tab.active{color:var(--on)}
+        .tab.active{color:#fff}
         .tab-indicator{
           position:absolute;top:5px;left:0;height:calc(100% - 10px);width:0;
           background:var(--accent);border-radius:999px;
@@ -277,15 +217,13 @@
           padding:9px 18px;border-radius:999px;background:var(--bg);font-size:14px;font-weight:500;
           transition:background .2s,color .2s,transform .2s;
         }
-        .link:hover{background:var(--accent);color:var(--on);transform:translateY(-2px)}
+        .link:hover{background:var(--accent);color:#fff;transform:translateY(-2px)}
 
-        /* SCROLL REVEAL */
         .reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.2,1)}
         .reveal.in{opacity:1;transform:none}
 
         .footer{padding:50px 24px;text-align:center;color:var(--mute);font-size:14px}
 
-        /* A11Y */
         :focus-visible{outline:2px solid var(--accent);outline-offset:3px}
         @media (max-width:640px){
           .nav nav{gap:16px}
@@ -296,11 +234,10 @@
           .reveal{opacity:1;transform:none}
         }
 
-        /* THEME TOGGLE */
         .nav-right{display:flex;align-items:center;gap:22px}
         .theme{
           position:relative;width:40px;height:40px;border-radius:50%;cursor:pointer;
-          border:1px solid var(--line);background:var(--card);color:var(--ink);
+          border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06);color:#fff;
           transition:transform .2s,border-color .2s;
         }
         .theme:hover{border-color:var(--accent)}
@@ -318,7 +255,6 @@
         ::view-transition-new(root){z-index:2}
         .fade-theme,.fade-theme *{transition:background-color .45s ease,color .45s ease,border-color .45s ease,fill .45s ease,box-shadow .45s ease!important}
 
-        /* SOCIALS */
         .socials{
           position:fixed;left:20px;bottom:20px;z-index:20;
           display:flex;gap:4px;padding:5px;
@@ -328,103 +264,60 @@
           width:40px;height:40px;display:grid;place-items:center;border-radius:50%;
           color:var(--mute);transition:background .25s,color .25s,transform .25s;
         }
-        .socials a:hover{background:var(--accent);color:var(--on);transform:translateY(-3px)}
+        .socials a:hover{background:var(--accent);color:#fff;transform:translateY(-3px)}
         .socials svg{width:20px;height:20px}
 
-        /* МОДАЛЬНОЕ ОКНО ВХОДА */
         .auth-modal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(8px);
-            z-index: 100;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
+            display: none;position: fixed;inset: 0;
+            background: rgba(0, 0, 0, 0.7);backdrop-filter: blur(8px);
+            z-index: 100;align-items: center;justify-content: center;padding: 20px;
         }
         .auth-modal.show { display: flex; }
         .auth-card {
-            background: var(--card);
-            border: 1px solid var(--line);
-            border-radius: 24px;
-            padding: 30px;
-            max-width: 400px;
-            width: 100%;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-            position: relative;
+            background: var(--card);border: 1px solid var(--line);border-radius: 24px;
+            padding: 30px;max-width: 400px;width: 100%;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);position: relative;
             animation: appear 0.3s cubic-bezier(.2,.7,.2,1) both;
         }
         .auth-close {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: none;
-            border: none;
-            color: var(--mute);
-            font-size: 24px;
-            cursor: pointer;
+            position: absolute;top: 15px;right: 15px;
+            background: none;border: none;color: var(--mute);
+            font-size: 24px;cursor: pointer;
         }
         .auth-title {
-            font-family: "Unbounded", sans-serif;
-            font-size: 24px;
-            margin-bottom: 20px;
-            text-align: center;
-            color: var(--ink);
+            font-family: "Unbounded", sans-serif;font-size: 24px;
+            margin-bottom: 20px;text-align: center;color: var(--ink);
         }
         .auth-input {
-            width: 100%;
-            padding: 14px 16px;
-            margin-bottom: 12px;
-            border-radius: 12px;
-            border: 1px solid var(--line);
-            background: var(--bg);
-            color: var(--ink);
-            font-size: 15px;
-            outline: none;
-            transition: 0.3s;
+            width: 100%;padding: 14px 16px;margin-bottom: 12px;
+            border-radius: 12px;border: 1px solid var(--line);
+            background: var(--bg);color: var(--ink);
+            font-size: 15px;outline: none;transition: 0.3s;
         }
-        .auth-input:focus {
-            border-color: var(--accent);
-        }
+        .auth-input:focus { border-color: var(--accent); }
         .auth-btn {
-            width: 100%;
-            padding: 14px;
-            border-radius: 12px;
-            border: none;
-            background: var(--accent);
-            color: var(--on);
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 10px;
-            transition: 0.3s;
+            width: 100%;padding: 14px;border-radius: 12px;border: none;
+            background: var(--accent);color: #fff;font-size: 15px;font-weight: 600;
+            cursor: pointer;margin-top: 10px;transition: 0.3s;
         }
         .auth-btn:hover { background: #6A7AFF; }
         .auth-switch {
-            text-align: center;
-            font-size: 13px;
-            color: var(--mute);
-            margin-top: 15px;
-            cursor: pointer;
+            text-align: center;font-size: 13px;color: var(--mute);
+            margin-top: 15px;cursor: pointer;
         }
         .auth-switch:hover { color: var(--ink); }
         .auth-error {
-            color: #FF5252;
-            font-size: 13px;
-            text-align: center;
-            margin-bottom: 10px;
-            display: none;
+            color: #FF5252;font-size: 13px;text-align: center;
+            margin-bottom: 10px;display: none;
         }
 
-        /* ================= MOBILE ================= */
         html,body{overflow-x:clip}
         html{-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent}
         button,a{touch-action:manipulation}
         img,svg{max-width:100%}
 
         @media (max-width:760px){
-          .nav{padding:12px 18px}
+          .nav{padding:0 18px;height:56px}
           .nav-right{gap:12px}
           .nav nav{gap:14px}
           .nav nav a{font-size:14px}
@@ -442,15 +335,13 @@
           .nav nav a:not([href="#download"]){display:none}
           h1{font-size:clamp(26px,8.4vw,40px);overflow-wrap:anywhere}
           h2{font-size:clamp(22px,6.6vw,30px)}
-          .logo{font-size:15px}
-          .logo img{width:24px;height:24px}
+          .logo img{height:24px}
 
           .btn{padding:10px 18px; font-size:14px;}
           .cta .btn{flex:1 1 140px;text-align:center; white-space: nowrap;}
 
           .composer {
-            padding:16px;
-            min-height: 280px;
+            padding:16px;min-height: 280px;
             animation: rise 0.8s cubic-bezier(.2,.7,.2,1) both;
           }
 
@@ -474,7 +365,7 @@
             backdrop-filter:blur(10px);
           }
           .socials a{width:38px;height:38px}
-          .footer{padding-bottom:96px}
+          .footer{padding-bottom:96px;}
         }
 
         @media (max-width:360px){
@@ -490,12 +381,9 @@
 </head>
 <body>
 
-    <!-- NAV -->
     <header class="nav">
-        <!-- Логотип -->
         <div class="logo">
-            <img src="icon.png" alt="V-AGENT">
-            <span>V-AGENT</span>
+            <img src="img.png" alt="V-AGENT">
         </div>
         <div class="nav-right">
             <nav>
@@ -504,12 +392,10 @@
                 <a href="#socials">Соцсети</a>
             </nav>
 
-            <!-- БЛОК ПОЛЬЗОВАТЕЛЯ -->
             <div id="user-container">
                 <button class="btn-login" onclick="openAuthModal()">Войти</button>
             </div>
 
-            <!-- Кнопка смены темы -->
             <button id="theme" class="theme" aria-label="Сменить тему">
                 <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
                 <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
@@ -518,7 +404,6 @@
     </header>
 
     <main>
-        <!-- HERO -->
         <section class="hero">
             <h1>Контент под контролем</h1>
             <p class="lead">V-AGENT — умный помощник для создания постов, генерации картинок и автопостинга в Telegram.</p>
@@ -527,7 +412,6 @@
                 <a href="#features" class="btn">Узнать больше</a>
             </div>
 
-            <!-- ДЕМО-АНИМАЦИЯ -->
             <div class="composer" id="composer">
                 <div class="composer-top">
                     <span class="dot"></span>
@@ -535,7 +419,6 @@
                     <span class="dot"></span>
                     <span class="composer-title">Новый запрос к ИИ</span>
                 </div>
-
                 <div class="chat" id="chat">
                     <div class="user-bubble"><span id="question"></span></div>
                     <div class="ai">
@@ -547,7 +430,6 @@
                         <div class="answer" id="answer"></div>
                     </div>
                 </div>
-
                 <div class="composer-bottom">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5-6.5 4.5 2-7.5-5.5-4.5h7z"></path></svg>
                     <span>Работает на базе искусственного интеллекта</span>
@@ -555,7 +437,6 @@
             </div>
         </section>
 
-        <!-- FEATURES -->
         <section id="features" class="section reveal">
             <h2>Что умеет V-AGENT</h2>
             <p class="sub">Все инструменты для ведения канала в одном приложении.</p>
@@ -575,13 +456,10 @@
             </div>
         </section>
 
-        <!-- DOWNLOADS -->
         <section id="download" class="section reveal">
             <h2>Получить доступ</h2>
             <p class="sub">Работает в браузере, на Windows и Android.</p>
             <div class="downloads">
-
-                <!-- Веб-версия -->
                 <div class="file">
                     <div>
                         <h3>Веб-версия</h3>
@@ -589,8 +467,6 @@
                     </div>
                     <a href="web.html" id="web-btn" class="btn primary">Открыть Web</a>
                 </div>
-
-                <!-- Windows -->
                 <div class="file">
                     <div>
                         <h3>Версия для Windows</h3>
@@ -598,8 +474,6 @@
                     </div>
                     <a href="https://github.com/vagentcust/vagent-site/releases/download/v1.1/V-AGENT.exe" class="btn primary">Скачать .exe</a>
                 </div>
-
-                <!-- Android -->
                 <div class="file">
                     <div>
                         <h3>Версия для Android</h3>
@@ -607,11 +481,9 @@
                     </div>
                     <a href="#" class="btn primary">Скачать .apk</a>
                 </div>
-
             </div>
         </section>
 
-        <!-- SOCIALS TABS -->
         <section id="socials" class="section reveal">
             <h2>Соцсети и поддержка</h2>
             <p class="sub">Следите за обновлениями или задайте вопрос.</p>
@@ -624,7 +496,6 @@
                 <div class="tab-indicator"></div>
             </div>
 
-            <!-- Вкладка 1: Telegram -->
             <div id="tab-1" class="panel active">
                 <h3>Telegram-канал</h3>
                 <p>Там выходят анонсы новых версий и советы по контенту.</p>
@@ -632,8 +503,6 @@
                     <a href="https://t.me/FirstMediaTeam" class="link" target="_blank">Перейти в канал</a>
                 </div>
             </div>
-
-            <!-- Вкладка 2: YouTube -->
             <div id="tab-2" class="panel">
                 <h3>YouTube</h3>
                 <p>Видео-обзоры и туториалы по работе с приложением.</p>
@@ -641,8 +510,6 @@
                     <a href="https://youtube.com/@ваш_канал" class="link" target="_blank">Смотреть на YouTube</a>
                 </div>
             </div>
-
-            <!-- Вкладка 3: ВКонтакте -->
             <div id="tab-3" class="panel">
                 <h3>ВКонтакте</h3>
                 <p>Наша группа ВК с новостями и обсуждениями.</p>
@@ -650,8 +517,6 @@
                     <a href="https://vk.com/ваша_группа" class="link" target="_blank">Перейти в группу</a>
                 </div>
             </div>
-
-            <!-- Вкладка 4: Помощь -->
             <div id="tab-4" class="panel">
                 <h3>Нужна помощь?</h3>
                 <p>Если возникли вопросы при установке, напишите нам.</p>
@@ -666,7 +531,6 @@
         <p>&copy; <span id="year"></span> V-AGENT. Все права защищены.</p>
     </footer>
 
-    <!-- Кнопки соцсетей внизу слева (фиксированные) -->
     <div class="socials">
         <a href="https://t.me/FirstMediaTeam" target="_blank" aria-label="Telegram">
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
@@ -676,7 +540,6 @@
         </a>
     </div>
 
-    <!-- МОДАЛЬНОЕ ОКНО ВХОДА -->
     <div id="auth-modal" class="auth-modal" onclick="closeAuthModal(event)">
         <div class="auth-card" onclick="event.stopPropagation()">
             <button class="auth-close" onclick="closeAuthModal()">×</button>
@@ -695,10 +558,8 @@
         const $$ = s => document.querySelectorAll(s);
         const sleep = ms => new Promise(r => setTimeout(r, ms));
         const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-
         const safe = fn => { try { fn(); } catch (e) { console.warn('V-agent script:', e); } };
 
-        // ---------- Логика авторизации ----------
         let isLoginMode = true;
 
         function checkUser() {
@@ -723,19 +584,16 @@
             $('#auth-password').value = '';
             $('#auth-confirm').value = '';
         }
-
         function closeAuthModal(e) {
             if (e && e.target !== e.currentTarget) return;
             $('#auth-modal').classList.remove('show');
         }
-
         function toggleAuthMode() {
             isLoginMode = !isLoginMode;
             const title = $('#auth-title');
             const btn = $('#auth-submit');
             const switchBtn = $('#auth-switch');
             const confirm = $('#auth-confirm');
-
             if (isLoginMode) {
                 title.textContent = 'Вход';
                 btn.textContent = 'Войти';
@@ -761,7 +619,6 @@
                 errorBox.style.display = 'block';
                 return;
             }
-
             if (!isLoginMode && pass !== confirm) {
                 errorBox.textContent = 'Пароли не совпадают';
                 errorBox.style.display = 'block';
@@ -781,9 +638,7 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username: user, password: pass })
                 });
-
                 const data = await res.json();
-
                 if (res.ok) {
                     localStorage.setItem('vagent_user', user);
                     closeAuthModal();
@@ -802,25 +657,16 @@
         }
 
         checkUser();
-
-        // ---------- Год в подвале ----------
         safe(() => { const y = $('#year'); if (y) y.textContent = new Date().getFullYear(); });
 
-        // ---------- Определение устройства (ПК или Телефон) ----------
         safe(() => {
           const webBtn = $('#web-btn');
           if (!webBtn) return;
-
           const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-
-          if (isMobile) {
-            webBtn.textContent = "Открыть Web (Телефон)";
-          } else {
-            webBtn.textContent = "Открыть Web (ПК)";
-          }
+          if (isMobile) webBtn.textContent = "Открыть Web (Телефон)";
+          else webBtn.textContent = "Открыть Web (ПК)";
         });
 
-        // ---------- Смена темы ----------
         safe(() => {
           const root = document.documentElement;
           const btn = $('#theme');
@@ -828,7 +674,7 @@
 
           let meta = $('meta[name="theme-color"]');
           if (!meta) { meta = document.createElement('meta'); meta.name = 'theme-color'; document.head.appendChild(meta); }
-          const paintBar = () => { meta.content = root.dataset.theme === 'dark' ? '#0E1116' : '#F1F3F6'; };
+          const paintBar = () => { meta.content = '#0E1116'; };
           paintBar();
 
           const simple = matchMedia('(max-width: 760px), (hover: none)').matches;
@@ -842,7 +688,6 @@
               paintBar();
               try { localStorage.setItem('theme', next); } catch (e) {}
             };
-
             if (simple || reduce || !document.startViewTransition) {
               busy = true;
               root.classList.add('fade-theme');
@@ -852,7 +697,6 @@
               });
               return;
             }
-
             busy = true;
             const r = btn.getBoundingClientRect();
             const x = r.left + r.width / 2, y = r.top + r.height / 2;
@@ -868,7 +712,6 @@
           });
         });
 
-        // ---------- Вкладки с ползунком ----------
         safe(() => {
           const tabs = $$('.tab'), panels = $$('.panel'), indicator = $('.tab-indicator');
           if (!tabs.length || !indicator) return;
@@ -892,7 +735,6 @@
           place();
         });
 
-        // ---------- Появление блоков при прокрутке ----------
         safe(() => {
           const items = $$('.reveal');
           if (!('IntersectionObserver' in window)) { items.forEach(el => el.classList.add('in')); return; }
@@ -902,7 +744,6 @@
           items.forEach(el => io.observe(el));
         });
 
-        // ---------- Демо: ИИ отвечает на вопрос ----------
         const QA = [
           ['Придумай пост про запуск V-agent', 'V-agent запущен. Он пишет посты, подбирает время и сам публикует их в Telegram. Больше никакой рутины.'],
           ['Что опубликовать на этой неделе?', 'Три идеи: разбор новой функции, подборка советов и короткий опрос для подписчиков. Расписание уже составлено.'],
@@ -914,9 +755,7 @@
           const chat = $('#chat'), comp = $('#composer');
           if (!q || !ans) return;
           const bubble = q.parentElement;
-
           if (reduce) { q.textContent = QA[0][0]; ans.textContent = QA[0][1]; return; }
-
           let i = 0;
           while (true) {
             const [Q, A] = QA[i++ % QA.length];
@@ -927,12 +766,10 @@
             bubble.classList.add('ping');
             await sleep(350);
             bubble.classList.remove('ping');
-
             if (comp) comp.classList.add('busy');
             if (think) think.classList.add('on');
             await sleep(1500);
             if (think) think.classList.remove('on');
-
             const words = A.split(' ');
             for (const [k, w] of words.entries()) {
               const s = document.createElement('span');
