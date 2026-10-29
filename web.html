@@ -5,13 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>V-AGENT — Вход</title>
     <link rel="icon" href="icon.ico" type="image/x-icon">
-
-    <!-- Шрифты -->
     <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600&family=Unbounded:wght@600&display=swap" rel="stylesheet">
 
     <style>
         :root {
-            --bg: #050508; /* Очень темный, почти черный фон */
+            --bg: #050508;
             --card: rgba(23, 27, 34, 0.45);
             --ink: #ECEFF4;
             --mute: #8B94A3;
@@ -27,9 +25,7 @@
             scrollbar-width: none;
             -ms-overflow-style: none;
         }
-        html::-webkit-scrollbar, body::-webkit-scrollbar {
-            display: none;
-        }
+        html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; }
 
         body {
             background-color: var(--bg);
@@ -44,7 +40,6 @@
             padding-bottom: 10px;
         }
 
-        /* --- ГЛУБОКИЙ ТЕМНЫЙ ФОН --- */
         .bg-glow {
             position: fixed;
             top: 0; left: 0;
@@ -52,7 +47,6 @@
             z-index: 0;
             pointer-events: none;
             background-color: #050508;
-            /* Очень темные, едва заметные градиенты по краям */
             background-image:
                 radial-gradient(circle at 0% 0%, rgba(30, 40, 90, 0.4) 0%, transparent 50%),
                 radial-gradient(circle at 100% 100%, rgba(60, 15, 70, 0.3) 0%, transparent 50%);
@@ -60,7 +54,6 @@
             background-size: cover;
         }
 
-        /* ВЕРХНЯЯ ПАНЕЛЬ */
         .nav {
             position: absolute;
             top: 20px;
@@ -94,19 +87,9 @@
             transition: opacity 0.3s;
         }
         .nav-logo:hover { opacity: 0.8; }
-        .nav-logo img.nav-icon {
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-            object-fit: cover;
-        }
+        .nav-logo img.nav-icon { width: 32px; height: 32px; border-radius: 8px; object-fit: cover; }
 
-        .nav-right {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
+        .nav-right { display: flex; align-items: center; gap: 20px; }
         .nav-link {
             position: relative;
             color: var(--mute);
@@ -121,26 +104,7 @@
             white-space: nowrap;
             padding: 8px 4px;
         }
-        .nav-link:hover {
-            color: var(--ink);
-            background: rgba(255,255,255,0.05);
-            border-radius: 6px;
-        }
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0%;
-            height: 2px;
-            background: #fff;
-            transition: width 0.3s ease;
-            border-radius: 2px;
-        }
-        .nav-link:hover::after {
-            width: 100%;
-        }
+        .nav-link:hover { color: var(--ink); background: rgba(255,255,255,0.05); border-radius: 6px; }
 
         .bell-wrapper { position: relative; }
         .nav-bell {
@@ -156,20 +120,8 @@
             transition: all 0.3s;
             position: relative;
         }
-        .nav-bell:hover {
-            background: rgba(255, 255, 255, 0.15);
-            border-color: var(--accent);
-            transform: scale(1.05);
-        }
-        .nav-bell svg {
-            width: 18px;
-            height: 18px;
-            stroke: var(--ink);
-            fill: none;
-            stroke-width: 2;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-        }
+        .nav-bell:hover { background: rgba(255, 255, 255, 0.15); border-color: var(--accent); transform: scale(1.05); }
+        .nav-bell svg { width: 18px; height: 18px; stroke: var(--ink); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
         .bell-badge {
             position: absolute;
@@ -228,20 +180,14 @@
             color: var(--mute);
             line-height: 1.4;
         }
-        .notif-item.error {
-            border-left: 3px solid #FF3B30;
-            color: #FF8A80;
-        }
-        .notif-item.success {
-            border-left: 3px solid #4CAF50;
-            color: #81C784;
-        }
+        .notif-item.error { border-left: 3px solid #FF3B30; color: #FF8A80; }
+        .notif-item.success { border-left: 3px solid #4CAF50; color: #81C784; }
 
         .glass-container {
             position: relative;
             z-index: 10;
             width: 100%;
-            max-width: 440px;
+            max-width: 440px; /* ВЕРНУЛ НОРМАЛЬНУЮ ШИРИНУ */
             padding: 20px;
             margin-top: 40px;
             animation: appear 0.8s cubic-bezier(.2,.7,.2,1) both;
@@ -338,18 +284,10 @@
             box-shadow: 0 8px 25px rgba(135, 148, 255, 0.4);
             margin-top: 8px;
         }
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 30px rgba(135, 148, 255, 0.6);
-        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(135, 148, 255, 0.6); }
         .btn-primary:disabled { opacity: 0.7; cursor: not-allowed; }
-        .btn-link {
-            background: none;
-            color: var(--mute);
-            font-size: 13px;
-            margin-top: 18px;
-            padding: 5px;
-        }
+
+        .btn-link { background: none; color: var(--mute); font-size: 13px; margin-top: 18px; padding: 5px; }
         .btn-link:hover { color: var(--ink); }
 
         .modal {
@@ -362,10 +300,7 @@
             border: 1px solid var(--line); max-width: 500px; width: 90%;
             position: relative; max-height: 80vh; overflow-y: auto;
         }
-        .modal-close {
-            position: absolute; top: 15px; right: 15px;
-            background: none; border: none; color: var(--mute); font-size: 24px; cursor: pointer;
-        }
+        .modal-close { position: absolute; top: 15px; right: 15px; background: none; border: none; color: var(--mute); font-size: 24px; cursor: pointer; }
         .modal-content h3 { font-size: 16px; color: var(--accent); margin: 15px 0 5px; }
         .modal-content p { color: var(--mute); font-size: 14px; line-height: 1.5; margin-bottom: 10px; }
 
@@ -470,7 +405,6 @@
     </div>
 
     <script>
-        // Уже вошёл — сразу в веб-версию
         if (localStorage.getItem('vagent_user')) { location.replace('./app.html'); }
 
         const bellBtn = document.getElementById('bell-btn');
@@ -514,11 +448,11 @@
                     <h3>1. Никакого хранения в открытом виде</h3>
                     <p>Мы <b>никогда</b> не сохраняем ваш пароль в виде обычного текста. Если база данных будет украдена, злоумышленники не смогут прочитать пароли.</p>
                     <h3>2. Хеширование (SHA-256 и соль)</h3>
-                    <p>Ваш пароль превращается в уникальный набор символов с помощью криптографического алгоритма <b>SHA-256</b>. Перед этим к паролю добавляется случайная "соль" (уникальная строка для каждого пользователя). Это делает невозможным использование "радужных таблиц" для взлома.</p>
+                    <p>Ваш пароль превращается в уникальный набор символов с помощью криптографического алгоритма <b>SHA-256</b>. Перед этим к паролю добавляется случайная "соль".</p>
                     <h3>3. Где хранятся данные?</h3>
-                    <p>Данные хранятся в защищенном облаке Cloudflare (Workers KV). Cloudflare использует шифрование AES-256 для всех данных в состоянии покоя. Даже сотрудники Cloudflare не могут прочитать ваши данные.</p>
+                    <p>Данные хранятся в защищенном облаке Cloudflare (Workers KV).</p>
                     <h3>4. Мы не видим ваши пароли</h3>
-                    <p>Даже администраторы V-AGENT не имеют доступа к вашим паролям. Мы видим только хеш (набор символов). Восстановить из него исходный пароль математически невозможно.</p>
+                    <p>Даже администраторы V-AGENT не имеют доступа к вашим паролям.</p>
                 `;
             }
         }

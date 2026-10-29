@@ -277,7 +277,6 @@ async function chPass(){
 }
 function logout(){localStorage.removeItem('vagent_user');location.href='web.html'}
 
-// установка на главный экран
 let dp;const ios=/iPad|iPhone|iPod/.test(navigator.userAgent),sa=matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
 const showPwa=()=>{if(!sa&&!localStorage.getItem('pwa_dismissed')&&innerWidth<900)setTimeout(()=>$('#pwa').classList.add('on'),2500)};
 if(ios){$('#pwab').textContent='Как?';showPwa()}

@@ -4,11 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>V-AGENT — Твой помощник по созданию контента</title>
-
-    <!-- Иконка сайта -->
     <link rel="icon" href="icon.ico" type="image/x-icon">
-
-    <!-- Шрифты -->
     <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600&family=Unbounded:wght@600&display=swap" rel="stylesheet">
 
     <style>
@@ -45,6 +41,51 @@
         .nav nav{display:flex;gap:28px}
         .nav nav a{color:var(--mute);font-size:15px;transition:color .2s}
         .nav nav a:hover{color:var(--ink)}
+
+        /* USER BLOCK */
+        .user-block {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            padding: 6px 12px;
+            border-radius: 20px;
+            transition: background 0.3s;
+        }
+        .user-block:hover {
+            background: var(--accent-soft);
+        }
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: var(--on);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        .user-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--ink);
+        }
+        .btn-login {
+            background: var(--accent);
+            color: var(--on);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .btn-login:hover {
+            transform: scale(1.05);
+        }
 
         main{max-width:1040px;margin:0 auto;padding:0 24px}
 
@@ -121,11 +162,11 @@
         }
         .chat.out{opacity:0;transform:translateY(-8px)}
 
-        .user{
+        .user-bubble{
           align-self:flex-end;max-width:88%;min-height:42px;padding:10px 16px;
           background:var(--accent-soft);border-radius:16px 16px 4px 16px;font-size:15px;
         }
-        .user.ping{animation:ping .35s ease}
+        .user-bubble.ping{animation:ping .35s ease}
         @keyframes ping{50%{transform:scale(1.05)}}
 
         .ai-head{display:flex;align-items:center;gap:10px;margin-bottom:8px;font-size:13px;color:var(--mute)}
@@ -290,6 +331,92 @@
         .socials a:hover{background:var(--accent);color:var(--on);transform:translateY(-3px)}
         .socials svg{width:20px;height:20px}
 
+        /* МОДАЛЬНОЕ ОКНО ВХОДА */
+        .auth-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .auth-modal.show { display: flex; }
+        .auth-card {
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: 24px;
+            padding: 30px;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            position: relative;
+            animation: appear 0.3s cubic-bezier(.2,.7,.2,1) both;
+        }
+        .auth-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: var(--mute);
+            font-size: 24px;
+            cursor: pointer;
+        }
+        .auth-title {
+            font-family: "Unbounded", sans-serif;
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+            color: var(--ink);
+        }
+        .auth-input {
+            width: 100%;
+            padding: 14px 16px;
+            margin-bottom: 12px;
+            border-radius: 12px;
+            border: 1px solid var(--line);
+            background: var(--bg);
+            color: var(--ink);
+            font-size: 15px;
+            outline: none;
+            transition: 0.3s;
+        }
+        .auth-input:focus {
+            border-color: var(--accent);
+        }
+        .auth-btn {
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            border: none;
+            background: var(--accent);
+            color: var(--on);
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: 0.3s;
+        }
+        .auth-btn:hover { background: #6A7AFF; }
+        .auth-switch {
+            text-align: center;
+            font-size: 13px;
+            color: var(--mute);
+            margin-top: 15px;
+            cursor: pointer;
+        }
+        .auth-switch:hover { color: var(--ink); }
+        .auth-error {
+            color: #FF5252;
+            font-size: 13px;
+            text-align: center;
+            margin-bottom: 10px;
+            display: none;
+        }
+
         /* ================= MOBILE ================= */
         html,body{overflow-x:clip}
         html{-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent}
@@ -328,7 +455,7 @@
           }
 
           .chat{gap:16px}
-          .user{max-width:94%;font-size:14px}
+          .user-bubble{max-width:94%;font-size:14px}
           .answer{font-size:16px}
           .composer-bottom{font-size:13px;gap:8px}
 
@@ -376,6 +503,12 @@
                 <a href="#download">Получить доступ</a>
                 <a href="#socials">Соцсети</a>
             </nav>
+
+            <!-- БЛОК ПОЛЬЗОВАТЕЛЯ -->
+            <div id="user-container">
+                <button class="btn-login" onclick="openAuthModal()">Войти</button>
+            </div>
+
             <!-- Кнопка смены темы -->
             <button id="theme" class="theme" aria-label="Сменить тему">
                 <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
@@ -404,7 +537,7 @@
                 </div>
 
                 <div class="chat" id="chat">
-                    <div class="user"><span id="question"></span></div>
+                    <div class="user-bubble"><span id="question"></span></div>
                     <div class="ai">
                         <div class="ai-head">
                             <span class="orb"></span>
@@ -543,7 +676,20 @@
         </a>
     </div>
 
-    <!-- Твой JS -->
+    <!-- МОДАЛЬНОЕ ОКНО ВХОДА -->
+    <div id="auth-modal" class="auth-modal" onclick="closeAuthModal(event)">
+        <div class="auth-card" onclick="event.stopPropagation()">
+            <button class="auth-close" onclick="closeAuthModal()">×</button>
+            <h2 class="auth-title" id="auth-title">Вход</h2>
+            <div class="auth-error" id="auth-error"></div>
+            <input type="text" class="auth-input" id="auth-username" placeholder="Логин">
+            <input type="password" class="auth-input" id="auth-password" placeholder="Пароль">
+            <input type="password" class="auth-input" id="auth-confirm" placeholder="Подтверди пароль" style="display: none;">
+            <button class="auth-btn" id="auth-submit" onclick="handleAuth()">Войти</button>
+            <div class="auth-switch" id="auth-switch" onclick="toggleAuthMode()">Нет аккаунта? Зарегистрироваться</div>
+        </div>
+    </div>
+
     <script>
         const $ = s => document.querySelector(s);
         const $$ = s => document.querySelectorAll(s);
@@ -551,6 +697,111 @@
         const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
         const safe = fn => { try { fn(); } catch (e) { console.warn('V-agent script:', e); } };
+
+        // ---------- Логика авторизации ----------
+        let isLoginMode = true;
+
+        function checkUser() {
+            const user = localStorage.getItem('vagent_user');
+            const container = $('#user-container');
+            if (user) {
+                container.innerHTML = `
+                    <div class="user-block" onclick="window.location.href='app.html'">
+                        <div class="user-avatar">${user[0].toUpperCase()}</div>
+                        <span class="user-name">${user}</span>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = `<button class="btn-login" onclick="openAuthModal()">Войти</button>`;
+            }
+        }
+
+        function openAuthModal() {
+            $('#auth-modal').classList.add('show');
+            $('#auth-error').style.display = 'none';
+            $('#auth-username').value = '';
+            $('#auth-password').value = '';
+            $('#auth-confirm').value = '';
+        }
+
+        function closeAuthModal(e) {
+            if (e && e.target !== e.currentTarget) return;
+            $('#auth-modal').classList.remove('show');
+        }
+
+        function toggleAuthMode() {
+            isLoginMode = !isLoginMode;
+            const title = $('#auth-title');
+            const btn = $('#auth-submit');
+            const switchBtn = $('#auth-switch');
+            const confirm = $('#auth-confirm');
+
+            if (isLoginMode) {
+                title.textContent = 'Вход';
+                btn.textContent = 'Войти';
+                switchBtn.textContent = 'Нет аккаунта? Зарегистрироваться';
+                confirm.style.display = 'none';
+            } else {
+                title.textContent = 'Регистрация';
+                btn.textContent = 'Создать аккаунт';
+                switchBtn.textContent = 'Уже есть аккаунт? Войти';
+                confirm.style.display = 'block';
+            }
+        }
+
+        async function handleAuth() {
+            const user = $('#auth-username').value.trim();
+            const pass = $('#auth-password').value.trim();
+            const confirm = $('#auth-confirm').value.trim();
+            const errorBox = $('#auth-error');
+            const btn = $('#auth-submit');
+
+            if (!user || !pass) {
+                errorBox.textContent = 'Заполни все поля';
+                errorBox.style.display = 'block';
+                return;
+            }
+
+            if (!isLoginMode && pass !== confirm) {
+                errorBox.textContent = 'Пароли не совпадают';
+                errorBox.style.display = 'block';
+                return;
+            }
+
+            btn.disabled = true;
+            btn.textContent = 'Загрузка...';
+
+            const url = isLoginMode
+                ? 'https://vagent-backend.novalaim11.workers.dev/login'
+                : 'https://vagent-backend.novalaim11.workers.dev/register';
+
+            try {
+                const res = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: user, password: pass })
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    localStorage.setItem('vagent_user', user);
+                    closeAuthModal();
+                    checkUser();
+                } else {
+                    errorBox.textContent = data.error || 'Ошибка';
+                    errorBox.style.display = 'block';
+                }
+            } catch (e) {
+                errorBox.textContent = 'Нет связи с сервером';
+                errorBox.style.display = 'block';
+            } finally {
+                btn.disabled = false;
+                btn.textContent = isLoginMode ? 'Войти' : 'Создать аккаунт';
+            }
+        }
+
+        checkUser();
 
         // ---------- Год в подвале ----------
         safe(() => { const y = $('#year'); if (y) y.textContent = new Date().getFullYear(); });
