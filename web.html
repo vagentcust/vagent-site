@@ -57,6 +57,7 @@
         }
         .bg-glow.loaded { opacity: 1; }
 
+        /* ЭКРАН ЗАГРУЗКИ (5 секунд) */
         .loader-screen {
             position: fixed;
             inset: 0;
@@ -66,7 +67,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 22px;
+            gap: 30px;
             transition: opacity 0.6s ease;
         }
         .loader-screen.hidden {
@@ -74,8 +75,8 @@
             pointer-events: none;
         }
         .loader-logo {
-            width: 260px;
-            max-width: 82vw;
+            width: 520px; /* Увеличено в 2 раза */
+            max-width: 95vw;
             animation: pulse 1.5s ease-in-out infinite alternate;
         }
         @keyframes pulse {
@@ -83,7 +84,7 @@
             100% { transform: scale(1.02); opacity: 1; }
         }
         .loader-bar-container {
-            width: 220px;
+            width: 260px;
             height: 4px;
             background: rgba(255, 255, 255, 0.2);
             border-radius: 4px;
@@ -418,9 +419,8 @@
             .btn { padding: 13px; font-size: 14px; }
             .btn-link { margin-top: 14px; font-size: 12px; }
 
-            .loader-logo { width: 200px; }
-            .loader-bar-container { width: 180px; }
-            .loader-marquee { width: 220px; }
+            .loader-logo { width: 320px; }
+            .loader-bar-container { width: 200px; }
         }
     </style>
 </head>
@@ -432,9 +432,6 @@
         <div class="loader-bar-container">
             <div class="loader-bar" id="loader-bar"></div>
         </div>
-        <div class="loader-marquee">
-            <span id="loader-marquee-text">Загрузка V-AGENT… Подключаемся к серверу… Почти готово…</span>
-        </div>
     </div>
 
     <!-- ОСНОВНОЙ КОНТЕНТ -->
@@ -443,7 +440,7 @@
     <nav class="nav">
         <div class="nav-left">
             <a href="index.html" class="nav-logo">
-                <img src="img.png" alt="V-AGENT" class="nav-icon">
+                <img src="logo_text.png" alt="V-AGENT" class="nav-icon">
             </a>
         </div>
         <div class="nav-right">
