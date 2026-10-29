@@ -10,7 +10,7 @@
     <style>
         :root {
             --bg: #050508;
-            --card: rgba(23, 27, 34, 0.45);
+            --card: rgba(23, 27, 34, 0.6);
             --ink: #ECEFF4;
             --mute: #8B94A3;
             --line: rgba(255, 255, 255, 0.12);
@@ -62,23 +62,25 @@
         .loader-screen {
             position: fixed;
             inset: 0;
-            background: transparent; /* Пропускаем фон, чтобы панель была видна */
-            z-index: 9999;
+            background: transparent;
+            z-index: 9998; /* Ниже верхней панели, чтобы она не перекрывалась */
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             gap: 25px;
             transition: opacity 0.6s ease;
-            pointer-events: none; /* Чтобы панель сверху была кликабельна, если нужно */
+            pointer-events: none;
         }
         .loader-screen.hidden {
             opacity: 0;
             pointer-events: none;
         }
+
+        /* ЛОГО В 2 РАЗА МЕНЬШЕ */
         .loader-logo {
-            width: 260px; /* Стандартный размер, не меняем */
-            max-width: 82vw;
+            width: 130px;
+            max-width: 50vw;
             animation: pulse 1.5s ease-in-out infinite alternate;
         }
         @keyframes pulse {
@@ -86,7 +88,7 @@
             100% { transform: scale(1.02); opacity: 1; }
         }
         .loader-bar-container {
-            width: 260px;
+            width: 160px;
             height: 4px;
             background: rgba(255, 255, 255, 0.2);
             border-radius: 4px;
@@ -109,7 +111,7 @@
             transform: translateX(-50%);
             width: calc(100% - 40px);
             max-width: 1040px;
-            z-index: 10000; /* Выше экрана загрузки */
+            z-index: 10000; /* Всегда на самом верху */
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -133,7 +135,7 @@
         }
         .nav-logo:hover { opacity: 0.8; }
 
-        /* УВЕЛИЧИВАЕМ ЛОГО В ПАНЕЛИ В 2 РАЗА */
+        /* ЛОГО В ПАНЕЛИ УВЕЛИЧЕНО */
         .nav-logo img.nav-icon {
             height: 52px;
             width: auto;
@@ -251,7 +253,7 @@
         .notif-item.error { border-left: 3px solid #FF3B30; color: #FF8A80; }
         .notif-item.success { border-left: 3px solid #4CAF50; color: #81C784; }
 
-        /* ФОРМА */
+        /* ФОРМА (В ТОЧНОСТИ КАК НА СКРИНШОТЕ) */
         .glass-container {
             position: relative;
             z-index: 10;
@@ -276,13 +278,13 @@
 
         .glass-card {
             width: 100%;
-            background: var(--card);
+            background: rgba(23, 27, 34, 0.6); /* Темный прозрачный фон */
             backdrop-filter: blur(30px);
             -webkit-backdrop-filter: blur(30px);
             border: 1px solid var(--line);
             border-radius: 28px;
             padding: 30px 30px 40px 30px;
-            box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255,255,255,0.1);
+            box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255,255,255,0.05);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -295,7 +297,7 @@
             margin-bottom: 20px;
         }
 
-        /* УВЕЛИЧИВАЕМ ЛОГО НА ФОРМЕ */
+        /* ЛОГО НАД ФОРМОЙ */
         .logo-img {
             width: 320px;
             max-width: 100%;
@@ -391,7 +393,6 @@
 
         @media (max-width: 600px) {
             .nav { top: 10px; width: calc(100% - 20px); height: 52px; padding: 0 14px; border-radius: 16px; }
-            /* На мобилках лого тоже больше, но не настолько, чтобы сломать панель */
             .nav-logo img.nav-icon { height: 32px; }
             .nav-link[href*="#download"] { display: none; }
             .nav-right { gap: 10px; }
@@ -410,14 +411,14 @@
             .btn { padding: 13px; font-size: 14px; }
             .btn-link { margin-top: 14px; font-size: 12px; }
 
-            .loader-logo { width: 200px; }
-            .loader-bar-container { width: 180px; }
+            .loader-logo { width: 100px; }
+            .loader-bar-container { width: 140px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- ЭКРАН ЗАГРУЗКИ (5 СЕКУНД) -->
+    <!-- ЭКРАН ЗАГРУЗКИ -->
     <div class="loader-screen" id="loader">
         <img src="logo_text.png" alt="V-AGENT" class="loader-logo">
         <div class="loader-bar-container">
@@ -428,7 +429,7 @@
     <!-- ОСНОВНОЙ КОНТЕНТ -->
     <div class="bg-glow" id="bg-glow"></div>
 
-    <!-- ПАНЕЛЬ (Всегда сверху, даже при загрузке) -->
+    <!-- ПАНЕЛЬ -->
     <nav class="nav">
         <div class="nav-left">
             <a href="index.html" class="nav-logo">
@@ -458,9 +459,9 @@
         </div>
     </nav>
 
+    <!-- ФОРМА ВХОДА -->
     <div class="glass-container" id="main-form">
         <div class="glass-card">
-
             <div class="logo-block">
                 <img src="logo_text.png" alt="V-AGENT" class="logo-img">
             </div>
@@ -491,7 +492,6 @@
 
             <button id="submit-btn" class="btn btn-primary">Войти</button>
             <button id="switch-btn" class="btn btn-link">Нет аккаунта? Зарегистрироваться</button>
-
         </div>
     </div>
 
@@ -504,6 +504,7 @@
     </div>
 
     <script>
+        // 5 СЕКУНД ЗАГРУЗКИ
         window.addEventListener('load', () => {
             const bar = document.getElementById('loader-bar');
             const loader = document.getElementById('loader');
@@ -512,7 +513,7 @@
 
             let progress = 0;
             const interval = setInterval(() => {
-                progress += 2; // 5 секунд = 50 шагов * 50мс
+                progress += 2;
                 bar.style.width = Math.min(progress, 100) + '%';
 
                 if (progress >= 100) {
@@ -567,11 +568,11 @@
                 modalText.innerHTML = `
                     <p>Мы серьезно относимся к защите ваших данных. Вот как именно мы обеспечиваем безопасность ваших паролей:</p>
                     <h3>1. Никакого хранения в открытом виде</h3>
-                    <p>Мы <b>никогда</b> не сохраняем ваш пароль в виде обычного текста. Если база данных будет украдена, злоумышленники не смогут прочитать пароли.</p>
+                    <p>Мы <b>никогда</b> не сохраняем ваш пароль в виде обычного текста.</p>
                     <h3>2. Хеширование (SHA-256 и соль)</h3>
-                    <p>Ваш пароль превращается в уникальный набор символов с помощью криптографического алгоритма <b>SHA-256</b>. Перед этим к паролю добавляется случайная "соль".</p>
+                    <p>Ваш пароль превращается в уникальный набор символов с помощью алгоритма <b>SHA-256</b>.</p>
                     <h3>3. Где хранятся данные?</h3>
-                    <p>Данные хранятся в защищенном облаке Cloudflare (Workers KV) с шифрованием AES-256.</p>
+                    <p>Данные хранятся в защищенном облаке Cloudflare (Workers KV).</p>
                 `;
             }
         }
