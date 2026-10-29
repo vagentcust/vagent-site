@@ -43,6 +43,18 @@ svg{display:block}
  radial-gradient(60% 50% at 0% 0%,rgba(106,122,255,.18),transparent 70%),
  radial-gradient(50% 45% at 100% 100%,rgba(192,38,211,.08),transparent 70%)}
 
+/* ЭКРАН ЗАГРУЗКИ */
+.loader-screen {
+    position: fixed; inset: 0; background: #000000; z-index: 9999;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 25px;
+    transition: opacity 0.6s ease;
+}
+.loader-screen.hidden { opacity: 0; pointer-events: none; }
+.loader-logo { width: 400px; max-width: 90vw; animation: pulse 1.5s ease-in-out infinite alternate; }
+@keyframes pulse { 0% { transform: scale(1); opacity: 0.8; } 100% { transform: scale(1.02); opacity: 1; } }
+.loader-bar-container { width: 260px; height: 4px; background: rgba(255, 255, 255, 0.2); border-radius: 4px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.3); }
+.loader-bar { width: 0%; height: 100%; background: #FFFFFF; border-radius: 4px; transition: width 0.1s linear; }
+
 /* shell */
 .shell{position:relative;z-index:1;display:flex;height:100dvh}
 .stage{flex:1;min-width:0;display:flex;flex-direction:column;height:100dvh}
@@ -52,7 +64,7 @@ main{flex:1;min-height:0;position:relative;display:flex;flex-direction:column;wi
 
 /* sidebar */
 .side{display:none;width:272px;flex:none;flex-direction:column;padding:18px 14px 14px;background:var(--glass);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-right:1px solid var(--line);height:100dvh}
-.brand{display:flex;align-items:center;gap:11px;padding:2px 8px 18px;text-decoration:none;color:var(--ink);font:600 17px Unbounded,sans-serif}
+.brand{display:flex;align-items:center;gap:11px;padding:2px 8px 18px;text-decoration:none;color:var(--ink);font:600 17px Unbounded,sans-serif;cursor:pointer;}
 .brand img{width:32px;height:32px;border-radius:10px}
 .nav{display:flex;flex-direction:column;gap:2px;overflow:auto;scrollbar-width:none;flex:1}
 .nav::-webkit-scrollbar{display:none}
@@ -102,15 +114,36 @@ main{flex:1;min-height:0;position:relative;display:flex;flex-direction:column;wi
 .hello{padding:14px 2px 16px}
 .hello h1{font:600 26px/1.2 Unbounded,sans-serif;letter-spacing:-.01em}
 .hello p{color:var(--mute);margin-top:6px}
-.hero{position:relative;overflow:hidden;border-radius:28px;padding:26px;background:
- radial-gradient(90% 120% at 100% 0%,rgba(155,107,255,.55),transparent 60%),
- radial-gradient(80% 100% at 0% 100%,rgba(75,107,255,.5),transparent 60%),#0E1233;
- border:1px solid rgba(135,148,255,.35);color:#fff;box-shadow:var(--shadow)}
-.hero h2{font:600 24px/1.2 Unbounded,sans-serif;max-width:420px;margin:0 0 8px}
-.hero p{color:rgba(255,255,255,.72);max-width:400px;margin-bottom:18px;font-size:14px}
-.hero .pl{position:absolute;right:-14px;bottom:-22px;width:170px;height:170px;opacity:.16;transform:rotate(-14deg)}
-.hero .row{display:flex;gap:8px;flex-wrap:wrap;position:relative}
-.hero .btn.g{background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.18)}
+
+/* АНИМИРОВАННЫЙ БАННЕР */
+.hero{
+    position:relative;overflow:hidden;border-radius:28px;padding:26px;
+    background: linear-gradient(135deg, #0E1233, #1A1550, #0B0E22, #0E1233);
+    background-size: 300% 300%;
+    animation: gradientMove 8s ease infinite;
+    border:1px solid rgba(135,148,255,.35);color:#fff;box-shadow:var(--shadow)
+}
+@keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+.hero h2{font:600 24px/1.2 Unbounded,sans-serif;max-width:420px;margin:0 0 8px; position:relative; z-index:2;}
+.hero p{color:rgba(255,255,255,.72);max-width:400px;margin-bottom:18px;font-size:14px; position:relative; z-index:2;}
+.hero .pl{position:absolute;right:-14px;bottom:-22px;width:170px;height:170px;opacity:.16;transform:rotate(-14deg); animation: float 6s ease-in-out infinite; z-index:1;}
+@keyframes float {
+    0% { transform: translateY(0) rotate(-14deg); }
+    50% { transform: translateY(-15px) rotate(-4deg); }
+    100% { transform: translateY(0) rotate(-14deg); }
+}
+.hero .row{display:flex;gap:8px;flex-wrap:wrap;position:relative; z-index:2;}
+.hero .btn.g{background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.18); animation: pulseGlow 2s infinite;}
+@keyframes pulseGlow {
+    0% { box-shadow: 0 0 0 0 rgba(255,255,255,0.2); }
+    70% { box-shadow: 0 0 0 10px rgba(255,255,255,0); }
+    100% { box-shadow: 0 0 0 0 rgba(255,255,255,0); }
+}
+
 .sec{display:flex;align-items:baseline;justify-content:space-between;margin:26px 2px 12px}
 .sec h3{font:600 16px Onest,sans-serif}
 .bento{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
@@ -310,11 +343,18 @@ main{flex:1;min-height:0;position:relative;display:flex;flex-direction:column;wi
 .modal-content h3 { font-size: 16px; color: var(--ac); margin: 15px 0 5px; }
 .modal-content p { color: var(--mute); font-size: 14px; line-height: 1.5; margin-bottom: 10px; }
 
+/* ИНСТРУКЦИЯ В ПРОФИЛЕ */
+.cloud-steps { background: var(--p2); border-radius: 14px; padding: 12px; margin: 10px 0; font-size: 13px; line-height: 1.6; border: 1px solid var(--line); }
+.cloud-steps b { color: var(--ac); display: block; margin-bottom: 4px; }
+.cloud-steps ol { padding-left: 18px; color: var(--mute); }
+.cloud-steps li { margin-bottom: 6px; }
+.cloud-steps a { color: var(--ac); text-decoration: underline; cursor: pointer; }
+
 
 @media(min-width:900px){
  .gearf{display:grid;position:fixed;top:18px;right:24px;z-index:5}
  .side{display:flex}.tabs,.top{display:none}
- .top-nav{display:flex}
+ .top-nav{display:flex; background: #0D0F17; border-color: rgba(255,255,255,0.08);} /* Черная панель */
  main{padding:20px 32px 0;max-width:960px} /* СДВИГ ТЕКСТА ВНИЗ */
  .hello{padding-top:10px}.hello h1{font-size:30px}
  .hero{padding:34px 36px}.hero h2{font-size:28px;max-width:480px}
@@ -330,10 +370,20 @@ main{flex:1;min-height:0;position:relative;display:flex;flex-direction:column;wi
 </style>
 </head>
 <body>
+
+<!-- ЭКРАН ЗАГРУЗКИ -->
+<div class="loader-screen" id="loader">
+    <img src="img.png" alt="V-AGENT" class="loader-logo">
+    <div class="loader-bar-container">
+        <div class="loader-bar" id="loader-bar"></div>
+    </div>
+</div>
+
 <div class="aurora"></div>
 <div class="shell">
  <aside class="side">
-  <a class="brand" href="index.html"><img src="icon.png" alt=""><span>V-Agent</span></a>
+  <!-- КЛИКАБЕЛЬНЫЙ ЛОГОТИП -->
+  <a class="brand" href="javascript:void(0)" onclick="go('home')"><img src="icon.png" alt=""><span>V-Agent</span></a>
   <nav class="nav" id="side"></nav>
   <div class="foot" id="foot"></div>
  </aside>
@@ -341,7 +391,7 @@ main{flex:1;min-height:0;position:relative;display:flex;flex-direction:column;wi
 
   <!-- НОВАЯ ПАНЕЛЬ СВЕРХУ -->
   <nav class="top-nav">
-    <a class="logo" href="index.html"><img src="logo_text.png" alt="V-Agent"></a>
+    <a class="logo" href="javascript:void(0)" onclick="go('home')"><img src="logo_text.png" alt="V-Agent"></a>
     <div class="nav-right">
       <a href="index.html#download" class="lnk">Скачать</a>
       <a href="javascript:void(0)" class="lnk" onclick="openModal('privacy')">Безопасность</a>
@@ -373,7 +423,8 @@ main{flex:1;min-height:0;position:relative;display:flex;flex-direction:column;wi
   </nav>
 
   <header class="top">
-   <a class="brand" href="index.html"><img src="icon.png" alt=""><span>V-Agent</span></a>
+   <!-- КЛИКАБЕЛЬНЫЙ ЛОГОТИП МОБИЛКА -->
+   <a class="brand" href="javascript:void(0)" onclick="go('home')"><img src="icon.png" alt=""><span>V-Agent</span></a>
    <button class="ibtn gear" id="gm" onclick="go('me')" aria-label="Настройки"></button>
    <button class="ava" id="avm" onclick="go('me')" aria-label="Профиль"></button>
   </header>
@@ -397,6 +448,21 @@ main{flex:1;min-height:0;position:relative;display:flex;flex-direction:column;wi
 </div>
 
 <script>
+// СКРИПТ ЗАГРУЗКИ
+window.addEventListener('load', () => {
+    const bar = document.getElementById('loader-bar');
+    const loader = document.getElementById('loader');
+    let progress = 0;
+    const interval = setInterval(() => {
+        progress += 5;
+        if (bar) bar.style.width = Math.min(progress, 100) + '%';
+        if (progress >= 100) {
+            clearInterval(interval);
+            setTimeout(() => { if (loader) loader.classList.add('hidden'); }, 200);
+        }
+    }, 30);
+});
+
 const API='https://vagent-backend.novalaim11.workers.dev';
 const USER=localStorage.getItem('vagent_user');
 if(!USER)location.href='web.html';
@@ -551,9 +617,12 @@ function home(m){
  const sc=el('div','scroll stg');const hr=new Date().getHours();
  const h=el('div','hello');
  h.innerHTML=`<h1>${hr<5?'Доброй ночи':hr<12?'Доброе утро':hr<18?'Добрый день':'Добрый вечер'}, <span></span></h1><p>Что будем делать сегодня?</p>`;h.querySelector('span').textContent=USER;sc.append(h);
+
+ // АНИМИРОВАННЫЙ БАННЕР
  const hero=el('div','hero');
  hero.innerHTML=`<span class="pl">${svg('send',170)}</span><h2>Автоматизируй свой Telegram-канал</h2><p>Автопостинг по расписанию, посты и разбор видео — в приложении V-Agent.</p><div class="row"><a class="btn w" href="index.html#download">Скачать приложение</a><button class="btn g" id="hl">Подробнее</button></div>`;
  hero.querySelector('#hl').onclick=()=>go('tg');sc.append(hero);
+
  const s=el('div','sec');s.innerHTML='<h3>Быстрый доступ</h3>';sc.append(s);
  const g=el('div','bento stg');g.style.setProperty('--b',3);
  Object.entries(MODES).forEach(([id,c],i)=>{const b=el('button','qc'+(i<2?' big':''));b.style.setProperty('--c',c.c);b.innerHTML=`<span class="ib">${svg(c.i,24)}</span><div><b>${c.t}</b><small>${c.s}</small></div><span class="go">${svg('arrow',18)}</span>`;b.onclick=()=>go('neuro',id);g.append(b)});
@@ -643,6 +712,7 @@ function acc(ic,t,sub,badge,body,open){
 }
 function row(ic,t,sub,right,cls){const b=el('button','lh '+(cls||''));b.innerHTML=`<span class="ib">${svg(ic,17)}</span><span class="t"><b>${t}</b><small>${sub}</small></span>${right||''}`;const li=el('div','li');li.append(b);return [li,b]}
 function grp(t,items){const w=el('div');w.append(el('div','grp2',t));const l=el('div','list');items.forEach(i=>l.append(i));w.append(l);return w}
+
 function me(m){
  const sc=el('div','scroll stg');sc.style.cssText='max-width:680px;width:100%;margin:0 auto';const k=cf();const dark=document.documentElement.dataset.theme==='dark';
  const who=el('div','who');who.style.marginTop='12px';who.innerHTML='<div class="ava" id="ava2"></div><div><h2 id="nm2"></h2><p>Настройки аккаунта V-Agent</p></div>';sc.append(who);
@@ -651,7 +721,19 @@ function me(m){
  const [rt]=row('pal','Тема','Оформление приложения',seg);
  sc.append(grp('Внешний вид',[rt]));
  // AI
+ const cloudInstructions = `
+    <div class="cloud-steps">
+        <b>Как получить ключ (бесплатно):</b>
+        <ol>
+            <li>Зайди на <a href="https://dash.cloudflare.com" target="_blank">dash.cloudflare.com</a> и войди в аккаунт.</li>
+            <li>В левом меню найди <b>Workers & Pages</b>. Там будет твой <b>Account ID</b> (набор из 32 символов). Скопируй его.</li>
+            <li>Перейди в <b>My Profile</b> -> <b>API Tokens</b> -> <b>Create Token</b>.</li>
+            <li>Создай токен с правами <b>Workers AI (Read)</b>. Скопируй полученный токен (начинается на cfut_...).</li>
+            <li>Вставь оба ключа в поля ниже и нажми «Сохранить».</li>
+        </ol>
+    </div>`;
  const keyBody=`<p style="color:var(--mute);font-size:13px;margin:4px 0 8px">Нужен для работы ИИ (текст и картинки). Хранится только в этом браузере.</p>
+ ${cloudInstructions}
  <input class="f" id="tk" type="password" placeholder="API токен (cfut_…)" value="${k?'••••••••':''}" autocomplete="off"><input class="f" id="ac" placeholder="Account ID (32 символа или вся ссылка)" value="${k?k.account:''}" autocomplete="off">
  <div class="row"><button class="btn" onclick="saveKey()">Сохранить и проверить</button>${k?'<button class="btn g" onclick="delKey()">Удалить</button>':''}</div><div class="st" id="ks"></div>`;
  sc.append(grp('Нейросети',[acc('key','Ключ Cloudflare',k?'Подключён — ИИ работает':'Добавь ключ, чтобы ИИ заработал',`<span class="badge ${k?'ok':''}"><i></i>${k?'Подключён':'Не добавлен'}</span>`,keyBody,!k)]));
@@ -685,13 +767,50 @@ async function chPass(){
 }
 function logout(){localStorage.removeItem('vagent_user');location.href='web.html'}
 
-let dp;const ios=/iPad|iPhone|iPod/.test(navigator.userAgent),sa=matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
-const showPwa=()=>{if(!sa&&!localStorage.getItem('pwa_dismissed')&&innerWidth<900)setTimeout(()=>$('#pwa').classList.add('on'),2500)};
-if(ios){$('#pwab').textContent='Как?';showPwa()}
-addEventListener('beforeinstallprompt',e=>{e.preventDefault();dp=e;showPwa()});
-$('#pwab').onclick=()=>{if(ios)alert('Нажми «Поделиться» внизу экрана → «На экран Домой» → «Добавить».');else if(dp){dp.prompt();dp=null}};
-function closePwa(){$('#pwa').classList.remove('on');localStorage.setItem('pwa_dismissed','1')}
-let wasDesk=isDesk();addEventListener('resize',()=>{if(isDesk()!==wasDesk){wasDesk=isDesk();drawNav()}});
+/* === PWA УСТАНОВКА === */
+let dp;
+const ios = /iPad|iPhone|iPod/.test(navigator.userAgent);
+const sa = matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+
+const showPwa = () => {
+    if (!sa && !localStorage.getItem('pwa_dismissed') && innerWidth < 900) {
+        setTimeout(() => $('#pwa').classList.add('on'), 2500);
+    }
+};
+
+if (ios) {
+    $('#pwab').textContent = 'Как?';
+    showPwa();
+}
+
+addEventListener('beforeinstallprompt', e => {
+    e.preventDefault();
+    dp = e;
+    showPwa();
+});
+
+$('#pwab').onclick = () => {
+    if (ios) {
+        alert('Нажми «Поделиться» внизу экрана → «На экран Домой» → «Добавить».');
+    } else if (dp) {
+        dp.prompt();
+        dp = null;
+    }
+};
+
+function closePwa() {
+    $('#pwa').classList.remove('on');
+    localStorage.setItem('pwa_dismissed', '1');
+}
+
+let wasDesk = isDesk();
+addEventListener('resize', () => {
+    if (isDesk() !== wasDesk) {
+        wasDesk = isDesk();
+        drawNav();
+    }
+});
+
 drawNav();draw();
 </script>
 </body>
