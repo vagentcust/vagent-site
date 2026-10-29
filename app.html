@@ -785,15 +785,17 @@ const showPwa = () => {
     }
 };
 
-if (ios) {
-    $('#pwab').textContent = 'Как?';
+// Принудительно показываем баннер на мобильных (включая iOS), если он еще не закрыт
+if (innerWidth < 900 && !localStorage.getItem('pwa_dismissed')) {
+    if (ios) $('#pwab').textContent = 'Как?';
     showPwa();
 }
 
 addEventListener('beforeinstallprompt', e => {
     e.preventDefault();
     dp = e;
-    showPwa();
+    // Показываем баннер, если это не iOS
+    if (!ios) showPwa();
 });
 
 $('#pwab').onclick = () => {
