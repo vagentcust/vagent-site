@@ -99,20 +99,20 @@
             transition: width 0.1s linear;
         }
 
-        /* ПАНЕЛЬ (850px, единый стиль) */
+        /* ПАНЕЛЬ (1700px, единый стиль) */
         .nav {
             position: absolute;
             top: 20px;
             left: 50%;
             transform: translateX(-50%);
             width: calc(100% - 40px);
-            max-width: 700px;
+            max-width: 1700px; /* Увеличено в 2 раза */
             z-index: 10000;
             display: flex;
             justify-content: space-between;
             align-items: center;
             height: 60px;
-            padding: 0 24px;
+            padding: 0 30px; /* Чуть больше отступы для широкой панели */
             background: var(--nav-bg);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
@@ -131,8 +131,9 @@
         }
         .nav-logo:hover { opacity: 0.8; }
 
+        /* ЛОГО В ПАНЕЛИ УВЕЛИЧЕНО В 1.5 РАЗА */
         .nav-logo img.nav-icon {
-            height: 32px;
+            height: 48px; /* 32 * 1.5 = 48 */
             width: auto;
             object-fit: contain;
             display: block;
@@ -292,7 +293,7 @@
         }
 
         .logo-img {
-            width: 267px;
+            width: 320px;
             max-width: 100%;
             height: auto;
             object-fit: contain;
@@ -386,7 +387,7 @@
 
         @media (max-width: 850px) {
             .nav { top: 10px; width: calc(100% - 20px); height: 52px; padding: 0 14px; border-radius: 16px; }
-            .nav-logo img.nav-icon { height: 26px; }
+            .nav-logo img.nav-icon { height: 32px; }
             .nav-link[href*="#download"] { display: none; }
             .nav-right { gap: 10px; }
             .nav-link { font-size: 12px; padding: 6px 2px; }
@@ -397,7 +398,7 @@
 
             .glass-container { margin-top: 50px; padding: 10px; max-height: calc(100vh - 60px); }
             .glass-card { padding: 25px 20px 30px 20px; border-radius: 24px; box-shadow: none; }
-            .logo-img { width: 217px; margin-bottom: 15px; }
+            .logo-img { width: 260px; margin-bottom: 15px; }
             .input-group { margin-bottom: 12px; }
             .input-group input { padding: 13px 14px 13px 42px; font-size: 14px; }
             .input-icon { left: 14px; width: 18px; height: 18px; }
