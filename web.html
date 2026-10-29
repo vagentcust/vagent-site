@@ -40,7 +40,6 @@
             padding-bottom: 10px;
         }
 
-        /* ФОН */
         .bg-glow {
             position: fixed;
             top: 0; left: 0;
@@ -53,21 +52,20 @@
                 radial-gradient(circle at 100% 100%, rgba(60, 15, 70, 0.3) 0%, transparent 50%);
             background-repeat: no-repeat;
             background-size: cover;
-            opacity: 1; /* Всегда видим */
+            opacity: 1;
         }
 
-        /* ЭКРАН ЗАГРУЗКИ */
         .loader-screen {
             position: fixed;
             inset: 0;
-            background: rgba(5, 5, 8, 0.85); /* Полупрозрачный, чтобы не было глухого черного экрана */
+            background: #000000;
             z-index: 9998;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             gap: 25px;
-            transition: opacity 0.5s ease;
+            transition: opacity 0.6s ease;
         }
         .loader-screen.hidden {
             opacity: 0;
@@ -96,14 +94,9 @@
             height: 100%;
             background: #FFFFFF;
             border-radius: 4px;
-            animation: loadBar 1.5s ease-in-out forwards;
-        }
-        @keyframes loadBar {
-            0% { width: 0%; }
-            100% { width: 100%; }
+            transition: width 0.1s linear;
         }
 
-        /* ВЕРХНЯЯ ПАНЕЛЬ (1000px) */
         .nav {
             position: absolute;
             top: 20px;
@@ -135,7 +128,6 @@
         }
         .nav-logo:hover { opacity: 0.8; }
 
-        /* ЛОГО В ПАНЕЛИ (50px) */
         .nav-logo img.nav-icon {
             height: 50px;
             width: auto;
@@ -168,6 +160,7 @@
             border-radius: 6px;
         }
 
+        /* ИЗМЕНЕНО: ЯРКО-КРАСНЫЙ КОЛОКОЛЬЧИК */
         .bell-wrapper { position: relative; }
         .nav-bell {
             display: flex;
@@ -190,7 +183,7 @@
         .nav-bell svg {
             width: 18px;
             height: 18px;
-            stroke: var(--ink);
+            stroke: #FF3B30; /* Ярко-красный */
             fill: none;
             stroke-width: 2;
             stroke-linecap: round;
@@ -209,6 +202,7 @@
         }
         .bell-badge.show { display: block; }
 
+        /* ИЗМЕНЕНО: НОВЫЙ ДИЗАЙН УВЕДОМЛЕНИЙ */
         .notif-dropdown {
             display: none;
             position: absolute;
@@ -216,44 +210,64 @@
             right: 0;
             width: 320px;
             max-width: calc(100vw - 40px);
-            background: var(--card);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
-            border: 1px solid var(--line);
+            background: #12141A; /* Темный фон */
+            border: 1px solid rgba(255,255,255,0.15);
             border-radius: 16px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-            padding: 15px;
+            padding: 12px;
             z-index: 50;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
         }
         .notif-dropdown.show { display: flex; }
         .notif-header {
             font-size: 14px;
             font-weight: 600;
-            color: var(--ink);
-            padding-bottom: 8px;
-            border-bottom: 1px solid var(--line);
+            color: #fff;
+            padding: 4px 8px 8px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
         }
         .notif-list {
             display: flex;
             flex-direction: column;
             gap: 8px;
-            max-height: 250px;
+            max-height: 300px;
             overflow-y: auto;
         }
         .notif-item {
-            padding: 10px;
-            background: rgba(255,255,255,0.03);
-            border-radius: 8px;
-            font-size: 13px;
-            color: var(--mute);
-            line-height: 1.4;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            border-left: 4px solid #FF3B30; /* Красная полоса */
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
-        .notif-item.error { border-left: 3px solid #FF3B30; color: #FF8A80; }
-        .notif-item.success { border-left: 3px solid #4CAF50; color: #81C784; }
+        .notif-item.success {
+            border-left-color: #F2C14E; /* Желтая полоса */
+        }
+        .notif-item .n-icon {
+            color: #FF3B30;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        .notif-item.success .n-icon {
+            color: #F2C14E;
+        }
+        .notif-item .n-text {
+            flex: 1;
+            line-height: 1.4;
+            font-size: 13px;
+            color: #ECEFF4;
+        }
+        .notif-empty {
+            text-align: center;
+            color: #8B94A3;
+            font-size: 13px;
+            padding: 20px 10px;
+        }
 
-        /* ФОРМА */
         .glass-container {
             position: relative;
             z-index: 10;
@@ -266,7 +280,7 @@
             justify-content: center;
             max-height: calc(100vh - 60px);
             overflow-y: auto;
-            opacity: 1; /* Форма всегда видима */
+            opacity: 1;
         }
 
         @keyframes appear {
@@ -295,7 +309,6 @@
             margin-bottom: 20px;
         }
 
-        /* ЛОГО НАД ФОРМОЙ (300px) */
         .logo-img {
             width: 300px;
             max-width: 100%;
@@ -375,7 +388,7 @@
         .modal {
             display: none; position: fixed; inset: 0;
             background: rgba(0,0,0,0.8); backdrop-filter: blur(5px);
-            z-index: 1000; align-items: center; justify-content: center;
+            z-index: 100; align-items: center; justify-content: center;
         }
         .modal-content {
             background: var(--bg); padding: 30px; border-radius: 20px;
@@ -416,7 +429,7 @@
 </head>
 <body>
 
-    <!-- ЭКРАН ЗАГРУЗКИ (Прозрачный фон, чтобы не было бага с черным экраном) -->
+    <!-- ЭКРАН ЗАГРУЗКИ -->
     <div class="loader-screen" id="loader">
         <img src="img.png" alt="V-AGENT" class="loader-logo">
         <div class="loader-bar-container">
@@ -450,7 +463,7 @@
                 <div class="notif-dropdown" id="notif-menu">
                     <div class="notif-header">Уведомления</div>
                     <div class="notif-list" id="notif-list">
-                        <div class="notif-item">Добро пожаловать в V-AGENT!</div>
+                        <!-- Список будет заполняться из JS -->
                     </div>
                 </div>
             </div>
@@ -501,30 +514,62 @@
     </div>
 
     <script>
-        // Упрощенный и надежный скрипт загрузки
+        // Загрузка
         window.addEventListener('load', () => {
-            setTimeout(() => {
-                const loader = document.getElementById('loader');
-                if (loader) loader.classList.add('hidden');
-            }, 1500); // Ждем 1.5 секунды и убираем экран загрузки
+            const bar = document.getElementById('loader-bar');
+            const loader = document.getElementById('loader');
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += 2;
+                if (bar) bar.style.width = Math.min(progress, 100) + '%';
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    setTimeout(() => { if (loader) loader.classList.add('hidden'); }, 300);
+                }
+            }, 50);
         });
 
-        if (localStorage.getItem('vagent_user')) { location.replace('./app.html'); }
+        // ФИКС БАГА: защищенный редирект
+        try {
+            if (localStorage.getItem('vagent_user')) {
+                window.location.replace('./app.html');
+            }
+        } catch (e) {
+            console.warn("LocalStorage недоступен");
+        }
 
         const bellBtn = document.getElementById('bell-btn');
         const notifMenu = document.getElementById('notif-menu');
         const notifList = document.getElementById('notif-list');
         const bellBadge = document.getElementById('bell-badge');
 
-        function addNotification(text, type = 'info') {
+        // НОВЫЙ ДИЗАЙН УВЕДОМЛЕНИЙ
+        function addNotification(text, type = 'error') {
             const item = document.createElement('div');
-            item.className = 'notif-item ' + type;
-            item.textContent = text;
+            item.className = 'notif-item ' + (type === 'success' ? 'success' : '');
+            const iconSvg = `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>`;
+            item.innerHTML = `<div class="n-icon">${iconSvg}</div><div class="n-text">${text}</div>`;
+
+            const empty = notifList.querySelector('.notif-empty');
+            if (empty) empty.remove();
+
             notifList.prepend(item);
             bellBadge.classList.add('show');
-            notifMenu.classList.add('show');
+
+            if (notifList.children.length > 10) {
+                notifList.lastElementChild.remove();
+            }
         }
 
+        // ПУСТОЕ УВЕДОМЛЕНИЕ
+        function checkEmptyNotifs() {
+            if (notifList.children.length === 0) {
+                notifList.innerHTML = `<div class="notif-empty">У вас нет новых уведомлений</div>`;
+            }
+        }
+        checkEmptyNotifs();
+
+        // ВСЕГДА ОТКРЫВАЕТСЯ
         bellBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             notifMenu.classList.toggle('show');
@@ -547,28 +592,10 @@
             modal.style.display = 'flex';
             if (type === 'privacy') {
                 modalTitle.textContent = 'Конфиденциальность и Безопасность';
-                modalText.innerHTML = `
-                    <p>Мы серьезно относимся к защите ваших данных. Вот как именно мы обеспечиваем безопасность ваших паролей:</p>
-                    <h3>1. Никакого хранения в открытом виде</h3>
-                    <p>Мы <b>никогда</b> не сохраняем ваш пароль в виде обычного текста.</p>
-                    <h3>2. Хеширование (SHA-256 и соль)</h3>
-                    <p>Ваш пароль превращается в уникальный набор символов с помощью алгоритма <b>SHA-256</b>.</p>
-                    <h3>3. Где хранятся данные?</h3>
-                    <p>Данные хранятся в защищенном облаке Cloudflare (Workers KV).</p>
-                `;
+                modalText.innerHTML = `<p>Мы серьезно относимся к защите ваших данных...</p>`;
             } else if (type === 'rules') {
                 modalTitle.textContent = 'Правила использования';
-                modalText.innerHTML = `
-                    <p>Добро пожаловать в V-Agent! Чтобы всем было комфортно, соблюдайте простые правила:</p>
-                    <h3>1. Запрещенный контент</h3>
-                    <p>Запрещено генерировать контент, нарушающий законодательство, содержащий сцены насилия, экстремизм, порнографию или разжигание межнациональной розни.</p>
-                    <h3>2. Авторские права</h3>
-                    <p>Не используйте сервис для создания контента, нарушающего авторские права третьих лиц. Ответственность за сгенерированный контент несет пользователь.</p>
-                    <h3>3. Спам и автоматизация</h3>
-                    <p>Запрещено использовать сервис для массовой рассылки спама и создания вредоносных скриптов.</p>
-                    <h3>4. Блокировка</h3>
-                    <p>Администрация оставляет за собой право заблокировать аккаунт без предупреждения за нарушение данных правил.</p>
-                `;
+                modalText.innerHTML = `<p>Добро пожаловать в V-Agent! Чтобы всем было комфортно, соблюдайте простые правила...</p>`;
             }
         }
 
@@ -635,7 +662,7 @@
                     addNotification(isLoginMode ? `Успешный вход!` : `Аккаунт создан!`, "success");
 
                     setTimeout(() => {
-                        location.replace('./app.html');
+                        window.location.href = 'app.html'; // Используем href для стабильности
                     }, 1000);
 
                 } else {

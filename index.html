@@ -84,7 +84,7 @@
         .user-dropdown button {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             width: 100%;
             padding: 10px 12px;
             border: 0;
@@ -96,11 +96,17 @@
             cursor: pointer;
             text-align: left;
             font-family: "Onest", sans-serif;
-            transition: background 0.2s;
+            transition: background 0.2s, color 0.2s;
         }
         .user-dropdown button:hover { background: rgba(135,148,255,0.1); color: var(--accent); }
         .user-dropdown .sep { height: 1px; background: var(--line); margin: 4px 6px; }
-        .user-dropdown button svg { color: var(--mute); }
+
+        /* БЕЛЫЕ СТИКЕРЫ (ИКОНКИ) */
+        .user-dropdown button svg {
+            color: var(--ink);
+            transition: color 0.2s;
+            flex-shrink: 0;
+        }
         .user-dropdown button:hover svg { color: var(--accent); }
 
         .btn-login {
@@ -109,6 +115,39 @@
             cursor: pointer;transition: transform 0.2s;
         }
         .btn-login:hover { transform: scale(1.05); }
+
+        /* ИЗМЕНЕНО: ЯРКО-КРАСНЫЙ КОЛОКОЛЬЧИК */
+        .bell-wrapper { position: relative; }
+        .nav-bell {
+            display: flex; align-items: center; justify-content: center;
+            width: 38px; height: 38px; border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05); border: 1px solid var(--line);
+            cursor: pointer; transition: all 0.3s; position: relative;
+        }
+        .nav-bell:hover { background: rgba(255, 255, 255, 0.15); border-color: var(--accent); transform: scale(1.05); }
+        .nav-bell svg { width: 18px; height: 18px; stroke: #FF3B30; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+        .bell-badge { position: absolute; top: 2px; right: 2px; width: 10px; height: 10px; background: #FF3B30; border-radius: 50%; border: 2px solid var(--bg); display: none; }
+        .bell-badge.show { display: block; }
+
+        /* ИЗМЕНЕНО: НОВЫЙ ДИЗАЙН УВЕДОМЛЕНИЙ */
+        .notif-dropdown {
+            display: none; position: absolute; top: 48px; right: 0; width: 320px; max-width: calc(100vw - 40px);
+            background: #12141A; border: 1px solid rgba(255,255,255,0.15); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); padding: 12px; z-index: 50; flex-direction: column; gap: 8px;
+        }
+        .notif-dropdown.show { display: flex; }
+        .notif-header { font-size: 14px; font-weight: 600; color: #fff; padding: 4px 8px 8px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .notif-list { display: flex; flex-direction: column; gap: 8px; max-height: 300px; overflow-y: auto; }
+
+        .notif-item {
+            display: flex; align-items: flex-start; gap: 12px;
+            padding: 12px; background: rgba(255, 255, 255, 0.03); border-radius: 12px;
+            border-left: 4px solid #FF3B30; box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        .notif-item.success { border-left-color: #F2C14E; }
+        .notif-item .n-icon { color: #FF3B30; flex-shrink: 0; margin-top: 2px; }
+        .notif-item.success .n-icon { color: #F2C14E; }
+        .notif-item .n-text { flex: 1; line-height: 1.4; font-size: 13px; color: #ECEFF4; }
+        .notif-empty { text-align: center; color: #8B94A3; font-size: 13px; padding: 20px 10px; }
 
         main{max-width:1040px;margin:0 auto;padding:100px 24px 0}
 
@@ -521,6 +560,20 @@
                 <a href="javascript:void(0)" onclick="openRulesModal()">Правила</a>
             </nav>
 
+            <div class="bell-wrapper" style="margin-right:10px;">
+                <button class="nav-bell" id="bell-btn">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                    </svg>
+                    <div class="bell-badge" id="bell-badge"></div>
+                </button>
+                <div class="notif-dropdown" id="notif-menu">
+                    <div class="notif-header">Уведомления</div>
+                    <div class="notif-list" id="notif-list"></div>
+                </div>
+            </div>
+
             <div id="user-container">
                 <button class="btn-login" onclick="openAuthModal()">Войти</button>
             </div>
@@ -723,6 +776,51 @@
 
         let isLoginMode = true;
 
+        /* --- УВЕДОМЛЕНИЯ --- */
+        const bellBtn = document.getElementById('bell-btn');
+        const notifMenu = document.getElementById('notif-menu');
+        const notifList = document.getElementById('notif-list');
+        const bellBadge = document.getElementById('bell-badge');
+
+        function addNotification(text, type = 'error') {
+            const item = document.createElement('div');
+            item.className = 'notif-item ' + (type === 'success' ? 'success' : '');
+            const iconSvg = `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>`;
+            item.innerHTML = `<div class="n-icon">${iconSvg}</div><div class="n-text">${text}</div>`;
+
+            const empty = notifList.querySelector('.notif-empty');
+            if (empty) empty.remove();
+
+            notifList.prepend(item);
+            bellBadge.classList.add('show');
+
+            if (notifList.children.length > 10) {
+                notifList.lastElementChild.remove();
+            }
+        }
+
+        function checkEmptyNotifs() {
+            if (notifList.children.length === 0) {
+                notifList.innerHTML = `<div class="notif-empty">У вас нет новых уведомлений</div>`;
+            }
+        }
+        checkEmptyNotifs();
+
+        bellBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            notifMenu.classList.toggle('show');
+            if (notifMenu.classList.contains('show')) {
+                bellBadge.classList.remove('show');
+            }
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!notifMenu.contains(e.target) && e.target !== bellBtn) {
+                notifMenu.classList.remove('show');
+            }
+        });
+
+        /* --- ПРОФИЛЬ --- */
         function checkUser() {
             const user = localStorage.getItem('vagent_user');
             const container = $('#user-container');
@@ -734,12 +832,12 @@
                         </div>
                         <div class="user-dropdown" id="user-dropdown">
                             <button onclick="window.location.href='app.html'">
-                                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                                 Настройки
                             </button>
                             <div class="sep"></div>
                             <button onclick="logout()">
-                                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2.5"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg>
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2.5"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg>
                                 Выйти
                             </button>
                         </div>

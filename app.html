@@ -35,11 +35,11 @@ button,input,textarea{font:inherit;color:inherit}
 
 .nr{display:flex;align-items:center;gap:16px}
 
-/* ССЫЛКИ И БЕЗОПАСНОСТЬ */
+/* ССЫЛКИ */
 .lnk{background:none;border:0;color:var(--mute);cursor:pointer;font-size:14px;font-weight:500;padding:6px 8px;border-radius:8px;text-decoration:none;transition:all 0.3s;}
 .lnk:hover{color:var(--ink);background:rgba(255,255,255,.06)}
 
-/* КОЛОКОЛЬЧИК */
+/* КОЛОКОЛЬЧИК (ЯРКО-КРАСНЫЙ) */
 .bell-wrapper { position: relative; }
 .nav-bell {
     display: flex; align-items: center; justify-content: center;
@@ -48,21 +48,41 @@ button,input,textarea{font:inherit;color:inherit}
     cursor: pointer; transition: all 0.3s; position: relative;
 }
 .nav-bell:hover { background: rgba(255, 255, 255, 0.15); border-color: var(--ac); transform: scale(1.05); }
-.nav-bell svg { width: 18px; height: 18px; stroke: var(--ink); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.nav-bell svg { width: 18px; height: 18px; stroke: #FF3B30; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .bell-badge { position: absolute; top: 2px; right: 2px; width: 10px; height: 10px; background: #FF3B30; border-radius: 50%; border: 2px solid var(--bg); display: none; }
 .bell-badge.show { display: block; }
 
+/* МЕНЮ УВЕДОМЛЕНИЙ (НОВЫЙ ДИЗАЙН) */
 .notif-dropdown {
     display: none; position: absolute; top: 48px; right: 0; width: 320px; max-width: calc(100vw - 40px);
-    background: var(--sheet); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
-    border: 1px solid var(--line); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); padding: 15px; z-index: 50; flex-direction: column; gap: 10px;
+    background: #12141A; border: 1px solid rgba(255,255,255,0.15); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); padding: 12px; z-index: 50; flex-direction: column; gap: 8px;
 }
 .notif-dropdown.show { display: flex; }
-.notif-header { font-size: 14px; font-weight: 600; color: var(--ink); padding-bottom: 8px; border-bottom: 1px solid var(--line); }
-.notif-list { display: flex; flex-direction: column; gap: 8px; max-height: 250px; overflow-y: auto; }
-.notif-item { padding: 10px; background: rgba(255,255,255,0.03); border-radius: 8px; font-size: 13px; color: var(--mute); line-height: 1.4; }
-.notif-item.error { border-left: 3px solid #FF3B30; color: #FF8A80; }
-.notif-item.success { border-left: 3px solid #4CAF50; color: #81C784; }
+.notif-header { font-size: 14px; font-weight: 600; color: #fff; padding: 4px 8px 8px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+.notif-list { display: flex; flex-direction: column; gap: 8px; max-height: 300px; overflow-y: auto; }
+
+.notif-item {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 12px; background: rgba(255, 255, 255, 0.03); border-radius: 12px;
+    border-left: 4px solid #FF3B30; /* Красная полоса */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    transition: transform 0.2s;
+}
+.notif-item.success {
+    border-left-color: #F2C14E; /* Желтая полоса */
+}
+.notif-item .n-icon {
+    color: #FF3B30; flex-shrink: 0; margin-top: 2px;
+}
+.notif-item.success .n-icon {
+    color: #F2C14E;
+}
+.notif-item .n-text {
+    flex: 1; line-height: 1.4; font-size: 13px; color: #ECEFF4;
+}
+.notif-empty {
+    text-align: center; color: #8B94A3; font-size: 13px; padding: 20px 10px;
+}
 
 /* ПРОФИЛЬ */
 .chip{position:relative;display:flex;align-items:center;gap:8px;padding:3px;border-radius:30px;background:none;font-size:13px;cursor:pointer;user-select:none;transition:background 0.3s;}
@@ -72,7 +92,7 @@ button,input,textarea{font:inherit;color:inherit}
 .pmenu.on{display:block;animation:up .18s ease both}
 .pmenu button{display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;border:0;background:none;color:var(--ink);font-size:14px;border-radius:10px;cursor:pointer;text-align:left;font-family:"Onest",sans-serif;}
 .pmenu button:hover{background:var(--hov)}
-.pmenu button svg{color:var(--mute)}
+.pmenu button svg{color:var(--ink)}
 .pmenu .sep{height:1px;background:var(--line);margin:4px 6px}
 
 .app{position:relative;z-index:1;height:100dvh;padding:100px 12px 0;display:flex;gap:16px;max-width:1180px;margin:0 auto}
@@ -166,7 +186,6 @@ main{flex:1;min-width:0;display:flex;flex-direction:column;height:calc(100dvh - 
 <nav class="nav">
  <a class="logo" href="index.html"><img src="logo_text.png" alt="V-Agent"></a>
  <div class="nr">
-  <!-- Кнопки как в регистрации -->
   <a class="lnk pcl" href="index.html#download">Скачать</a>
   <a class="lnk pcl" href="javascript:void(0)" onclick="openModal('privacy')">Безопасность</a>
   <a class="lnk pcl" href="javascript:void(0)" onclick="openModal('rules')">Правила</a>
@@ -183,7 +202,7 @@ main{flex:1;min-width:0;display:flex;flex-direction:column;height:calc(100dvh - 
       <div class="notif-dropdown" id="notif-menu">
           <div class="notif-header">Уведомления</div>
           <div class="notif-list" id="notif-list">
-              <div class="notif-item">Добро пожаловать в V-AGENT!</div>
+              <!-- Сюда будут падать уведомления -->
           </div>
       </div>
   </div>
@@ -219,235 +238,256 @@ main{flex:1;min-width:0;display:flex;flex-direction:column;height:calc(100dvh - 
 </div>
 
 <script>
-const API='https://vagent-backend.novalaim11.workers.dev';
-const USER=localStorage.getItem('vagent_user');
-if(!USER)location.href='web.html';
-const $=s=>document.querySelector(s);
-const el=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e};
-const P={home:'<path d="M3 11l9-8 9 8"/><path d="M5 10v10h5v-6h4v6h5V10"/>',chat:'<path d="M21 12a8 8 0 0 1-11.6 7.1L3 21l1.9-5.4A8 8 0 1 1 21 12z"/>',image:'<rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="1.6"/><path d="M21 16l-5-5-9 9"/>',bulb:'<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/>',grid:'<rect x="3" y="3" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="2"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="2"/>',hash:'<path d="M5 9h15M4 15h15M10 3L8 21M16 3l-2 18"/>',send:'<path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4z"/>',user:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',film:'<rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M3 9h18M3 15h18M8 4v16M16 4v16"/>',lock:'<rect x="5" y="11" width="14" height="10" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',spark:'<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8z"/>'};
-const svg=(n,s=20)=>`<svg viewBox="0 0 24 24" width="${s}" height="${s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${P[n]}</svg>`;
-const MODES={
- chat:{t:'Чат с ИИ',s:'Спроси что угодно',i:'chat',h:'Напиши сообщение...',w:'Нейро думает',intro:'Задай любой вопрос или попроси написать текст.',ex:['Придумай название для кофейни','Объясни простыми словами, что такое NFT','Напиши пост про утреннюю пробежку']},
- image:{t:'Картинки',s:'7 стилей генерации',i:'image',h:'Опиши картинку...',w:'Рисую',intro:'Опиши, что нарисовать, и выбери стиль ниже.',ex:['Уютный домик в лесу на закате','Кот-космонавт на Луне','Неоновый город под дождём']},
- ideas:{t:'Идеи',s:'10 идей для постов',i:'bulb',h:'Тема для идей...',w:'Придумываю идеи',intro:'Напиши тему — получишь 10 идей для постов.',ex:['Кофейня у дома','Фитнес для новичков','Путешествия по России']},
- templates:{t:'Шаблоны',s:'Готовые структуры',i:'grid',h:'О чём пост?',w:'Пишу пост',intro:'Выбери шаблон ниже и напиши тему.',ex:['Как выбрать беговые кроссовки','Обзор беспроводных наушников']},
- hashtags:{t:'Хештеги',s:'Подбор тегов по теме',i:'hash',h:'Тема для хештегов...',w:'Подбираю хештеги',intro:'Напиши тему — подберу 20 хештегов.',ex:['кошки','здоровое питание','путешествия']}
-};
-const STY={photo:['Реализм','photorealistic photograph, DSLR, 85mm lens, natural lighting, sharp focus, high detail'],anime:['Аниме','anime artwork, Studio Ghibli style, soft cel shading, vibrant pastel colors'],'3d':['3D','3D render, octane render, cinematic lighting, highly detailed'],cyberpunk:['Киберпанк','cyberpunk style, neon lights, rainy night city, purple and cyan glow'],fantasy:['Фэнтези','epic fantasy art, magical atmosphere, dramatic lighting, concept art'],sketch:['Скетч','pencil sketch, graphite illustration, cross-hatching, monochrome'],minimal:['Минимализм','minimalist flat vector illustration, clean lines, solid colors, poster style']};
-const TPL=[['instruction','Инструкция','Заголовок с эмодзи «Как сделать…»; короткое вступление; 3-7 шагов с эмодзи; один важный совет; вопрос читателю'],['review','Обзор','Цепляющий заголовок; вступление; плюсы (✅); минусы (❌); итог-рекомендация; вопрос «А вы пробовали?»'],['facts','10 фактов','Заголовок «10 фактов о…»; вступление; ровно 10 фактов с эмодзи; самый удивительный факт отдельно; вопрос'],['case','Кейс','Заголовок с результатом; Было; Что сделали (3-4 шага); Стало; вывод; вопрос'],['mistakes','Ошибки','Заголовок «5 ошибок в…»; почему важно; список ошибок с объяснением; как правильно; вопрос'],['top','ТОП-N','Заголовок «ТОП-5…»; критерии; нумерованный список с описанием; победитель; вопрос']];
-const SYS='Ты — полезный ассистент. Отвечай кратко и по делу, на русском языке. Помогаешь писать тексты, отвечать на вопросы, объяснять сложное простыми словами. Не используй Markdown-разметку.';
-const LKEY='vagent_c_'+USER, CKEY='vagent_cf_'+USER;
-let st={view:'home',mode:'chat',style:'photo',tpl:'instruction',busy:false,chats:{}};
-try{st.chats=JSON.parse(localStorage.getItem(LKEY)||'{}')}catch(e){}
-const save=()=>{try{localStorage.setItem(LKEY,JSON.stringify(st.chats))}catch(e){for(const k in st.chats)st.chats[k].forEach(m=>delete m.img);try{localStorage.setItem(LKEY,JSON.stringify(st.chats))}catch(_){}}};
-const cf=()=>{try{return JSON.parse(localStorage.getItem(CKEY)||'null')}catch(e){return null}};
-$('#nm').textContent=USER;$('#ava').textContent=USER[0].toUpperCase();
+// Защита от бесконечного цикла перезагрузки
+let USER = null;
+try { USER = localStorage.getItem('vagent_user'); } catch(e) { console.warn('LocalStorage is disabled'); }
 
-/* --- УВЕДОМЛЕНИЯ --- */
-const bellBtn = document.getElementById('bell-btn');
-const notifMenu = document.getElementById('notif-menu');
-const bellBadge = document.getElementById('bell-badge');
-
-bellBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    notifMenu.classList.toggle('show');
-    if (notifMenu.classList.contains('show')) {
-        bellBadge.classList.remove('show');
+if (!USER || USER === 'null' || USER === 'undefined') {
+    // Если мы не на web.html, перекидываем
+    if (!window.location.href.includes('web.html')) {
+        window.location.href = 'web.html';
     }
-});
-document.addEventListener('click', (e) => {
-    if (!notifMenu.contains(e.target) && e.target !== bellBtn) {
-        notifMenu.classList.remove('show');
+} else {
+    // Основной код приложения
+    const API='https://vagent-backend.novalaim11.workers.dev';
+    const $=s=>document.querySelector(s);
+    const el=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e};
+    const P={home:'<path d="M3 11l9-8 9 8"/><path d="M5 10v10h5v-6h4v6h5V10"/>',chat:'<path d="M21 12a8 8 0 0 1-11.6 7.1L3 21l1.9-5.4A8 8 0 1 1 21 12z"/>',image:'<rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="1.6"/><path d="M21 16l-5-5-9 9"/>',bulb:'<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/>',grid:'<rect x="3" y="3" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="2"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="2"/>',hash:'<path d="M5 9h15M4 15h15M10 3L8 21M16 3l-2 18"/>',send:'<path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4z"/>',user:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',film:'<rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M3 9h18M3 15h18M8 4v16M16 4v16"/>',lock:'<rect x="5" y="11" width="14" height="10" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',spark:'<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8z"/>'};
+    const svg=(n,s=20)=>`<svg viewBox="0 0 24 24" width="${s}" height="${s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${P[n]}</svg>`;
+    const MODES={
+     chat:{t:'Чат с ИИ',s:'Спроси что угодно',i:'chat',h:'Напиши сообщение...',w:'Нейро думает',intro:'Задай любой вопрос или попроси написать текст.',ex:['Придумай название для кофейни','Объясни простыми словами, что такое NFT','Напиши пост про утреннюю пробежку']},
+     image:{t:'Картинки',s:'7 стилей генерации',i:'image',h:'Опиши картинку...',w:'Рисую',intro:'Опиши, что нарисовать, и выбери стиль ниже.',ex:['Уютный домик в лесу на закате','Кот-космонавт на Луне','Неоновый город под дождём']},
+     ideas:{t:'Идеи',s:'10 идей для постов',i:'bulb',h:'Тема для идей...',w:'Придумываю идеи',intro:'Напиши тему — получишь 10 идей для постов.',ex:['Кофейня у дома','Фитнес для новичков','Путешествия по России']},
+     templates:{t:'Шаблоны',s:'Готовые структуры',i:'grid',h:'О чём пост?',w:'Пишу пост',intro:'Выбери шаблон ниже и напиши тему.',ex:['Как выбрать беговые кроссовки','Обзор беспроводных наушников']},
+     hashtags:{t:'Хештеги',s:'Подбор тегов по теме',i:'hash',h:'Тема для хештегов...',w:'Подбираю хештеги',intro:'Напиши тему — подберу 20 хештегов.',ex:['кошки','здоровое питание','путешествия']}
+    };
+    const STY={photo:['Реализм','photorealistic photograph, DSLR, 85mm lens, natural lighting, sharp focus, high detail'],anime:['Аниме','anime artwork, Studio Ghibli style, soft cel shading, vibrant pastel colors'],'3d':['3D','3D render, octane render, cinematic lighting, highly detailed'],cyberpunk:['Киберпанк','cyberpunk style, neon lights, rainy night city, purple and cyan glow'],fantasy:['Фэнтези','epic fantasy art, magical atmosphere, dramatic lighting, concept art'],sketch:['Скетч','pencil sketch, graphite illustration, cross-hatching, monochrome'],minimal:['Минимализм','minimalist flat vector illustration, clean lines, solid colors, poster style']};
+    const TPL=[['instruction','Инструкция','Заголовок с эмодзи «Как сделать…»; короткое вступление; 3-7 шагов с эмодзи; один важный совет; вопрос читателю'],['review','Обзор','Цепляющий заголовок; вступление; плюсы (✅); минусы (❌); итог-рекомендация; вопрос «А вы пробовали?»'],['facts','10 фактов','Заголовок «10 фактов о…»; вступление; ровно 10 фактов с эмодзи; самый удивительный факт отдельно; вопрос'],['case','Кейс','Заголовок с результатом; Было; Что сделали (3-4 шага); Стало; вывод; вопрос'],['mistakes','Ошибки','Заголовок «5 ошибок в…»; почему важно; список ошибок с объяснением; как правильно; вопрос'],['top','ТОП-N','Заголовок «ТОП-5…»; критерии; нумерованный список с описанием; победитель; вопрос']];
+    const SYS='Ты — полезный ассистент. Отвечай кратко и по делу, на русском языке. Помогаешь писать тексты, отвечать на вопросы, объяснять сложное простыми словами. Не используй Markdown-разметку.';
+    const LKEY='vagent_c_'+USER, CKEY='vagent_cf_'+USER;
+    let st={view:'home',mode:'chat',style:'photo',tpl:'instruction',busy:false,chats:{}};
+    try{st.chats=JSON.parse(localStorage.getItem(LKEY)||'{}')}catch(e){}
+    const save=()=>{try{localStorage.setItem(LKEY,JSON.stringify(st.chats))}catch(e){for(const k in st.chats)st.chats[k].forEach(m=>delete m.img);try{localStorage.setItem(LKEY,JSON.stringify(st.chats))}catch(_){}}};
+    const cf=()=>{try{return JSON.parse(localStorage.getItem(CKEY)||'null')}catch(e){return null}};
+    $('#ava').textContent=USER[0].toUpperCase();
+
+    /* --- УВЕДОМЛЕНИЯ --- */
+    const bellBtn = document.getElementById('bell-btn');
+    const notifMenu = document.getElementById('notif-menu');
+    const notifList = document.getElementById('notif-list');
+    const bellBadge = document.getElementById('bell-badge');
+
+    // Функция добавления уведомления
+    function addNotification(text, type = 'error') {
+        const item = document.createElement('div');
+        item.className = 'notif-item ' + (type === 'success' ? 'success' : '');
+
+        const iconSvg = `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>`;
+        item.innerHTML = `<div class="n-icon">${iconSvg}</div><div class="n-text">${text}</div>`;
+
+        // Удаляем заглушку, если есть
+        const empty = notifList.querySelector('.notif-empty');
+        if (empty) empty.remove();
+
+        notifList.prepend(item);
+        bellBadge.classList.add('show');
+
+        // Обрезаем лишние уведомления
+        if (notifList.children.length > 10) {
+            notifList.lastElementChild.remove();
+        }
     }
-});
 
-/* --- МОДАЛЬНОЕ ОКНО --- */
-function openModal(type) {
-    const modal = document.getElementById('info-modal');
-    modal.style.display = 'flex';
-    const title = document.getElementById('modal-title');
-    const text = document.getElementById('modal-text');
-
-    if (type === 'privacy') {
-        title.textContent = 'Конфиденциальность и Безопасность';
-        text.innerHTML = `
-            <p>Мы серьезно относимся к защите ваших данных. Вот как именно мы обеспечиваем безопасность ваших паролей:</p>
-            <h3>1. Никакого хранения в открытом виде</h3>
-            <p>Мы <b>никогда</b> не сохраняем ваш пароль в виде обычного текста.</p>
-            <h3>2. Хеширование (SHA-256 и соль)</h3>
-            <p>Ваш пароль превращается в уникальный набор символов с помощью алгоритма <b>SHA-256</b>.</p>
-            <h3>3. Где хранятся данные?</h3>
-            <p>Данные хранятся в защищенном облаке Cloudflare (Workers KV).</p>
-        `;
-    } else if (type === 'rules') {
-        title.textContent = 'Правила использования';
-        text.innerHTML = `
-            <p>Добро пожаловать в V-Agent! Чтобы всем было комфортно, соблюдайте простые правила:</p>
-            <h3>1. Запрещенный контент</h3>
-            <p>Запрещено генерировать контент, нарушающий законодательство, содержащий сцены насилия, экстремизм, порнографию или разжигание межнациональной розни.</p>
-            <h3>2. Авторские права</h3>
-            <p>Не используйте сервис для создания контента, нарушающего авторские права третьих лиц. Ответственность за сгенерированный контент несет пользователь.</p>
-            <h3>3. Спам и автоматизация</h3>
-            <p>Запрещено использовать сервис для массовой рассылки спама и создания вредоносных скриптов.</p>
-            <h3>4. Блокировка</h3>
-            <p>Администрация оставляет за собой право заблокировать аккаунт без предупреждения за нарушение данных правил.</p>
-        `;
+    // Инициализация списка (заглушка)
+    function checkEmptyNotifs() {
+        if (notifList.children.length === 0) {
+            notifList.innerHTML = `<div class="notif-empty">У вас нет новых уведомлений</div>`;
+        }
     }
-}
-function closeModal() {
-    document.getElementById('info-modal').style.display = 'none';
-}
-document.getElementById('info-modal').addEventListener('click', (e) => {
-    if (e.target.id === 'info-modal') closeModal();
-});
+    checkEmptyNotifs(); // Вызываем при старте
 
-/* --- ПРОФИЛЬ --- */
-function togglePMenu(e){e.stopPropagation();$('#pmenu').classList.toggle('on')}
-function closePMenu(){$('#pmenu').classList.remove('on')}
-document.addEventListener('click',e=>{if(!e.target.closest('#chip')&&!e.target.closest('#pmenu'))closePMenu()});
-$('#pm-ic1').outerHTML=svg('user',16);
-$('#pm-ic2').outerHTML=svg('lock',16);
+    bellBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        notifMenu.classList.toggle('show');
+        if (notifMenu.classList.contains('show')) {
+            bellBadge.classList.remove('show');
+        }
+    });
 
-async function ai(path,body){
- const k=cf();if(!k)throw new Error('Добавь ключ Cloudflare в разделе «Профиль»');
- let r;try{r=await fetch(API+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...body,token:k.token,account_id:k.account})})}catch(e){throw new Error('Нет связи с сервером')}
- const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||'Ошибка ИИ');return d;
-}
-const chatAI=(messages,max)=>ai('/ai/text',{messages,max_tokens:max||900}).then(d=>(d.text||'').trim());
+    document.addEventListener('click', (e) => {
+        if (!notifMenu.contains(e.target) && e.target !== bellBtn) {
+            notifMenu.classList.remove('show');
+        }
+    });
 
-const NAV=[['home','home','Главная'],['chat','chat','Чат с ИИ'],['image','image','Картинки'],['ideas','bulb','Идеи'],['templates','grid','Шаблоны'],['hashtags','hash','Хештеги'],['tg','send','Telegram',1],['me','user','Профиль']];
-function go(v,mode){if(mode)st.mode=mode;st.view=v;drawNav();draw()}
-function drawNav(){
- const on=n=>st.view==='neuro'?n===st.mode:n===st.view;
- $('#side').innerHTML='';
- NAV.forEach(([id,ic,t,lock],i)=>{
-  if(i===1||id==='tg')$('#side').append(el('div','sep'));
-  const b=el('button','si'+(on(id)?' on':''));const ib=el('span','ic');ib.innerHTML=svg(ic,18);const lb=el('span','',t);if(lock){const l=el('span');l.innerHTML=svg('lock',13);l.style.cssText='display:inline-block;vertical-align:-2px;margin-left:6px;opacity:.7';lb.append(l)}b.append(ib,lb);
-  b.onclick=()=>MODES[id]?go('neuro',id):go(id);$('#side').append(b);
- });
- const T=[['home','home','Главная'],['neuro','spark','Нейросети'],['tg','send','Telegram',1],['me','user','Профиль']];
- $('#tabs').innerHTML='';
- T.forEach(([id,ic,t,lock])=>{const b=el('button','tb'+(st.view===id?' on':''));const ib=el('span');ib.innerHTML=svg(ic,22);b.append(ib,el('div','',t));if(lock){const l=el('i','lock');l.innerHTML=svg('lock',10);b.append(l)}b.onclick=()=>go(id);$('#tabs').append(b)});
-}
-function draw(){
- const m=$('#main');m.innerHTML='';
- if(st.view==='home')home(m);else if(st.view==='neuro')neuro(m);else if(st.view==='tg')tg(m);else me(m);
-}
-function home(m){
- const sc=el('div','scroll');
- const h=el('div','pc');const hr=new Date().getHours();
- h.innerHTML=`<h1 style="font:600 28px Unbounded,sans-serif;margin:4px 4px 14px">${hr<5?'Доброй ночи':hr<12?'Доброе утро':hr<18?'Добрый день':'Добрый вечер'}, <span style="color:var(--ac)"></span></h1>`;h.querySelector('span').textContent=USER;sc.append(h);
- const hero=el('div','hero');
- hero.innerHTML='<div style="position:relative"><span class="tag">Telegram-канал</span><h2>Автоматизируй<br>свой <b>Telegram-канал</b></h2><a class="btn w" href="index.html#download">Скачать приложение →</a></div>';
- sc.append(hero,el('div','lab','БЫСТРЫЙ ДОСТУП'));
- const g=el('div','grid');
- Object.entries(MODES).forEach(([id,c])=>{const b=el('button','qc');b.innerHTML=`<span class="ic">${svg(c.i,26)}</span><div><b>${c.t}</b><small>${c.s}</small></div>`;b.onclick=()=>go('neuro',id);g.append(b)});
- const v=el('button','qc off');v.innerHTML='<span class="ic">'+svg('film',26)+'</span><div><b>Видео</b><small>Пересказ и промпт — в приложении</small></div>';v.onclick=()=>go('tg');g.append(v);
- sc.append(g);m.append(sc);
-}
-function tg(m){
- const sc=el('div','scroll');
- sc.innerHTML=`<div class="empty" style="margin-top:40px"><div class="ic" style="background:linear-gradient(135deg,#F2C14E,#E0963A);color:#1A1405">${svg('lock',36)}</div><h3>Только в приложении</h3><p>Автоведение Telegram-канала (автопостинг по расписанию), автосоздание постов и разбор видео работают в приложении V-Agent и доступны по Premium-подписке.</p><a class="btn" href="index.html#download">Скачать приложение</a></div>`;
- m.append(sc);
-}
-function neuro(m){
- const c=MODES[st.mode],list=st.chats[st.mode]||(st.chats[st.mode]=[]);
- const hd=el('div','mh');const pill=el('div','pill');pill.innerHTML=`<span class="ic">${svg(c.i,19)}</span><div><b>${c.t}</b><small>${c.s}</small></div><span class="ph" style="color:var(--mute)">⌄</span>`;pill.onclick=()=>{if(innerWidth<900)openSheet()};
- const nw=el('button','btn g','＋ Новый чат');nw.style.marginLeft='auto';nw.onclick=()=>{if(st.busy)return;st.chats[st.mode]=[];save();draw()};
- hd.append(pill,nw);m.append(hd);
- const box=el('div','box');box.id='box';m.append(box);
- if(!cf()){const w=el('div','warn','⚠ Добавь ключ Cloudflare в разделе «Профиль», чтобы ИИ заработал →');w.onclick=()=>go('me');m.append(w)}
- if(st.mode==='image'||st.mode==='templates'){
-  const o=el('div','opts');
-  (st.mode==='image'?Object.entries(STY).map(([k,v])=>[k,v[0]]):TPL.map(t=>[t[0],t[1]])).forEach(([k,t])=>{const cur=st.mode==='image'?st.style:st.tpl;const b=el('button','op'+(k===cur?' on':''),t);b.onclick=()=>{st[st.mode==='image'?'style':'tpl']=k;[...o.children].forEach(x=>x.classList.remove('on'));b.classList.add('on')};o.append(b)});m.append(o);
- }
- const f=el('div','inp');const ta=el('textarea');ta.rows=1;ta.placeholder=c.h;ta.id='ta';
- const sb=el('button','send','↑');sb.id='sb';sb.onclick=send;
- ta.onkeydown=e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send()}};
- ta.oninput=()=>{ta.style.height='auto';ta.style.height=Math.min(ta.scrollHeight,140)+'px'};
- f.append(ta,sb);m.append(f);
- paint();
-}
-function paint(){
- const box=$('#box');if(!box)return;box.innerHTML='';const c=MODES[st.mode],list=st.chats[st.mode]||[];
- if(!list.length){
-  const e=el('div','empty');e.innerHTML=`<div class="ic">${svg(c.i,38)}</div><h3>${c.t}</h3><p>${c.intro}</p>`;
-  c.ex.forEach(x=>{const b=el('button','ex',x);b.onclick=()=>{$('#ta').value=x;$('#ta').focus()};e.append(b)});box.append(e);return;
- }
- list.forEach(msg=>box.append(bubble(msg)));box.scrollTop=box.scrollHeight;
-}
-function bubble(msg){
- const b=el('div','m '+(msg.r==='u'?'u':'a')+(msg.e?' e':''));
- if(msg.img){const i=el('img');i.src='data:image/jpeg;base64,'+msg.img;b.append(i);const a=el('div','act');const dl=el('a','','Скачать');dl.href=i.src;dl.download='v-agent.jpg';a.append(dl);b.append(a)}
- else{b.append(document.createTextNode(msg.t));if(msg.r==='a'&&!msg.e){const a=el('div','act');const cp=el('button','','Копировать');cp.onclick=()=>{navigator.clipboard&&navigator.clipboard.writeText(msg.t);cp.textContent='Скопировано'};a.append(cp);b.append(a)}}
- return b;
-}
-async function send(){
- const ta=$('#ta');const text=(ta.value||'').trim();if(!text||st.busy)return;
- const mode=st.mode,list=st.chats[mode]||(st.chats[mode]=[]);
- list.push({r:'u',t:text});ta.value='';ta.style.height='auto';st.busy=true;$('#sb').disabled=true;paint();
- const th=el('div','m a',MODES[mode].w+'…');th.style.fontStyle='italic';$('#box').append(th);$('#box').scrollTop=1e9;
- let n=0;const iv=setInterval(()=>{th.textContent=MODES[mode].w+'.'.repeat(n++%3+1)},450);
- const msg={r:'a',t:''};
- try{
-  if(mode==='chat'){
-   const ctx=list.slice(-10).filter(x=>!x.e&&x.t).map(x=>({role:x.r==='u'?'user':'assistant',content:x.t}));
-   msg.t=await chatAI([{role:'system',content:SYS},...ctx],1200);
-  }else if(mode==='image'){
-   let p=text;if(/[а-яё]/i.test(p))p=await chatAI([{role:'system',content:'Translate the user text to English for an image generator. Output only the translation.'},{role:'user',content:p}],200)||p;
-   const d=await ai('/ai/image',{prompt:p+', '+STY[st.style][1]});msg.img=d.image;msg.t='Картинка';
-  }else if(mode==='ideas'){
-   msg.t=await chatAI([{role:'system',content:'Ты креативный SMM-редактор. Выдаёшь только нумерованный список, без пояснений.'},{role:'user',content:`Придумай 10 свежих, конкретных идей для постов в соцсетях на тему: «${text}». Каждая идея — одна строка: цепляющий заголовок и короткая суть. Нумерованный список 1–10, на русском.`}],900);
-  }else if(mode==='templates'){
-   const t=TPL.find(x=>x[0]===st.tpl)||TPL[0];
-   msg.t=await chatAI([{role:'system',content:'Ты SMM-редактор. Выдаёшь только готовый пост без комментариев.'},{role:'user',content:`Напиши пост по шаблону «${t[1]}».\nТема: ${text}\nСтруктура: ${t[2]}.\nПиши на русском, живым языком, без HTML и Markdown.`}],1200);
-  }else{
-   const r=await chatAI([{role:'system',content:'Ты помогаешь подбирать хештеги для соцсетей.'},{role:'user',content:`Тема: «${text}». Сгенерируй РОВНО 20 хештегов по теме. Каждый хештег — одно обычное русское слово, слова не склеивать. Выведи только хештеги через пробел.`}],400);
-   const tags=[...new Set((r.match(/#[\p{L}\d_]+/gu)||[]).map(x=>x.toLowerCase()))].slice(0,20);msg.t=tags.length?tags.join(' '):r;
-  }
-  msg.t=(msg.t||'').replace(/\*\*/g,'').trim();if(!msg.t&&!msg.img)throw new Error('Пустой ответ, попробуй ещё раз');
- }catch(e){msg.t='❌ '+e.message;msg.e=true}
- clearInterval(iv);list.push(msg);if(list.length>40)list.splice(0,list.length-40);save();st.busy=false;
- if(st.mode===mode&&st.view==='neuro'){$('#sb').disabled=false;paint()}
-}
-function openSheet(){
- const sh=$('#sh');sh.innerHTML='<i></i><h3 style="margin:0 4px 4px;font:600 20px Unbounded,sans-serif">Что делаем?</h3><p style="color:var(--mute);font-size:12px;margin:0 4px 10px">Выбери режим — чат останется тем же.</p>';
- Object.entries(MODES).forEach(([id,c])=>{const b=el('button','si'+(id===st.mode?' on':''));b.innerHTML=`<span class="ic">${svg(c.i,19)}</span><span style="flex:1"><b style="display:block;color:var(--ink)">${c.t}</b><small>${c.s}</small></span>${id===st.mode?'✓':''}`;b.onclick=()=>{closeSheet();setTimeout(()=>{st.mode=id;drawNav();draw()},180)};sh.append(b)});
- $('#sheet').classList.add('on');let y0=0;sh.ontouchstart=e=>y0=e.touches[0].clientY;sh.ontouchend=e=>{if(e.changedTouches[0].clientY-y0>70&&sh.scrollTop<=0)closeSheet()};
-}
-const closeSheet=()=>$('#sheet').classList.remove('on');
-function me(m){
- const sc=el('div','scroll me');const k=cf();
- sc.innerHTML=`<div class="card" style="display:flex;gap:14px;align-items:center"><div class="ava" style="width:56px;height:56px;font-size:24px" id="ava2"></div><div><h3 id="nm2" style="font-size:20px;margin:0"></h3><p style="margin:0">Аккаунт V-Agent</p></div></div>
- <div class="card"><h3>Ключ Cloudflare</h3><p>Нужен для работы ИИ (текст и картинки). Хранится только в этом браузере.</p>
- <input class="f" id="tk" type="password" placeholder="API токен (cfut_…)" value="${k?'••••••••':''}"><input class="f" id="ac" placeholder="Account ID (32 символа или вся ссылка)" value="${k?k.account:''}">
- <div class="row"><button class="btn" onclick="saveKey()">Сохранить и проверить</button>${k?'<button class="btn g" onclick="delKey()">Удалить</button>':''}</div><div class="st" id="ks"></div></div>
- <div class="card"><h3>Сменить пароль</h3><p>Введи старый и новый пароль.</p><input class="f" id="op" type="password" placeholder="Старый пароль"><input class="f" id="np" type="password" placeholder="Новый пароль (от 4 символов)"><div class="row"><button class="btn" onclick="chPass()">Сменить пароль</button></div><div class="st" id="ps"></div></div>
- <div class="card"><h3>О V-Agent</h3><p>Помощник для авторов и админов каналов: чат с ИИ, картинки, идеи, шаблоны постов и хештеги. Автопостинг в Telegram и разбор видео — в приложении.</p><div class="row"><a class="btn g" href="index.html#download">Скачать приложение</a><button class="btn g" onclick="logout()">Выйти</button></div></div>`;
- m.append(sc);$('#ava2').textContent=USER[0].toUpperCase();$('#nm2').textContent=USER;
-}
-async function saveKey(){
- const s=$('#ks');let tk=$('#tk').value.trim();const old=cf();if(tk.startsWith('•')&&old)tk=old.token;
- const a=($('#ac').value.match(/[a-f0-9]{32}/i)||[''])[0];
- if(tk.length<20||!a){s.className='st er';s.textContent='Проверь токен и Account ID';return}
- localStorage.setItem(CKEY,JSON.stringify({token:tk,account:a}));s.className='st';s.textContent='Проверяю…';
- try{await chatAI([{role:'user',content:'Ответь одним словом: привет'}],20);s.className='st ok';s.textContent='Ключ работает ✓'}catch(e){s.className='st er';s.textContent=e.message}
-}
-function delKey(){localStorage.removeItem(CKEY);draw()}
-async function chPass(){
- const s=$('#ps'),o=$('#op').value,n=$('#np').value;if(!o||n.length<4){s.className='st er';s.textContent='Заполни поля (новый пароль от 4 символов)';return}
- try{const r=await fetch(API+'/change-password',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:USER,old_password:o,new_password:n})});const d=await r.json();s.className='st '+(r.ok?'ok':'er');s.textContent=r.ok?'Пароль изменён ✓':(d.error||'Ошибка')}catch(e){s.className='st er';s.textContent='Нет связи с сервером'}
-}
-function logout(){localStorage.removeItem('vagent_user');location.href='web.html'}
+    /* --- МОДАЛЬНОЕ ОКНО --- */
+    function openModal(type) {
+        const modal = document.getElementById('info-modal');
+        modal.style.display = 'flex';
+        const title = document.getElementById('modal-title');
+        const text = document.getElementById('modal-text');
 
-let dp;const ios=/iPad|iPhone|iPod/.test(navigator.userAgent),sa=matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
-const showPwa=()=>{if(!sa&&!localStorage.getItem('pwa_dismissed')&&innerWidth<900)setTimeout(()=>$('#pwa').classList.add('on'),2500)};
-if(ios){$('#pwab').textContent='Как?';showPwa()}
-addEventListener('beforeinstallprompt',e=>{e.preventDefault();dp=e;showPwa()});
-$('#pwab').onclick=()=>{if(ios)alert('Нажми «Поделиться» внизу экрана → «На экран Домой» → «Добавить».');else if(dp){dp.prompt();dp=null}};
-function closePwa(){$('#pwa').classList.remove('on');localStorage.setItem('pwa_dismissed','1')}
-addEventListener('resize',()=>{drawNav()});
-drawNav();draw();
+        if (type === 'privacy') {
+            title.textContent = 'Конфиденциальность и Безопасность';
+            text.innerHTML = `<p>Мы серьезно относимся к защите ваших данных...</p>`;
+        } else if (type === 'rules') {
+            title.textContent = 'Правила использования';
+            text.innerHTML = `<p>Добро пожаловать в V-Agent! Чтобы всем было комфортно, соблюдайте простые правила...</p>`;
+        }
+    }
+    function closeModal() { document.getElementById('info-modal').style.display = 'none'; }
+    document.getElementById('info-modal').addEventListener('click', (e) => {
+        if (e.target.id === 'info-modal') closeModal();
+    });
+
+    /* --- ПРОФИЛЬ --- */
+    function togglePMenu(e){e.stopPropagation();$('#pmenu').classList.toggle('on')}
+    function closePMenu(){$('#pmenu').classList.remove('on')}
+    document.addEventListener('click',e=>{if(!e.target.closest('#chip')&&!e.target.closest('#pmenu'))closePMenu()});
+    $('#pm-ic1').outerHTML=svg('user',16);
+    $('#pm-ic2').outerHTML=svg('lock',16);
+
+    async function ai(path,body){
+     const k=cf();if(!k)throw new Error('Добавь ключ Cloudflare в разделе «Профиль»');
+     let r;try{r=await fetch(API+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...body,token:k.token,account_id:k.account})})}catch(e){throw new Error('Нет связи с сервером')}
+     const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||'Ошибка ИИ');return d;
+    }
+    const chatAI=(messages,max)=>ai('/ai/text',{messages,max_tokens:max||900}).then(d=>(d.text||'').trim());
+
+    const NAV=[['home','home','Главная'],['chat','chat','Чат с ИИ'],['image','image','Картинки'],['ideas','bulb','Идеи'],['templates','grid','Шаблоны'],['hashtags','hash','Хештеги'],['tg','send','Telegram',1],['me','user','Профиль']];
+    function go(v,mode){if(mode)st.mode=mode;st.view=v;drawNav();draw()}
+    function drawNav(){
+     const on=n=>st.view==='neuro'?n===st.mode:n===st.view;
+     $('#side').innerHTML='';
+     NAV.forEach(([id,ic,t,lock],i)=>{
+      if(i===1||id==='tg')$('#side').append(el('div','sep'));
+      const b=el('button','si'+(on(id)?' on':''));const ib=el('span','ic');ib.innerHTML=svg(ic,18);const lb=el('span','',t);if(lock){const l=el('span');l.innerHTML=svg('lock',13);l.style.cssText='display:inline-block;vertical-align:-2px;margin-left:6px;opacity:.7';lb.append(l)}b.append(ib,lb);
+      b.onclick=()=>MODES[id]?go('neuro',id):go(id);$('#side').append(b);
+     });
+     const T=[['home','home','Главная'],['neuro','spark','Нейросети'],['tg','send','Telegram',1],['me','user','Профиль']];
+     $('#tabs').innerHTML='';
+     T.forEach(([id,ic,t,lock])=>{const b=el('button','tb'+(st.view===id?' on':''));const ib=el('span');ib.innerHTML=svg(ic,22);b.append(ib,el('div','',t));if(lock){const l=el('i','lock');l.innerHTML=svg('lock',10);b.append(l)}b.onclick=()=>go(id);$('#tabs').append(b)});
+    }
+    function draw(){
+     const m=$('#main');m.innerHTML='';
+     if(st.view==='home')home(m);else if(st.view==='neuro')neuro(m);else if(st.view==='tg')tg(m);else me(m);
+    }
+    function home(m){
+     const sc=el('div','scroll');
+     const h=el('div','pc');const hr=new Date().getHours();
+     h.innerHTML=`<h1 style="font:600 28px Unbounded,sans-serif;margin:4px 4px 14px">${hr<5?'Доброй ночи':hr<12?'Доброе утро':hr<18?'Добрый день':'Добрый вечер'}, <span style="color:var(--ac)"></span></h1>`;h.querySelector('span').textContent=USER;sc.append(h);
+     const hero=el('div','hero');
+     hero.innerHTML='<div style="position:relative"><span class="tag">Telegram-канал</span><h2>Автоматизируй<br>свой <b>Telegram-канал</b></h2><a class="btn w" href="index.html#download">Скачать приложение →</a></div>';
+     sc.append(hero,el('div','lab','БЫСТРЫЙ ДОСТУП'));
+     const g=el('div','grid');
+     Object.entries(MODES).forEach(([id,c])=>{const b=el('button','qc');b.innerHTML=`<span class="ic">${svg(c.i,26)}</span><div><b>${c.t}</b><small>${c.s}</small></div>`;b.onclick=()=>go('neuro',id);g.append(b)});
+     const v=el('button','qc off');v.innerHTML='<span class="ic">'+svg('film',26)+'</span><div><b>Видео</b><small>Пересказ и промпт — в приложении</small></div>';v.onclick=()=>go('tg');g.append(v);
+     sc.append(g);m.append(sc);
+    }
+    function tg(m){
+     const sc=el('div','scroll');
+     sc.innerHTML=`<div class="empty" style="margin-top:40px"><div class="ic" style="background:linear-gradient(135deg,#F2C14E,#E0963A);color:#1A1405">${svg('lock',36)}</div><h3>Только в приложении</h3><p>Автоведение Telegram-канала (автопостинг по расписанию), автосоздание постов и разбор видео работают в приложении V-Agent и доступны по Premium-подписке.</p><a class="btn" href="index.html#download">Скачать приложение</a></div>`;
+     m.append(sc);
+    }
+    function neuro(m){
+     const c=MODES[st.mode],list=st.chats[st.mode]||(st.chats[st.mode]=[]);
+     const hd=el('div','mh');const pill=el('div','pill');pill.innerHTML=`<span class="ic">${svg(c.i,19)}</span><div><b>${c.t}</b><small>${c.s}</small></div><span class="ph" style="color:var(--mute)">⌄</span>`;pill.onclick=()=>{if(innerWidth<900)openSheet()};
+     const nw=el('button','btn g','＋ Новый чат');nw.style.marginLeft='auto';nw.onclick=()=>{if(st.busy)return;st.chats[st.mode]=[];save();draw()};
+     hd.append(pill,nw);m.append(hd);
+     const box=el('div','box');box.id='box';m.append(box);
+     if(!cf()){const w=el('div','warn','⚠ Добавь ключ Cloudflare в разделе «Профиль», чтобы ИИ заработал →');w.onclick=()=>go('me');m.append(w)}
+     if(st.mode==='image'||st.mode==='templates'){
+      const o=el('div','opts');
+      (st.mode==='image'?Object.entries(STY).map(([k,v])=>[k,v[0]]):TPL.map(t=>[t[0],t[1]])).forEach(([k,t])=>{const cur=st.mode==='image'?st.style:st.tpl;const b=el('button','op'+(k===cur?' on':''),t);b.onclick=()=>{st[st.mode==='image'?'style':'tpl']=k;[...o.children].forEach(x=>x.classList.remove('on'));b.classList.add('on')};o.append(b)});m.append(o);
+     }
+     const f=el('div','inp');const ta=el('textarea');ta.rows=1;ta.placeholder=c.h;ta.id='ta';
+     const sb=el('button','send','↑');sb.id='sb';sb.onclick=send;
+     ta.onkeydown=e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send()}};
+     ta.oninput=()=>{ta.style.height='auto';ta.style.height=Math.min(ta.scrollHeight,140)+'px'};
+     f.append(ta,sb);m.append(f);
+     paint();
+    }
+    function paint(){
+     const box=$('#box');if(!box)return;box.innerHTML='';const c=MODES[st.mode],list=st.chats[st.mode]||[];
+     if(!list.length){
+      const e=el('div','empty');e.innerHTML=`<div class="ic">${svg(c.i,38)}</div><h3>${c.t}</h3><p>${c.intro}</p>`;
+      c.ex.forEach(x=>{const b=el('button','ex',x);b.onclick=()=>{$('#ta').value=x;$('#ta').focus()};e.append(b)});box.append(e);return;
+     }
+     list.forEach(msg=>box.append(bubble(msg)));box.scrollTop=box.scrollHeight;
+    }
+    function bubble(msg){
+     const b=el('div','m '+(msg.r==='u'?'u':'a')+(msg.e?' e':''));
+     if(msg.img){const i=el('img');i.src='data:image/jpeg;base64,'+msg.img;b.append(i);const a=el('div','act');const dl=el('a','','Скачать');dl.href=i.src;dl.download='v-agent.jpg';a.append(dl);b.append(a)}
+     else{b.append(document.createTextNode(msg.t));if(msg.r==='a'&&!msg.e){const a=el('div','act');const cp=el('button','','Копировать');cp.onclick=()=>{navigator.clipboard&&navigator.clipboard.writeText(msg.t);cp.textContent='Скопировано'};a.append(cp);b.append(a)}}
+     return b;
+    }
+    async function send(){
+     const ta=$('#ta');const text=(ta.value||'').trim();if(!text||st.busy)return;
+     const mode=st.mode,list=st.chats[mode]||(st.chats[mode]=[]);
+     list.push({r:'u',t:text});ta.value='';ta.style.height='auto';st.busy=true;$('#sb').disabled=true;paint();
+     const th=el('div','m a',MODES[mode].w+'…');th.style.fontStyle='italic';$('#box').append(th);$('#box').scrollTop=1e9;
+     let n=0;const iv=setInterval(()=>{th.textContent=MODES[mode].w+'.'.repeat(n++%3+1)},450);
+     const msg={r:'a',t:''};
+     try{
+      if(mode==='chat'){
+       const ctx=list.slice(-10).filter(x=>!x.e&&x.t).map(x=>({role:x.r==='u'?'user':'assistant',content:x.t}));
+       msg.t=await chatAI([{role:'system',content:SYS},...ctx],1200);
+      }else if(mode==='image'){
+       let p=text;if(/[а-яё]/i.test(p))p=await chatAI([{role:'system',content:'Translate the user text to English for an image generator. Output only the translation.'},{role:'user',content:p}],200)||p;
+       const d=await ai('/ai/image',{prompt:p+', '+STY[st.style][1]});msg.img=d.image;msg.t='Картинка';
+      }else if(mode==='ideas'){
+       msg.t=await chatAI([{role:'system',content:'Ты креативный SMM-редактор. Выдаёшь только нумерованный список, без пояснений.'},{role:'user',content:`Придумай 10 свежих, конкретных идей для постов в соцсетях на тему: «${text}». Каждая идея — одна строка: цепляющий заголовок и короткая суть. Нумерованный список 1–10, на русском.`}],900);
+      }else if(mode==='templates'){
+       const t=TPL.find(x=>x[0]===st.tpl)||TPL[0];
+       msg.t=await chatAI([{role:'system',content:'Ты SMM-редактор. Выдаёшь только готовый пост без комментариев.'},{role:'user',content:`Напиши пост по шаблону «${t[1]}».\nТема: ${text}\nСтруктура: ${t[2]}.\nПиши на русском, живым языком, без HTML и Markdown.`}],1200);
+      }else{
+       const r=await chatAI([{role:'system',content:'Ты помогаешь подбирать хештеги для соцсетей.'},{role:'user',content:`Тема: «${text}». Сгенерируй РОВНО 20 хештегов по теме. Каждый хештег — одно обычное русское слово, слова не склеивать. Выведи только хештеги через пробел.`}],400);
+       const tags=[...new Set((r.match(/#[\p{L}\d_]+/gu)||[]).map(x=>x.toLowerCase()))].slice(0,20);msg.t=tags.length?tags.join(' '):r;
+      }
+      msg.t=(msg.t||'').replace(/\*\*/g,'').trim();if(!msg.t&&!msg.img)throw new Error('Пустой ответ, попробуй ещё раз');
+     }catch(e){msg.t='❌ '+e.message;msg.e=true}
+     clearInterval(iv);list.push(msg);if(list.length>40)list.splice(0,list.length-40);save();st.busy=false;
+     if(st.mode===mode&&st.view==='neuro'){$('#sb').disabled=false;paint()}
+    }
+    function openSheet(){
+     const sh=$('#sh');sh.innerHTML='<i></i><h3 style="margin:0 4px 4px;font:600 20px Unbounded,sans-serif">Что делаем?</h3><p style="color:var(--mute);font-size:12px;margin:0 4px 10px">Выбери режим — чат останется тем же.</p>';
+     Object.entries(MODES).forEach(([id,c])=>{const b=el('button','si'+(id===st.mode?' on':''));b.innerHTML=`<span class="ic">${svg(c.i,19)}</span><span style="flex:1"><b style="display:block;color:var(--ink)">${c.t}</b><small>${c.s}</small></span>${id===st.mode?'✓':''}`;b.onclick=()=>{closeSheet();setTimeout(()=>{st.mode=id;drawNav();draw()},180)};sh.append(b)});
+     $('#sheet').classList.add('on');let y0=0;sh.ontouchstart=e=>y0=e.touches[0].clientY;sh.ontouchend=e=>{if(e.changedTouches[0].clientY-y0>70&&sh.scrollTop<=0)closeSheet()};
+    }
+    const closeSheet=()=>$('#sheet').classList.remove('on');
+    function me(m){
+     const sc=el('div','scroll me');const k=cf();
+     sc.innerHTML=`<div class="card" style="display:flex;gap:14px;align-items:center"><div class="ava" style="width:56px;height:56px;font-size:24px" id="ava2"></div><div><h3 id="nm2" style="font-size:20px;margin:0"></h3><p style="margin:0">Аккаунт V-Agent</p></div></div>
+     <div class="card"><h3>Ключ Cloudflare</h3><p>Нужен для работы ИИ (текст и картинки). Хранится только в этом браузере.</p>
+     <input class="f" id="tk" type="password" placeholder="API токен (cfut_…)" value="${k?'••••••••':''}"><input class="f" id="ac" placeholder="Account ID (32 символа или вся ссылка)" value="${k?k.account:''}">
+     <div class="row"><button class="btn" onclick="saveKey()">Сохранить и проверить</button>${k?'<button class="btn g" onclick="delKey()">Удалить</button>':''}</div><div class="st" id="ks"></div></div>
+     <div class="card"><h3>Сменить пароль</h3><p>Введи старый и новый пароль.</p><input class="f" id="op" type="password" placeholder="Старый пароль"><input class="f" id="np" type="password" placeholder="Новый пароль (от 4 символов)"><div class="row"><button class="btn" onclick="chPass()">Сменить пароль</button></div><div class="st" id="ps"></div></div>
+     <div class="card"><h3>О V-Agent</h3><p>Помощник для авторов и админов каналов: чат с ИИ, картинки, идеи, шаблоны постов и хештеги. Автопостинг в Telegram и разбор видео — в приложении.</p><div class="row"><a class="btn g" href="index.html#download">Скачать приложение</a><button class="btn g" onclick="logout()">Выйти</button></div></div>`;
+     m.append(sc);$('#ava2').textContent=USER[0].toUpperCase();$('#nm2').textContent=USER;
+    }
+    async function saveKey(){
+     const s=$('#ks');let tk=$('#tk').value.trim();const old=cf();if(tk.startsWith('•')&&old)tk=old.token;
+     const a=($('#ac').value.match(/[a-f0-9]{32}/i)||[''])[0];
+     if(tk.length<20||!a){s.className='st er';s.textContent='Проверь токен и Account ID';return}
+     localStorage.setItem(CKEY,JSON.stringify({token:tk,account:a}));s.className='st';s.textContent='Проверяю…';
+     try{await chatAI([{role:'user',content:'Ответь одним словом: привет'}],20);s.className='st ok';s.textContent='Ключ работает ✓'; addNotification('Ключ Cloudflare успешно сохранен!', 'success')}catch(e){s.className='st er';s.textContent=e.message; addNotification('Ошибка ключа Cloudflare: ' + e.message, 'error')}
+    }
+    function delKey(){localStorage.removeItem(CKEY);draw()}
+    async function chPass(){
+     const s=$('#ps'),o=$('#op').value,n=$('#np').value;if(!o||n.length<4){s.className='st er';s.textContent='Заполни поля (новый пароль от 4 символов)';return}
+     try{const r=await fetch(API+'/change-password',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:USER,old_password:o,new_password:n})});const d=await r.json();s.className='st '+(r.ok?'ok':'er');s.textContent=r.ok?'Пароль изменён ✓':(d.error||'Ошибка'); if(r.ok) addNotification('Пароль успешно изменен!', 'success'); else addNotification('Ошибка смены пароля: '+(d.error||''), 'error')}catch(e){s.className='st er';s.textContent='Нет связи с сервером'}
+    }
+    function logout(){localStorage.removeItem('vagent_user');location.href='web.html'}
+
+    let dp;const ios=/iPad|iPhone|iPod/.test(navigator.userAgent),sa=matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+    const showPwa=()=>{if(!sa&&!localStorage.getItem('pwa_dismissed')&&innerWidth<900)setTimeout(()=>$('#pwa').classList.add('on'),2500)};
+    if(ios){$('#pwab').textContent='Как?';showPwa()}
+    addEventListener('beforeinstallprompt',e=>{e.preventDefault();dp=e;showPwa()});
+    $('#pwab').onclick=()=>{if(ios)alert('Нажми «Поделиться» внизу экрана → «На экран Домой» → «Добавить».');else if(dp){dp.prompt();dp=null}};
+    function closePwa(){$('#pwa').classList.remove('on');localStorage.setItem('pwa_dismissed','1')}
+    addEventListener('resize',()=>{drawNav()});
+    drawNav();draw();
+}
 </script>
 </body>
 </html>
