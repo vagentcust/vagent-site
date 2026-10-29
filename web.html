@@ -40,6 +40,7 @@
             padding-bottom: 10px;
         }
 
+        /* ФОН */
         .bg-glow {
             position: fixed;
             top: 0; left: 0;
@@ -57,26 +58,27 @@
         }
         .bg-glow.loaded { opacity: 1; }
 
-        /* ЭКРАН ЗАГРУЗКИ (5 секунд) */
+        /* ЭКРАН ЗАГРУЗКИ */
         .loader-screen {
             position: fixed;
             inset: 0;
-            background: #000000;
+            background: transparent; /* Пропускаем фон, чтобы панель была видна */
             z-index: 9999;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 30px;
+            gap: 25px;
             transition: opacity 0.6s ease;
+            pointer-events: none; /* Чтобы панель сверху была кликабельна, если нужно */
         }
         .loader-screen.hidden {
             opacity: 0;
             pointer-events: none;
         }
         .loader-logo {
-            width: 520px; /* Увеличено в 2 раза */
-            max-width: 95vw;
+            width: 260px; /* Стандартный размер, не меняем */
+            max-width: 82vw;
             animation: pulse 1.5s ease-in-out infinite alternate;
         }
         @keyframes pulse {
@@ -98,26 +100,8 @@
             border-radius: 4px;
             transition: width 0.1s linear;
         }
-        .loader-marquee {
-            width: 260px;
-            max-width: 82vw;
-            overflow: hidden;
-            white-space: nowrap;
-            color: var(--mute);
-            font-size: 13px;
-            position: relative;
-            text-align: left;
-        }
-        .loader-marquee span {
-            display: inline-block;
-            padding-left: 100%;
-            animation: marquee 6s linear infinite;
-        }
-        @keyframes marquee {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-100%); }
-        }
 
+        /* ВЕРХНЯЯ ПАНЕЛЬ */
         .nav {
             position: absolute;
             top: 20px;
@@ -125,7 +109,7 @@
             transform: translateX(-50%);
             width: calc(100% - 40px);
             max-width: 1040px;
-            z-index: 20;
+            z-index: 10000; /* Выше экрана загрузки */
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -148,8 +132,10 @@
             transition: opacity 0.3s;
         }
         .nav-logo:hover { opacity: 0.8; }
+
+        /* УВЕЛИЧИВАЕМ ЛОГО В ПАНЕЛИ В 2 РАЗА */
         .nav-logo img.nav-icon {
-            height: 26px;
+            height: 52px;
             width: auto;
             object-fit: contain;
             display: block;
@@ -265,6 +251,7 @@
         .notif-item.error { border-left: 3px solid #FF3B30; color: #FF8A80; }
         .notif-item.success { border-left: 3px solid #4CAF50; color: #81C784; }
 
+        /* ФОРМА */
         .glass-container {
             position: relative;
             z-index: 10;
@@ -307,8 +294,10 @@
             width: 100%;
             margin-bottom: 20px;
         }
+
+        /* УВЕЛИЧИВАЕМ ЛОГО НА ФОРМЕ */
         .logo-img {
-            width: 260px;
+            width: 320px;
             max-width: 100%;
             height: auto;
             object-fit: contain;
@@ -349,7 +338,7 @@
             box-shadow: 0 0 0 3px rgba(135, 148, 255, 0.2);
         }
 
-        .hidden { display: none; }
+        .hidden { display: none !important; }
 
         .btn {
             width: 100%;
@@ -402,7 +391,8 @@
 
         @media (max-width: 600px) {
             .nav { top: 10px; width: calc(100% - 20px); height: 52px; padding: 0 14px; border-radius: 16px; }
-            .nav-logo img.nav-icon { height: 22px; }
+            /* На мобилках лого тоже больше, но не настолько, чтобы сломать панель */
+            .nav-logo img.nav-icon { height: 32px; }
             .nav-link[href*="#download"] { display: none; }
             .nav-right { gap: 10px; }
             .nav-link { font-size: 12px; padding: 6px 2px; }
@@ -410,25 +400,26 @@
             .nav-bell svg { width: 16px; height: 16px; }
             .bell-badge { width: 8px; height: 8px; top: 2px; right: 2px; border-width: 1.5px; }
             .notif-dropdown { position: fixed; top: 70px; left: 50%; transform: translateX(-50%); width: calc(100vw - 30px); max-width: 340px; }
+
             .glass-container { margin-top: 50px; padding: 10px; max-height: calc(100vh - 60px); }
             .glass-card { padding: 25px 20px 30px 20px; border-radius: 24px; box-shadow: none; }
-            .logo-img { width: 220px; margin-bottom: 15px; }
+            .logo-img { width: 260px; margin-bottom: 15px; }
             .input-group { margin-bottom: 12px; }
             .input-group input { padding: 13px 14px 13px 42px; font-size: 14px; }
             .input-icon { left: 14px; width: 18px; height: 18px; }
             .btn { padding: 13px; font-size: 14px; }
             .btn-link { margin-top: 14px; font-size: 12px; }
 
-            .loader-logo { width: 320px; }
-            .loader-bar-container { width: 200px; }
+            .loader-logo { width: 200px; }
+            .loader-bar-container { width: 180px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- ЭКРАН ЗАГРУЗКИ: 5 СЕКУНД -->
+    <!-- ЭКРАН ЗАГРУЗКИ (5 СЕКУНД) -->
     <div class="loader-screen" id="loader">
-        <img src="img.png" alt="V-AGENT" class="loader-logo">
+        <img src="logo_text.png" alt="V-AGENT" class="loader-logo">
         <div class="loader-bar-container">
             <div class="loader-bar" id="loader-bar"></div>
         </div>
@@ -437,6 +428,7 @@
     <!-- ОСНОВНОЙ КОНТЕНТ -->
     <div class="bg-glow" id="bg-glow"></div>
 
+    <!-- ПАНЕЛЬ (Всегда сверху, даже при загрузке) -->
     <nav class="nav">
         <div class="nav-left">
             <a href="index.html" class="nav-logo">
@@ -470,7 +462,7 @@
         <div class="glass-card">
 
             <div class="logo-block">
-                <img src="img.png" alt="V-AGENT" class="logo-img">
+                <img src="logo_text.png" alt="V-AGENT" class="logo-img">
             </div>
 
             <div class="input-group">
@@ -489,6 +481,7 @@
                 <input type="password" id="password" placeholder="Пароль" autocomplete="current-password">
             </div>
 
+            <!-- Поле добавляется при регистрации -->
             <div class="input-group hidden" id="confirm-group">
                 <svg class="input-icon" viewBox="0 0 24 24">
                     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
@@ -519,7 +512,7 @@
 
             let progress = 0;
             const interval = setInterval(() => {
-                progress += 2;
+                progress += 2; // 5 секунд = 50 шагов * 50мс
                 bar.style.width = Math.min(progress, 100) + '%';
 
                 if (progress >= 100) {
@@ -576,11 +569,9 @@
                     <h3>1. Никакого хранения в открытом виде</h3>
                     <p>Мы <b>никогда</b> не сохраняем ваш пароль в виде обычного текста. Если база данных будет украдена, злоумышленники не смогут прочитать пароли.</p>
                     <h3>2. Хеширование (SHA-256 и соль)</h3>
-                    <p>Ваш пароль превращается в уникальный набор символов с помощью криптографического алгоритма <b>SHA-256</b>. Перед этим к паролю добавляется случайная "соль" (уникальная строка для каждого пользователя). Это делает невозможным использование "радужных таблиц" для взлома.</p>
+                    <p>Ваш пароль превращается в уникальный набор символов с помощью криптографического алгоритма <b>SHA-256</b>. Перед этим к паролю добавляется случайная "соль".</p>
                     <h3>3. Где хранятся данные?</h3>
-                    <p>Данные хранятся в защищенном облаке Cloudflare (Workers KV). Cloudflare использует шифрование AES-256 для всех данных в состоянии покоя. Даже сотрудники Cloudflare не могут прочитать ваши данные.</p>
-                    <h3>4. Мы не видим ваши пароли</h3>
-                    <p>Даже администраторы V-AGENT не имеют доступа к вашим паролям. Мы видим только хеш (набор символов). Восстановить из него исходный пароль математически невозможно.</p>
+                    <p>Данные хранятся в защищенном облаке Cloudflare (Workers KV) с шифрованием AES-256.</p>
                 `;
             }
         }
@@ -615,6 +606,7 @@
                 addNotification("Заполни логин и пароль", "error");
                 return;
             }
+
             if (!isLoginMode) {
                 if (pass !== confirmPass) {
                     addNotification("Пароли не совпадают", "error");
@@ -639,11 +631,17 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username: user, password: pass })
                 });
+
                 const data = await res.json();
+
                 if (res.ok) {
                     localStorage.setItem('vagent_user', user);
                     addNotification(isLoginMode ? `Успешный вход!` : `Аккаунт создан!`, "success");
-                    setTimeout(() => { location.replace('./app.html'); }, 1000);
+
+                    setTimeout(() => {
+                        location.replace('./app.html');
+                    }, 1000);
+
                 } else {
                     addNotification(data.error || "Ошибка авторизации", "error");
                 }
