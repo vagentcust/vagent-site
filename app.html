@@ -388,7 +388,7 @@ main{flex:1;min-height:0;position:relative;display:flex;flex-direction:column;wi
   <div class="foot" id="foot"></div>
  </aside>
  <div class="stage">
-
+  
   <!-- НОВАЯ ПАНЕЛЬ СВЕРХУ -->
   <nav class="top-nav">
     <a class="logo" href="javascript:void(0)" onclick="go('home')"><img src="logo_text.png" alt="V-Agent"></a>
@@ -396,7 +396,7 @@ main{flex:1;min-height:0;position:relative;display:flex;flex-direction:column;wi
       <a href="index.html#download" class="lnk">Скачать</a>
       <a href="javascript:void(0)" class="lnk" onclick="openModal('privacy')">Безопасность</a>
       <a href="javascript:void(0)" class="lnk" onclick="openModal('rules')">Правила</a>
-
+      
       <div class="bell-wrapper">
           <button class="nav-bell" id="bell-btn">
               <svg viewBox="0 0 24 24">
@@ -421,14 +421,14 @@ main{flex:1;min-height:0;position:relative;display:flex;flex-direction:column;wi
       </div>
     </div>
   </nav>
-
+  
   <header class="top">
    <!-- КЛИКАБЕЛЬНЫЙ ЛОГОТИП МОБИЛКА -->
    <a class="brand" href="javascript:void(0)" onclick="go('home')"><img src="icon.png" alt=""><span>V-Agent</span></a>
    <button class="ibtn gear" id="gm" onclick="go('me')" aria-label="Настройки"></button>
    <button class="ava" id="avm" onclick="go('me')" aria-label="Профиль"></button>
   </header>
-
+  
   <button class="ibtn gear gearf" id="gf" onclick="go('me')" aria-label="Настройки"></button>
   <main id="main"></main>
   <div class="tabs" id="tabs"></div>
@@ -454,13 +454,13 @@ window.addEventListener('load', () => {
     const loader = document.getElementById('loader');
     let progress = 0;
     const interval = setInterval(() => {
-        progress += 5;
+        progress += 5; 
         if (bar) bar.style.width = Math.min(progress, 100) + '%';
         if (progress >= 100) {
             clearInterval(interval);
             setTimeout(() => { if (loader) loader.classList.add('hidden'); }, 200);
         }
-    }, 30);
+    }, 30); 
 });
 
 const API='https://vagent-backend.novalaim11.workers.dev';
@@ -503,13 +503,13 @@ function addNotification(text, type = 'error') {
     item.className = 'notif-item ' + (type === 'success' ? 'success' : '');
     const iconSvg = `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>`;
     item.innerHTML = `<div class="n-icon">${iconSvg}</div><div class="n-text">${text}</div>`;
-
+    
     const empty = notifList.querySelector('.notif-empty');
     if (empty) empty.remove();
 
     notifList.prepend(item);
     bellBadge.classList.add('show');
-
+    
     if (notifList.children.length > 10) {
         notifList.lastElementChild.remove();
     }
@@ -542,7 +542,7 @@ function openModal(type) {
     modal.style.display = 'flex';
     const title = document.getElementById('modal-title');
     const text = document.getElementById('modal-text');
-
+    
     if (type === 'privacy') {
         title.textContent = 'Конфиденциальность и Безопасность';
         text.innerHTML = `<p>Мы серьезно относимся к защите ваших данных. Вот как именно мы обеспечиваем безопасность ваших паролей:</p>
@@ -617,12 +617,12 @@ function home(m){
  const sc=el('div','scroll stg');const hr=new Date().getHours();
  const h=el('div','hello');
  h.innerHTML=`<h1>${hr<5?'Доброй ночи':hr<12?'Доброе утро':hr<18?'Добрый день':'Добрый вечер'}, <span></span></h1><p>Что будем делать сегодня?</p>`;h.querySelector('span').textContent=USER;sc.append(h);
-
+ 
  // АНИМИРОВАННЫЙ БАННЕР
  const hero=el('div','hero');
  hero.innerHTML=`<span class="pl">${svg('send',170)}</span><h2>Автоматизируй свой Telegram-канал</h2><p>Автопостинг по расписанию, посты и разбор видео — в приложении V-Agent.</p><div class="row"><a class="btn w" href="index.html#download">Скачать приложение</a><button class="btn g" id="hl">Подробнее</button></div>`;
  hero.querySelector('#hl').onclick=()=>go('tg');sc.append(hero);
-
+ 
  const s=el('div','sec');s.innerHTML='<h3>Быстрый доступ</h3>';sc.append(s);
  const g=el('div','bento stg');g.style.setProperty('--b',3);
  Object.entries(MODES).forEach(([id,c],i)=>{const b=el('button','qc'+(i<2?' big':''));b.style.setProperty('--c',c.c);b.innerHTML=`<span class="ib">${svg(c.i,24)}</span><div><b>${c.t}</b><small>${c.s}</small></div><span class="go">${svg('arrow',18)}</span>`;b.onclick=()=>go('neuro',id);g.append(b)});
@@ -725,11 +725,18 @@ function me(m){
     <div class="cloud-steps">
         <b>Как получить ключ (бесплатно):</b>
         <ol>
-            <li>Зайди на <a href="https://dash.cloudflare.com" target="_blank">dash.cloudflare.com</a> и войди в аккаунт.</li>
-            <li>В левом меню найди <b>Workers & Pages</b>. Там будет твой <b>Account ID</b> (набор из 32 символов). Скопируй его.</li>
-            <li>Перейди в <b>My Profile</b> -> <b>API Tokens</b> -> <b>Create Token</b>.</li>
-            <li>Создай токен с правами <b>Workers AI (Read)</b>. Скопируй полученный токен (начинается на cfut_...).</li>
-            <li>Вставь оба ключа в поля ниже и нажми «Сохранить».</li>
+            <li>
+                <a href="https://dash.cloudflare.com/profile/api-tokens" target="_blank">Перейди на страницу API Tokens</a> 
+                (или вручную: My Profile → API Tokens) и нажми <b>Create Token</b>. 
+                Создай токен с правами <b>Workers AI (Read)</b>. 
+                Скопируй токен (начинается на cfut_...).
+            </li>
+            <li>
+                <a href="https://dash.cloudflare.com/?to=/:account/workers-and-pages" target="_blank">Перейди в раздел Workers & Pages</a>. 
+                Там в блоке <b>Account Details</b> найди и скопируй свой <b>Account ID</b> (32 символа). 
+                (Или нажми CMD/CTRL+K и введи "Copy account ID").
+            </li>
+            <li>Вставь оба ключа в поля ниже и нажми «Сохранить и проверить».</li>
         </ol>
     </div>`;
  const keyBody=`<p style="color:var(--mute);font-size:13px;margin:4px 0 8px">Нужен для работы ИИ (текст и картинки). Хранится только в этом браузере.</p>
