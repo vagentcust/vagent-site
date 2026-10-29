@@ -11,25 +11,24 @@
 
     <style>
         :root {
-            --bg: #0E1116;
+            --bg: #050508; /* Очень темный, почти черный фон */
             --card: rgba(23, 27, 34, 0.45);
             --ink: #ECEFF4;
             --mute: #8B94A3;
             --line: rgba(255, 255, 255, 0.12);
             --accent: #8794FF;
-            --nav-bg: rgba(14, 17, 22, 0.85);
+            --nav-bg: rgba(10, 10, 15, 0.85);
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
-        /* Убираем горизонтальную прокрутку и делаем красивый скроллбар */
         html, body {
             overflow-x: hidden;
             width: 100%;
-            scrollbar-width: none; /* Firefox */
-            -ms-overflow-style: none; /* IE/Edge */
+            scrollbar-width: none;
+            -ms-overflow-style: none;
         }
         html::-webkit-scrollbar, body::-webkit-scrollbar {
-            display: none; /* Chrome/Safari */
+            display: none;
         }
 
         body {
@@ -45,18 +44,18 @@
             padding-bottom: 10px;
         }
 
-        /* БЕСШОВНЫЙ ФОН */
+        /* --- ГЛУБОКИЙ ТЕМНЫЙ ФОН --- */
         .bg-glow {
             position: fixed;
             top: 0; left: 0;
             width: 100vw; height: 100vh;
             z-index: 0;
             pointer-events: none;
-            background-color: #0E1116;
+            background-color: #050508;
+            /* Очень темные, едва заметные градиенты по краям */
             background-image:
-                radial-gradient(circle at 10% 20%, rgba(61, 90, 254, 0.25) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(192, 38, 211, 0.2) 0%, transparent 45%),
-                radial-gradient(circle at 50% 50%, rgba(0, 188, 212, 0.1) 0%, transparent 50%);
+                radial-gradient(circle at 0% 0%, rgba(30, 40, 90, 0.4) 0%, transparent 50%),
+                radial-gradient(circle at 100% 100%, rgba(60, 15, 70, 0.3) 0%, transparent 50%);
             background-repeat: no-repeat;
             background-size: cover;
         }
@@ -79,7 +78,7 @@
             -webkit-backdrop-filter: blur(20px);
             border: 1px solid var(--line);
             border-radius: 24px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
         }
 
         .nav-left { display: flex; align-items: center; }
@@ -108,7 +107,6 @@
             gap: 20px;
         }
 
-        /* Кнопки в меню */
         .nav-link {
             position: relative;
             color: var(--mute);
@@ -144,10 +142,7 @@
             width: 100%;
         }
 
-        /* КОЛОКОЛЬЧИК И УВЕДОМЛЕНИЯ */
-        .bell-wrapper {
-            position: relative;
-        }
+        .bell-wrapper { position: relative; }
         .nav-bell {
             display: flex;
             align-items: center;
@@ -176,7 +171,6 @@
             stroke-linejoin: round;
         }
 
-        /* Красный кружок непрочитанных */
         .bell-badge {
             position: absolute;
             top: 2px;
@@ -190,7 +184,6 @@
         }
         .bell-badge.show { display: block; }
 
-        /* Выпадающее меню уведомлений */
         .notif-dropdown {
             display: none;
             position: absolute;
@@ -244,7 +237,6 @@
             color: #81C784;
         }
 
-        /* ФОРМА */
         .glass-container {
             position: relative;
             z-index: 10;
@@ -272,13 +264,12 @@
             border: 1px solid var(--line);
             border-radius: 28px;
             padding: 30px 30px 40px 30px;
-            box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255,255,255,0.1);
+            box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255,255,255,0.1);
             display: flex;
             flex-direction: column;
             align-items: center;
         }
 
-        /* Логотип */
         .logo-block {
             display: flex;
             justify-content: center;
@@ -293,7 +284,6 @@
             filter: drop-shadow(0 0 30px rgba(135, 148, 255, 0.4));
         }
 
-        /* Поля ввода */
         .input-group { width: 100%; margin-bottom: 14px; position: relative; }
         .input-icon {
             position: absolute;
@@ -315,7 +305,7 @@
             padding: 14px 18px 14px 48px;
             border-radius: 16px;
             border: 1px solid var(--line);
-            background: rgba(0, 0, 0, 0.2);
+            background: rgba(0, 0, 0, 0.3);
             color: var(--ink);
             font-size: 15px;
             font-family: "Onest", sans-serif;
@@ -324,13 +314,12 @@
         }
         .input-group input:focus {
             border-color: var(--accent);
-            background: rgba(0, 0, 0, 0.4);
+            background: rgba(0, 0, 0, 0.5);
             box-shadow: 0 0 0 3px rgba(135, 148, 255, 0.2);
         }
 
         .hidden { display: none; }
 
-        /* Кнопки */
         .btn {
             width: 100%;
             padding: 14px;
@@ -363,10 +352,9 @@
         }
         .btn-link:hover { color: var(--ink); }
 
-        /* Модальное окно */
         .modal {
             display: none; position: fixed; inset: 0;
-            background: rgba(0,0,0,0.7); backdrop-filter: blur(5px);
+            background: rgba(0,0,0,0.8); backdrop-filter: blur(5px);
             z-index: 100; align-items: center; justify-content: center;
         }
         .modal-content {
@@ -381,53 +369,23 @@
         .modal-content h3 { font-size: 16px; color: var(--accent); margin: 15px 0 5px; }
         .modal-content p { color: var(--mute); font-size: 14px; line-height: 1.5; margin-bottom: 10px; }
 
-        /* =========================================
-           АДАПТИВ ДЛЯ ТЕЛЕФОНОВ
-           ========================================= */
         @media (max-width: 600px) {
-            .nav {
-                top: 10px;
-                width: calc(100% - 20px);
-                padding: 10px 14px;
-                border-radius: 16px;
-            }
+            .nav { top: 10px; width: calc(100% - 20px); padding: 10px 14px; border-radius: 16px; }
             .nav-logo { font-size: 15px; gap: 8px; }
             .nav-logo img.nav-icon { width: 26px; height: 26px; }
             .nav-link[href*="#download"] { display: none; }
-
             .nav-right { gap: 10px; }
             .nav-link { font-size: 12px; padding: 6px 2px; }
             .nav-bell { width: 32px; height: 32px; }
             .nav-bell svg { width: 16px; height: 16px; }
             .bell-badge { width: 8px; height: 8px; top: 2px; right: 2px; border-width: 1.5px; }
-
-            .notif-dropdown {
-                position: fixed;
-                top: 70px;
-                left: 50%;
-                transform: translateX(-50%);
-                width: calc(100vw - 30px);
-                max-width: 340px;
-            }
-
-            .glass-container {
-                margin-top: 50px;
-                padding: 10px;
-                max-height: calc(100vh - 60px);
-            }
-
-            .glass-card {
-                padding: 25px 20px 30px 20px;
-                border-radius: 24px;
-                box-shadow: none;
-            }
-
+            .notif-dropdown { position: fixed; top: 70px; left: 50%; transform: translateX(-50%); width: calc(100vw - 30px); max-width: 340px; }
+            .glass-container { margin-top: 50px; padding: 10px; max-height: calc(100vh - 60px); }
+            .glass-card { padding: 25px 20px 30px 20px; border-radius: 24px; box-shadow: none; }
             .logo-img { width: 260px; margin-bottom: 15px; }
-
             .input-group { margin-bottom: 12px; }
             .input-group input { padding: 13px 14px 13px 42px; font-size: 14px; }
             .input-icon { left: 14px; width: 18px; height: 18px; }
-
             .btn { padding: 13px; font-size: 14px; }
             .btn-link { margin-top: 14px; font-size: 12px; }
         }
@@ -435,10 +393,8 @@
 </head>
 <body>
 
-    <!-- БЕСШОВНЫЙ ФОН -->
     <div class="bg-glow"></div>
 
-    <!-- ВЕРХНЯЯ ПАНЕЛЬ -->
     <nav class="nav">
         <div class="nav-left">
             <a href="index.html" class="nav-logo">
@@ -450,7 +406,6 @@
             <a href="index.html#download" class="nav-link">Скачать</a>
             <button class="nav-link" onclick="openModal('privacy')">Безопасность</button>
 
-            <!-- КОЛОКОЛЬЧИК -->
             <div class="bell-wrapper">
                 <button class="nav-bell" id="bell-btn">
                     <svg viewBox="0 0 24 24">
@@ -460,7 +415,6 @@
                     <div class="bell-badge" id="bell-badge"></div>
                 </button>
 
-                <!-- МЕНЮ УВЕДОМЛЕНИЙ -->
                 <div class="notif-dropdown" id="notif-menu">
                     <div class="notif-header">Уведомления</div>
                     <div class="notif-list" id="notif-list">
@@ -471,7 +425,6 @@
         </div>
     </nav>
 
-    <!-- Стеклянная карточка (ФОРМА) -->
     <div class="glass-container">
         <div class="glass-card">
 
@@ -508,7 +461,6 @@
         </div>
     </div>
 
-    <!-- Модальное окно (для Безопасности) -->
     <div id="info-modal" class="modal">
         <div class="modal-content">
             <button class="modal-close" onclick="closeModal()">×</button>
@@ -518,21 +470,20 @@
     </div>
 
     <script>
-        // --- СИСТЕМА УВЕДОМЛЕНИЙ ---
+        // Уже вошёл — сразу в веб-версию
+        if (localStorage.getItem('vagent_user')) { location.replace('./app.html'); }
+
         const bellBtn = document.getElementById('bell-btn');
         const notifMenu = document.getElementById('notif-menu');
         const notifList = document.getElementById('notif-list');
         const bellBadge = document.getElementById('bell-badge');
 
-        // Функция добавления уведомления (вместо alert)
         function addNotification(text, type = 'info') {
             const item = document.createElement('div');
             item.className = 'notif-item ' + type;
             item.textContent = text;
-            notifList.prepend(item); // Вставляем в начало
-            bellBadge.classList.add('show'); // Показываем красную точку
-
-            // Автоматически открываем меню, чтобы пользователь увидел уведомление
+            notifList.prepend(item);
+            bellBadge.classList.add('show');
             notifMenu.classList.add('show');
         }
 
@@ -550,7 +501,6 @@
             }
         });
 
-        // --- МОДАЛЬНОЕ ОКНО ---
         const modal = document.getElementById('info-modal');
         const modalTitle = document.getElementById('modal-title');
         const modalText = document.getElementById('modal-text');
@@ -564,11 +514,11 @@
                     <h3>1. Никакого хранения в открытом виде</h3>
                     <p>Мы <b>никогда</b> не сохраняем ваш пароль в виде обычного текста. Если база данных будет украдена, злоумышленники не смогут прочитать пароли.</p>
                     <h3>2. Хеширование (SHA-256 и соль)</h3>
-                    <p>Ваш пароль превращается в уникальный набор символов с помощью криптографического алгоритма <b>SHA-256</b>. Перед этим к паролю добавляется случайная "соль".</p>
+                    <p>Ваш пароль превращается в уникальный набор символов с помощью криптографического алгоритма <b>SHA-256</b>. Перед этим к паролю добавляется случайная "соль" (уникальная строка для каждого пользователя). Это делает невозможным использование "радужных таблиц" для взлома.</p>
                     <h3>3. Где хранятся данные?</h3>
-                    <p>Данные хранятся в защищенном облаке Cloudflare (Workers KV). Cloudflare использует шифрование AES-256 для всех данных в состоянии покоя.</p>
+                    <p>Данные хранятся в защищенном облаке Cloudflare (Workers KV). Cloudflare использует шифрование AES-256 для всех данных в состоянии покоя. Даже сотрудники Cloudflare не могут прочитать ваши данные.</p>
                     <h3>4. Мы не видим ваши пароли</h3>
-                    <p>Даже администраторы V-AGENT не имеют доступа к вашим паролям. Мы видим только хеш.</p>
+                    <p>Даже администраторы V-AGENT не имеют доступа к вашим паролям. Мы видим только хеш (набор символов). Восстановить из него исходный пароль математически невозможно.</p>
                 `;
             }
         }
@@ -576,7 +526,6 @@
         function closeModal() { modal.style.display = 'none'; }
         modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
 
-        // --- ЛОГИКА ФОРМЫ ---
         let isLoginMode = true;
         const submitBtn = document.getElementById('submit-btn');
         const switchBtn = document.getElementById('switch-btn');
@@ -584,7 +533,6 @@
 
         switchBtn.addEventListener('click', () => {
             isLoginMode = !isLoginMode;
-
             if (isLoginMode) {
                 submitBtn.textContent = "Войти";
                 switchBtn.textContent = "Нет аккаунта? Зарегистрироваться";
@@ -635,14 +583,11 @@
 
                 if (res.ok) {
                     localStorage.setItem('vagent_user', user);
-
-                    // Показываем зеленое уведомление
                     addNotification(isLoginMode ? `Успешный вход!` : `Аккаунт создан!`, "success");
 
-                    // Перекидываем на главную страницу через 1.5 секунды
                     setTimeout(() => {
-                        window.location.href = 'index.html';
-                    }, 1500);
+                        location.replace('./app.html');
+                    }, 1000);
 
                 } else {
                     addNotification(data.error || "Ошибка авторизации", "error");

@@ -1,7 +1,7 @@
 {
   "name": "V-Agent",
   "short_name": "V-Agent",
-  "start_url": "/app.html",
+  "start_url": "./app.html",
   "display": "standalone",
   "background_color": "#000000",
   "theme_color": "#000000",
@@ -16,5 +16,7 @@
       "sizes": "512x512",
       "type": "image/png"
     }
-  ]
+  ],
+  "id": "./app.html",
+  "scope": "./"
 }
