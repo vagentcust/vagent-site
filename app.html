@@ -240,11 +240,83 @@ main{flex:1;min-height:0;position:relative;display:flex;flex-direction:column;wi
 .seg button{position:relative;flex:1;border:0;background:none;padding:6px 14px;font-size:13px;font-weight:500;color:var(--mute);display:flex;align-items:center;gap:6px;justify-content:center;transition:color .2s}
 .seg button.on{color:var(--ink)}
 .lh.danger b{color:var(--err)}
+
+/* === НОВАЯ ПАНЕЛЬ СВЕРХУ (ДЕСКТОП) === */
+.top-nav {
+  display: none;
+  flex: none;
+  margin: 20px auto 0;
+  width: calc(100% - 48px);
+  max-width: 1000px;
+  height: 64px;
+  padding: 0 24px;
+  background: var(--glass);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.4);
+  justify-content: space-between;
+  align-items: center;
+  z-index: 100;
+}
+.top-nav .logo { display: flex; align-items: center; text-decoration: none; cursor: pointer; }
+.top-nav .logo img { height: 50px; width: auto; object-fit: contain; display: block; }
+.top-nav .nav-right { display: flex; align-items: center; gap: 16px; }
+.top-nav .lnk { background: none; border: 0; color: var(--mute); cursor: pointer; font-size: 14px; font-weight: 500; padding: 6px 8px; border-radius: 8px; text-decoration: none; transition: all 0.3s; }
+.top-nav .lnk:hover { color: var(--ink); background: var(--hov); }
+
+/* УВЕДОМЛЕНИЯ */
+.bell-wrapper { position: relative; }
+.nav-bell { display: flex; align-items: center; justify-content: center; width: 38px; height: 38px; border-radius: 50%; background: var(--p2); border: 1px solid var(--line); cursor: pointer; transition: all 0.3s; position: relative; }
+.nav-bell:hover { background: var(--p3); border-color: var(--ac); transform: scale(1.05); }
+.nav-bell svg { width: 18px; height: 18px; stroke: #FF3B30; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.bell-badge { position: absolute; top: 2px; right: 2px; width: 10px; height: 10px; background: #FF3B30; border-radius: 50%; border: 2px solid var(--bg); display: none; }
+.bell-badge.show { display: block; }
+
+.notif-dropdown {
+    display: none; position: absolute; top: 48px; right: 0; width: 320px; max-width: calc(100vw - 40px);
+    background: #12141A; border: 1px solid rgba(255,255,255,0.15); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); padding: 12px; z-index: 50; flex-direction: column; gap: 8px;
+}
+.notif-dropdown.show { display: flex; }
+.notif-header { font-size: 14px; font-weight: 600; color: #fff; padding: 4px 8px 8px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+.notif-list { display: flex; flex-direction: column; gap: 8px; max-height: 300px; overflow-y: auto; }
+.notif-item {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 12px; background: rgba(255, 255, 255, 0.03); border-radius: 12px;
+    border-left: 4px solid #FF3B30; box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+.notif-item.success { border-left-color: #F2C14E; }
+.notif-item .n-icon { color: #FF3B30; flex-shrink: 0; margin-top: 2px; }
+.notif-item.success .n-icon { color: #F2C14E; }
+.notif-item .n-text { flex: 1; line-height: 1.4; font-size: 13px; color: #ECEFF4; }
+.notif-empty { text-align: center; color: #8B94A3; font-size: 13px; padding: 20px 10px; }
+
+/* ПРОФИЛЬ */
+.chip { position: relative; display: flex; align-items: center; gap: 8px; padding: 3px; border-radius: 30px; background: none; font-size: 13px; cursor: pointer; user-select: none; transition: background 0.3s; }
+.chip:hover { background: var(--hov); }
+.chip .ava { width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg,var(--ac),var(--vio)); display: grid; place-items: center; font-weight: 600; font-size: 15px; color: #fff; }
+.pmenu { position: absolute; top: 46px; right: 0; min-width: 200px; background: var(--p1); border: 1px solid var(--line); border-radius: 16px; box-shadow: 0 20px 50px rgba(0,0,0,.6); padding: 6px; display: none; z-index: 60; }
+.pmenu.on { display: block; animation: up .18s ease both; }
+.pmenu button { display: flex; align-items: center; gap: 10px; width: 100%; padding: 10px 12px; border: 0; background: none; color: var(--ink); font-size: 14px; border-radius: 10px; cursor: pointer; text-align: left; font-family: "Onest", sans-serif; transition: background 0.2s; }
+.pmenu button:hover { background: var(--hov); }
+.pmenu button svg { color: var(--ink); }
+.pmenu .sep { height: 1px; background: var(--line); margin: 4px 6px; }
+
+/* МОДАЛКА */
+.modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 1000; align-items: center; justify-content: center; }
+.modal-content { background: var(--bg); padding: 30px; border-radius: 20px; border: 1px solid var(--line); max-width: 500px; width: 90%; position: relative; max-height: 80vh; overflow-y: auto; }
+.modal-close { position: absolute; top: 15px; right: 15px; background: none; border: none; color: var(--mute); font-size: 24px; cursor: pointer; }
+.modal-content h3 { font-size: 16px; color: var(--ac); margin: 15px 0 5px; }
+.modal-content p { color: var(--mute); font-size: 14px; line-height: 1.5; margin-bottom: 10px; }
+
+
 @media(min-width:900px){
  .gearf{display:grid;position:fixed;top:18px;right:24px;z-index:5}
  .side{display:flex}.tabs,.top{display:none}
- main{padding:0 32px;max-width:960px}
- .hello{padding-top:28px}.hello h1{font-size:30px}
+ .top-nav{display:flex}
+ main{padding:20px 32px 0;max-width:960px} /* СДВИГ ТЕКСТА ВНИЗ */
+ .hello{padding-top:10px}.hello h1{font-size:30px}
  .hero{padding:34px 36px}.hero h2{font-size:28px;max-width:480px}
  .bento{grid-template-columns:repeat(6,1fr)}
  .qc{grid-column:span 2;min-height:168px}.qc.big{grid-column:span 3}.qc.wide{grid-column:span 6;min-height:110px;flex-direction:row;align-items:center;gap:16px;justify-content:flex-start}
@@ -266,11 +338,46 @@ main{flex:1;min-height:0;position:relative;display:flex;flex-direction:column;wi
   <div class="foot" id="foot"></div>
  </aside>
  <div class="stage">
+
+  <!-- НОВАЯ ПАНЕЛЬ СВЕРХУ -->
+  <nav class="top-nav">
+    <a class="logo" href="index.html"><img src="logo_text.png" alt="V-Agent"></a>
+    <div class="nav-right">
+      <a href="index.html#download" class="lnk">Скачать</a>
+      <a href="javascript:void(0)" class="lnk" onclick="openModal('privacy')">Безопасность</a>
+      <a href="javascript:void(0)" class="lnk" onclick="openModal('rules')">Правила</a>
+
+      <div class="bell-wrapper">
+          <button class="nav-bell" id="bell-btn">
+              <svg viewBox="0 0 24 24">
+                  <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                  <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+              </svg>
+              <div class="bell-badge" id="bell-badge"></div>
+          </button>
+          <div class="notif-dropdown" id="notif-menu">
+              <div class="notif-header">Уведомления</div>
+              <div class="notif-list" id="notif-list"></div>
+          </div>
+      </div>
+
+      <div class="chip" id="chip" onclick="togglePMenu(event)">
+        <div class="ava" id="ava"></div>
+      </div>
+      <div class="pmenu" id="pmenu">
+        <button onclick="closePMenu();go('me')"><span id="pm-ic1"></span>Настройки</button>
+        <div class="sep"></div>
+        <button onclick="closePMenu();logout()"><span id="pm-ic2"></span>Выйти</button>
+      </div>
+    </div>
+  </nav>
+
   <header class="top">
    <a class="brand" href="index.html"><img src="icon.png" alt=""><span>V-Agent</span></a>
    <button class="ibtn gear" id="gm" onclick="go('me')" aria-label="Настройки"></button>
    <button class="ava" id="avm" onclick="go('me')" aria-label="Профиль"></button>
   </header>
+
   <button class="ibtn gear gearf" id="gf" onclick="go('me')" aria-label="Настройки"></button>
   <main id="main"></main>
   <div class="tabs" id="tabs"></div>
@@ -279,6 +386,15 @@ main{flex:1;min-height:0;position:relative;display:flex;flex-direction:column;wi
 
 <div class="sheet" id="sheet" onclick="if(event.target===this)closeSheet()"><div class="sh" id="sh"></div></div>
 <div class="pwa" id="pwa"><img src="icon.png" alt=""><div><b>Установить V-Agent</b>Добавь на главный экран</div><button class="btn sm" id="pwab">Добавить</button><button class="x" onclick="closePwa()" aria-label="Закрыть">✕</button></div>
+
+<!-- МОДАЛЬНОЕ ОКНО -->
+<div id="info-modal" class="modal">
+    <div class="modal-content">
+        <button class="modal-close" onclick="closeModal()">×</button>
+        <h2 id="modal-title" style="margin-bottom: 15px; font-family: 'Unbounded';">Заголовок</h2>
+        <div id="modal-text" style="color: var(--mute); line-height: 1.6; font-size: 14px;"></div>
+    </div>
+</div>
 
 <script>
 const API='https://vagent-backend.novalaim11.workers.dev';
@@ -308,6 +424,92 @@ const save=()=>{try{localStorage.setItem(LKEY,JSON.stringify(st.chats))}catch(e)
 const cf=()=>{try{return JSON.parse(localStorage.getItem(CKEY)||'null')}catch(e){return null}};
 const isDesk=()=>innerWidth>=900;
 $('#avm').textContent=USER[0].toUpperCase();
+$('#ava').textContent=USER[0].toUpperCase();
+
+/* === УВЕДОМЛЕНИЯ === */
+const bellBtn = document.getElementById('bell-btn');
+const notifMenu = document.getElementById('notif-menu');
+const notifList = document.getElementById('notif-list');
+const bellBadge = document.getElementById('bell-badge');
+
+function addNotification(text, type = 'error') {
+    const item = document.createElement('div');
+    item.className = 'notif-item ' + (type === 'success' ? 'success' : '');
+    const iconSvg = `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>`;
+    item.innerHTML = `<div class="n-icon">${iconSvg}</div><div class="n-text">${text}</div>`;
+
+    const empty = notifList.querySelector('.notif-empty');
+    if (empty) empty.remove();
+
+    notifList.prepend(item);
+    bellBadge.classList.add('show');
+
+    if (notifList.children.length > 10) {
+        notifList.lastElementChild.remove();
+    }
+}
+
+function checkEmptyNotifs() {
+    if (notifList.children.length === 0) {
+        notifList.innerHTML = `<div class="notif-empty">У вас нет новых уведомлений</div>`;
+    }
+}
+checkEmptyNotifs();
+
+bellBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    notifMenu.classList.toggle('show');
+    if (notifMenu.classList.contains('show')) {
+        bellBadge.classList.remove('show');
+    }
+});
+
+document.addEventListener('click', (e) => {
+    if (!notifMenu.contains(e.target) && e.target !== bellBtn) {
+        notifMenu.classList.remove('show');
+    }
+});
+
+/* === МОДАЛЬНОЕ ОКНО === */
+function openModal(type) {
+    const modal = document.getElementById('info-modal');
+    modal.style.display = 'flex';
+    const title = document.getElementById('modal-title');
+    const text = document.getElementById('modal-text');
+
+    if (type === 'privacy') {
+        title.textContent = 'Конфиденциальность и Безопасность';
+        text.innerHTML = `<p>Мы серьезно относимся к защите ваших данных. Вот как именно мы обеспечиваем безопасность ваших паролей:</p>
+        <h3>1. Никакого хранения в открытом виде</h3>
+        <p>Мы <b>никогда</b> не сохраняем ваш пароль в виде обычного текста.</p>
+        <h3>2. Хеширование (SHA-256 и соль)</h3>
+        <p>Ваш пароль превращается в уникальный набор символов с помощью алгоритма <b>SHA-256</b>.</p>
+        <h3>3. Где хранятся данные?</h3>
+        <p>Данные хранятся в защищенном облаке Cloudflare (Workers KV).</p>`;
+    } else if (type === 'rules') {
+        title.textContent = 'Правила использования';
+        text.innerHTML = `<p>Добро пожаловать в V-Agent! Чтобы всем было комфортно, соблюдайте простые правила:</p>
+        <h3>1. Запрещенный контент</h3>
+        <p>Запрещено генерировать контент, нарушающий законодательство, содержащий сцены насилия, экстремизм, порнографию или разжигание межнациональной розни.</p>
+        <h3>2. Авторские права</h3>
+        <p>Не используйте сервис для создания контента, нарушающего авторские права третьих лиц.</p>
+        <h3>3. Спам и автоматизация</h3>
+        <p>Запрещено использовать сервис для массовой рассылки спама и создания вредоносных скриптов.</p>
+        <h3>4. Блокировка</h3>
+        <p>Администрация оставляет за собой право заблокировать аккаунт без предупреждения за нарушение данных правил.</p>`;
+    }
+}
+function closeModal() { document.getElementById('info-modal').style.display = 'none'; }
+document.getElementById('info-modal').addEventListener('click', (e) => {
+    if (e.target.id === 'info-modal') closeModal();
+});
+
+/* === ПРОФИЛЬ (ВЕРХНЯЯ ПАНЕЛЬ) === */
+function togglePMenu(e){e.stopPropagation();$('#pmenu').classList.toggle('on')}
+function closePMenu(){$('#pmenu').classList.remove('on')}
+document.addEventListener('click',e=>{if(!e.target.closest('#chip')&&!e.target.closest('#pmenu'))closePMenu()});
+$('#pm-ic1').outerHTML=svg('gear',16);
+$('#pm-ic2').outerHTML=svg('out',16);
 
 async function ai(path,body){
  const k=cf();if(!k)throw new Error('Добавь ключ Cloudflare в разделе «Профиль»');
@@ -474,12 +676,12 @@ async function saveKey(){
  const a=($('#ac').value.match(/[a-f0-9]{32}/i)||[''])[0];
  if(tk.length<20||!a){s.className='st er';s.textContent='Проверь токен и Account ID';return}
  localStorage.setItem(CKEY,JSON.stringify({token:tk,account:a}));s.className='st';s.textContent='Проверяю…';
- try{await chatAI([{role:'user',content:'Ответь одним словом: привет'}],20);s.className='st ok';s.textContent='Ключ работает ✓'}catch(e){s.className='st er';s.textContent=e.message}
+ try{await chatAI([{role:'user',content:'Ответь одним словом: привет'}],20);s.className='st ok';s.textContent='Ключ работает ✓';addNotification('Ключ Cloudflare успешно сохранен!', 'success')}catch(e){s.className='st er';s.textContent=e.message;addNotification('Ошибка ключа Cloudflare: ' + e.message, 'error')}
 }
 function delKey(){localStorage.removeItem(CKEY);draw()}
 async function chPass(){
  const s=$('#ps'),o=$('#op').value,n=$('#np').value;if(!o||n.length<4){s.className='st er';s.textContent='Заполни поля (новый пароль от 4 символов)';return}
- try{const r=await fetch(API+'/change-password',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:USER,old_password:o,new_password:n})});const d=await r.json();s.className='st '+(r.ok?'ok':'er');s.textContent=r.ok?'Пароль изменён ✓':(d.error||'Ошибка')}catch(e){s.className='st er';s.textContent='Нет связи с сервером'}
+ try{const r=await fetch(API+'/change-password',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:USER,old_password:o,new_password:n})});const d=await r.json();s.className='st '+(r.ok?'ok':'er');s.textContent=r.ok?'Пароль изменён ✓':(d.error||'Ошибка');if(r.ok)addNotification('Пароль успешно изменен!', 'success');else addNotification('Ошибка смены пароля: '+(d.error||''), 'error')}catch(e){s.className='st er';s.textContent='Нет связи с сервером'}
 }
 function logout(){localStorage.removeItem('vagent_user');location.href='web.html'}
 
