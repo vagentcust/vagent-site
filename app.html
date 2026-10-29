@@ -46,7 +46,7 @@ svg{display:block}
 /* shell */
 .shell{position:relative;z-index:1;display:flex;height:100dvh}
 .stage{flex:1;min-width:0;display:flex;flex-direction:column;height:100dvh}
-main{flex:1;min-height:0;display:flex;flex-direction:column;width:100%;max-width:880px;margin:0 auto;padding:0 16px}
+main{flex:1;min-height:0;position:relative;display:flex;flex-direction:column;width:100%;max-width:880px;margin:0 auto;padding:0 16px}
 .scroll{flex:1;min-height:0;overflow:auto;padding:4px 0 28px;scrollbar-width:none}
 .scroll::-webkit-scrollbar{display:none}
 
@@ -60,8 +60,10 @@ main{flex:1;min-height:0;display:flex;flex-direction:column;width:100%;max-width
 .si{position:relative;display:flex;align-items:center;gap:12px;width:100%;padding:9px 12px;border:0;border-radius:14px;background:none;color:var(--mute);font-size:14px;font-weight:500;text-align:left;transition:background .15s,color .15s}
 .si:hover{background:var(--hov);color:var(--ink)}
 .si.on{background:var(--p3);color:var(--ink)}
-.si.on:before{content:"";position:absolute;left:-14px;top:10px;bottom:10px;width:3px;border-radius:0 3px 3px 0;background:var(--c,var(--ac))}
-.ib{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;flex:none;color:var(--c,var(--ac));background:color-mix(in srgb,var(--c,var(--ac)) 14%,transparent)}
+.si.on:before{content:"";position:absolute;left:-14px;top:10px;bottom:10px;width:3px;border-radius:0 3px 3px 0;background:var(--ink);animation:grow .3s ease both}
+@keyframes grow{from{transform:scaleY(0)}}
+.ib{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;flex:none;color:var(--ink);background:var(--p3);border:1px solid var(--line);transition:transform .25s cubic-bezier(.3,1.4,.5,1),background .2s}
+.si:hover .ib,.qc:hover .ib,.pill:hover .ib{transform:scale(1.08) rotate(-4deg)}
 .si .lk{margin-left:auto;color:var(--gold);opacity:.9}
 .foot{display:flex;flex-direction:column;gap:8px;padding-top:12px;border-top:1px solid var(--line)}
 .usr{display:flex;align-items:center;gap:10px;padding:8px;border-radius:16px;background:var(--p2);border:1px solid var(--line);cursor:pointer;text-align:left;width:100%;transition:border-color .15s}
@@ -84,7 +86,9 @@ main{flex:1;min-height:0;display:flex;flex-direction:column;width:100%;max-width
 .tb{flex:1;position:relative;display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 2px;border:0;border-radius:16px;background:none;color:var(--mute);font-size:11px;font-weight:500;transition:color .15s}
 .tb .pl{display:grid;place-items:center;width:52px;height:30px;border-radius:15px;transition:background .2s}
 .tb.on{color:var(--ink)}
-.tb.on .pl{background:color-mix(in srgb,var(--ac) 22%,transparent);color:var(--ac)}
+.tb.on .pl{background:var(--p3);color:var(--ink);box-shadow:inset 0 0 0 1px var(--line2)}
+.tb.on .pl svg{animation:bump .45s cubic-bezier(.3,1.5,.5,1)}
+@keyframes bump{0%{transform:scale(.7)}100%{transform:scale(1)}}
 .tb .lk{position:absolute;top:3px;left:calc(50% + 10px);width:15px;height:15px;border-radius:8px;background:var(--gold);color:#1A1405;display:grid;place-items:center}
 
 /* buttons */
@@ -114,13 +118,14 @@ main{flex:1;min-height:0;display:flex;flex-direction:column;width:100%;max-width
  radial-gradient(120% 90% at 0% 0%,color-mix(in srgb,var(--c) 16%,transparent),transparent 70%),var(--p1);transition:transform .18s,border-color .2s}
 .qc:hover{border-color:color-mix(in srgb,var(--c) 55%,transparent);transform:translateY(-2px)}
 .qc:active{transform:scale(.98)}
-.qc .ib{width:46px;height:46px;border-radius:15px;background:color-mix(in srgb,var(--c) 20%,transparent)}
+.qc .ib{width:46px;height:46px;border-radius:15px;background:var(--hov)}
 .qc b{display:block;font-size:17px;font-weight:600}
 .qc small{display:block;color:var(--mute);font-size:13px;margin-top:2px}
 .qc.wide{grid-column:span 2;min-height:120px}
 .qc.off{border-style:dashed}
-.qc.off .ib{color:var(--mute);background:var(--p3)}
-.qc .go{position:absolute;top:16px;right:16px;color:var(--dim)}
+.qc.off .ib{color:var(--mute)}
+.qc .go{position:absolute;top:16px;right:16px;color:var(--dim);transition:transform .2s,color .2s}
+.qc:hover .go{transform:translate(3px,-3px);color:var(--ink)}
 
 /* chat */
 .mh{display:flex;align-items:center;gap:10px;padding:6px 0 10px;flex:none}
@@ -134,7 +139,7 @@ main{flex:1;min-height:0;display:flex;flex-direction:column;width:100%;max-width
 .m.u{justify-content:flex-end}
 .m .bd{max-width:min(82%,680px);white-space:pre-wrap;word-break:break-word;font-size:15px;line-height:1.55}
 .m.u .bd{padding:10px 15px;border-radius:20px 20px 6px 20px;background:linear-gradient(135deg,var(--ac2),var(--vio));color:#fff}
-.m.a .av{width:30px;height:30px;border-radius:10px;flex:none;display:grid;place-items:center;color:var(--c,var(--ac));background:color-mix(in srgb,var(--c,var(--ac)) 16%,transparent);margin-top:2px}
+.m.a .av{width:30px;height:30px;border-radius:10px;flex:none;display:grid;place-items:center;color:var(--ink);background:var(--p3);border:1px solid var(--line);margin-top:2px}
 .m.a .bd{padding:10px 15px;border-radius:6px 20px 20px 20px;background:var(--p1);border:1px solid var(--line)}
 .m.e .bd{border-color:color-mix(in srgb,var(--err) 50%,transparent);color:var(--err)}
 .m.a.think .bd{color:var(--mute)}
@@ -148,7 +153,7 @@ main{flex:1;min-height:0;display:flex;flex-direction:column;width:100%;max-width
 .dots i:nth-child(2){animation-delay:.15s}.dots i:nth-child(3){animation-delay:.3s}
 @keyframes bl{0%,80%,100%{opacity:.25;transform:scale(.8)}40%{opacity:1;transform:scale(1)}}
 .empty{margin:auto;text-align:center;max-width:420px;padding:12px}
-.empty .ib{width:72px;height:72px;border-radius:24px;margin:0 auto 14px}
+.empty>.ib{width:72px;height:72px;border-radius:24px;margin:0 auto 14px;animation:fl 5s ease-in-out infinite}
 .empty h3{font:600 22px Unbounded,sans-serif;margin-bottom:6px}
 .empty p{color:var(--mute);font-size:14px;margin-bottom:16px}
 .ex{display:block;width:100%;margin:6px 0;padding:11px 16px;border-radius:16px;background:var(--p1);border:1px solid var(--line);color:var(--mute);font-size:14px;text-align:left;transition:color .15s,border-color .15s}
@@ -158,7 +163,7 @@ main{flex:1;min-height:0;display:flex;flex-direction:column;width:100%;max-width
 .opts::-webkit-scrollbar{display:none}
 .op{flex:none;padding:7px 14px;border-radius:12px;background:var(--p1);border:1px solid var(--line);color:var(--mute);font-size:13px;font-weight:500;transition:all .15s}
 .op:hover{color:var(--ink)}
-.op.on{background:color-mix(in srgb,var(--c,var(--ac)) 18%,transparent);border-color:var(--c,var(--ac));color:var(--ink)}
+.op.on{background:var(--p3);border-color:var(--ink);color:var(--ink)}
 .inp{flex:none;display:flex;align-items:flex-end;gap:8px;padding:6px 6px 6px 18px;margin:0 0 14px;border-radius:26px;background:var(--p1);border:1px solid var(--line2);box-shadow:var(--shadow);transition:border-color .2s}
 .inp:focus-within{border-color:var(--c,var(--ac))}
 .inp textarea{flex:1;resize:none;max-height:140px;padding:10px 0;border:0;background:none;outline:0;line-height:1.45}
@@ -184,12 +189,12 @@ main{flex:1;min-height:0;display:flex;flex-direction:column;width:100%;max-width
 .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
 .st{font-size:13px;margin-top:8px;min-height:18px}.st.ok{color:var(--ok)}.st.er{color:var(--err)}
 .lockp{text-align:center;max-width:460px;margin:7vh auto 0;padding:10px}
-.lockp .ib{width:84px;height:84px;border-radius:28px;margin:0 auto 18px;--c:var(--gold)}
+.lockp>.ib{width:84px;height:84px;border-radius:28px;margin:0 auto 18px;animation:fl 5s ease-in-out infinite}
 .lockp h3{font:600 24px Unbounded,sans-serif;margin-bottom:10px}
 .lockp p{color:var(--mute);margin-bottom:20px}
 .feat{display:grid;gap:8px;text-align:left;margin:0 0 22px}
 .feat div{display:flex;gap:12px;align-items:center;padding:12px 14px;border-radius:16px;background:var(--p1);border:1px solid var(--line);font-size:14px}
-.feat .ib{width:34px;height:34px;border-radius:11px}
+.feat .ib{width:34px;height:34px;border-radius:11px;margin:0}
 
 /* sheet */
 .sheet{position:fixed;inset:0;z-index:60;display:none;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);align-items:flex-end}
@@ -200,7 +205,7 @@ main{flex:1;min-height:0;display:flex;flex-direction:column;width:100%;max-width
 .sh>p{color:var(--mute);font-size:13px;margin:0 6px 10px}
 .sh .si{padding:10px 12px;color:var(--ink)}.sh .si.on:before{display:none}
 .sh .si b{display:block;font-weight:600}.sh .si small{color:var(--mute);font-weight:400;font-size:12px}
-.sh .tk{margin-left:auto;color:var(--c)}
+.sh .tk{margin-left:auto;color:var(--ink)}
 @keyframes up{from{transform:translateY(70px);opacity:0}}
 
 /* pwa */
@@ -210,7 +215,33 @@ main{flex:1;min-height:0;display:flex;flex-direction:column;width:100%;max-width
 .pwa div{flex:1;font-size:12px;color:var(--mute)}.pwa b{display:block;color:var(--ink);font-size:14px}
 .pwa .x{background:none;border:0;color:var(--mute);width:32px;height:32px}
 
+.view{animation:vin .38s cubic-bezier(.2,.8,.2,1) both}
+@keyframes vin{from{opacity:0;transform:translateY(10px)}}
+.stg>*{animation:vin .5s cubic-bezier(.2,.8,.2,1) backwards;animation-delay:calc((var(--i,0) + var(--b,0))*55ms)}
+@keyframes fl{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.hero .pl{animation:fl 7s ease-in-out infinite}
+.gear svg{transition:transform .5s cubic-bezier(.3,1.2,.5,1)}.gear:hover svg{transform:rotate(90deg)}
+.gearf{display:none}
+.spin svg{animation:spin .5s cubic-bezier(.3,1.2,.5,1)}@keyframes spin{from{transform:rotate(-120deg) scale(.5);opacity:0}}
+.grp2{margin:18px 2px 8px;font-size:13px;font-weight:500;color:var(--dim)}
+.list{border-radius:22px;background:var(--p1);border:1px solid var(--line);overflow:hidden}
+.li{border-top:1px solid var(--line)}.li:first-child{border-top:0}
+.lh{display:flex;align-items:center;gap:12px;width:100%;padding:12px 14px;border:0;background:none;text-align:left;color:var(--ink);transition:background .15s}
+.lh:hover{background:var(--hov)}
+.lh .t{flex:1;min-width:0}.lh .t b{display:block;font-weight:500;font-size:15px}.lh .t small{display:block;color:var(--mute);font-size:12px}
+.lh .cv{color:var(--dim);transition:transform .3s cubic-bezier(.3,1.2,.5,1)}
+.li.open .lh .cv{transform:rotate(180deg)}
+.lb{display:grid;grid-template-rows:0fr;transition:grid-template-rows .35s cubic-bezier(.2,.8,.2,1)}
+.li.open .lb{grid-template-rows:1fr}
+.lb>div{overflow:hidden}.lb .in{padding:2px 14px 16px}
+.seg{position:relative;display:flex;padding:3px;border-radius:12px;background:var(--p3);border:1px solid var(--line)}
+.seg i{position:absolute;top:3px;bottom:3px;left:3px;width:calc(50% - 3px);border-radius:9px;background:var(--p1);box-shadow:0 1px 6px rgba(0,0,0,.3),inset 0 0 0 1px var(--line2);transition:transform .3s cubic-bezier(.3,1.2,.5,1)}
+.seg.l i{transform:translateX(100%)}
+.seg button{position:relative;flex:1;border:0;background:none;padding:6px 14px;font-size:13px;font-weight:500;color:var(--mute);display:flex;align-items:center;gap:6px;justify-content:center;transition:color .2s}
+.seg button.on{color:var(--ink)}
+.lh.danger b{color:var(--err)}
 @media(min-width:900px){
+ .gearf{display:grid;position:fixed;top:18px;right:24px;z-index:5}
  .side{display:flex}.tabs,.top{display:none}
  main{padding:0 32px;max-width:960px}
  .hello{padding-top:28px}.hello h1{font-size:30px}
@@ -237,9 +268,10 @@ main{flex:1;min-height:0;display:flex;flex-direction:column;width:100%;max-width
  <div class="stage">
   <header class="top">
    <a class="brand" href="index.html"><img src="icon.png" alt=""><span>V-Agent</span></a>
-   <button class="ibtn" id="tsm" onclick="toggleTheme()" aria-label="Сменить тему"></button>
+   <button class="ibtn gear" id="gm" onclick="go('me')" aria-label="Настройки"></button>
    <button class="ava" id="avm" onclick="go('me')" aria-label="Профиль"></button>
   </header>
+  <button class="ibtn gear gearf" id="gf" onclick="go('me')" aria-label="Настройки"></button>
   <main id="main"></main>
   <div class="tabs" id="tabs"></div>
  </div>
@@ -254,12 +286,13 @@ const USER=localStorage.getItem('vagent_user');
 if(!USER)location.href='web.html';
 const $=s=>document.querySelector(s);
 const el=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e};
-const P={home:'<path d="M3 11l9-8 9 8"/><path d="M5 10v10h5v-6h4v6h5V10"/>',chat:'<path d="M21 12a8 8 0 0 1-11.6 7.1L3 21l1.9-5.4A8 8 0 1 1 21 12z"/>',image:'<rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="1.6"/><path d="M21 16l-5-5-9 9"/>',bulb:'<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/>',grid:'<rect x="3" y="3" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="2"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="2"/>',hash:'<path d="M5 9h15M4 15h15M10 3L8 21M16 3l-2 18"/>',send:'<path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4z"/>',user:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',film:'<rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M3 9h18M3 15h18M8 4v16M16 4v16"/>',lock:'<rect x="5" y="11" width="14" height="10" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',spark:'<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8z"/>',sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',moon:'<path d="M21 13A9 9 0 1 1 11 3a7 7 0 0 0 10 10z"/>',up:'<path d="M12 19V5M5 12l7-7 7 7"/>',plus:'<path d="M12 5v14M5 12h14"/>',chev:'<path d="M6 9l6 6 6-6"/>',arrow:'<path d="M7 17L17 7M8 7h9v9"/>',copy:'<rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/>',down:'<path d="M12 4v12M6 11l6 6 6-6M5 21h14"/>',out:'<path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3M10 8l-4 4 4 4M6 12h11"/>',check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',key:'<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M16 7l3 3"/>',alert:'<path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18v.01"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',zap:'<path d="M13 2L4 14h7l-1 8 9-12h-7z"/>'};
+const P={home:'<path d="M3 11l9-8 9 8"/><path d="M5 10v10h5v-6h4v6h5V10"/>',chat:'<path d="M21 12a8 8 0 0 1-11.6 7.1L3 21l1.9-5.4A8 8 0 1 1 21 12z"/>',image:'<rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="1.6"/><path d="M21 16l-5-5-9 9"/>',bulb:'<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/>',grid:'<rect x="3" y="3" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="2"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="2"/>',hash:'<path d="M5 9h15M4 15h15M10 3L8 21M16 3l-2 18"/>',send:'<path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4z"/>',user:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',film:'<rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M3 9h18M3 15h18M8 4v16M16 4v16"/>',lock:'<rect x="5" y="11" width="14" height="10" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',spark:'<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8z"/>',sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',moon:'<path d="M21 13A9 9 0 1 1 11 3a7 7 0 0 0 10 10z"/>',up:'<path d="M12 19V5M5 12l7-7 7 7"/>',plus:'<path d="M12 5v14M5 12h14"/>',chev:'<path d="M6 9l6 6 6-6"/>',arrow:'<path d="M7 17L17 7M8 7h9v9"/>',copy:'<rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/>',down:'<path d="M12 4v12M6 11l6 6 6-6M5 21h14"/>',out:'<path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3M10 8l-4 4 4 4M6 12h11"/>',check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',key:'<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M16 7l3 3"/>',alert:'<path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18v.01"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',zap:'<path d="M13 2L4 14h7l-1 8 9-12h-7z"/>',bot:'<rect x="4" y="8" width="16" height="12" rx="4"/><path d="M12 8V5M9 14v.01M15 14v.01"/><circle cx="12" cy="3.6" r="1.1"/><path d="M2 13v3M22 13v3"/>',gear:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>',trash:'<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>',pal:'<circle cx="12" cy="12" r="9"/><path d="M12 3v18"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/>',shield:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/>',info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.01"/>'};
 const svg=(n,s=20)=>`<svg viewBox="0 0 24 24" width="${s}" height="${s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${P[n]}</svg>`;
-function paintTheme(){const d=document.documentElement.dataset.theme==='dark';const h=svg(d?'sun':'moon',18);const a=$('#tsm');if(a)a.innerHTML=h;const b=$('#tsd');if(b)b.innerHTML=h}
-function toggleTheme(){const r=document.documentElement;r.dataset.theme=r.dataset.theme==='dark'?'light':'dark';localStorage.setItem('vagent_theme',r.dataset.theme);const m=document.querySelector('meta[name=theme-color]');if(m)m.content=r.dataset.theme==='dark'?'#07080D':'#EFF1F7';paintTheme()}
+function paintTheme(){const d=document.documentElement.dataset.theme==='dark';const b=$('#tsd');if(b)b.innerHTML=svg(d?'sun':'moon',18);const g=$('#gm');if(g)g.innerHTML=svg('gear',19);const f=$('#gf');if(f)f.innerHTML=svg('gear',19);[g,f].forEach(x=>x&&(x.hidden=st.view==='me'))}
+function setTheme(t){const r=document.documentElement;if(r.dataset.theme===t)return;r.dataset.theme=t;localStorage.setItem('vagent_theme',t);const m=document.querySelector('meta[name=theme-color]');if(m)m.content=t==='dark'?'#07080D':'#EFF1F7';paintTheme();const b=$('#tsd');if(b){b.classList.remove('spin');void b.offsetWidth;b.classList.add('spin')}const sg=$('#seg');if(sg){sg.classList.toggle('l',t==='light');[...sg.querySelectorAll('button')].forEach(x=>x.classList.toggle('on',x.dataset.t===t))}}
+function toggleTheme(){setTheme(document.documentElement.dataset.theme==='dark'?'light':'dark')}
 const MODES={
- chat:{t:'Чат с ИИ',s:'Спроси что угодно',i:'chat',c:'#8794FF',h:'Напиши сообщение…',w:'Нейро думает',intro:'Задай любой вопрос или попроси написать текст.',ex:['Придумай название для кофейни','Объясни простыми словами, что такое NFT','Напиши пост про утреннюю пробежку']},
+ chat:{t:'Чат с ИИ',s:'Спроси что угодно',i:'bot',c:'#8794FF',h:'Напиши сообщение…',w:'Нейро думает',intro:'Задай любой вопрос или попроси написать текст.',ex:['Придумай название для кофейни','Объясни простыми словами, что такое NFT','Напиши пост про утреннюю пробежку']},
  image:{t:'Картинки',s:'7 стилей генерации',i:'image',c:'#E879F9',h:'Опиши картинку…',w:'Рисую',intro:'Опиши, что нарисовать, и выбери стиль ниже.',ex:['Уютный домик в лесу на закате','Кот-космонавт на Луне','Неоновый город под дождём']},
  ideas:{t:'Идеи',s:'10 идей для постов',i:'bulb',c:'#FBBF24',h:'Тема для идей…',w:'Придумываю идеи',intro:'Напиши тему — получишь 10 идей для постов.',ex:['Кофейня у дома','Фитнес для новичков','Путешествия по России']},
  templates:{t:'Шаблоны',s:'Готовые структуры',i:'grid',c:'#34D399',h:'О чём пост?',w:'Пишу пост',intro:'Выбери шаблон ниже и напиши тему.',ex:['Как выбрать беговые кроссовки','Обзор беспроводных наушников']},
@@ -283,8 +316,8 @@ async function ai(path,body){
 }
 const chatAI=(messages,max)=>ai('/ai/text',{messages,max_tokens:max||900}).then(d=>(d.text||'').trim());
 
-const SIDE=[['home','home','Главная'],['grp','Нейросети'],['chat','chat'],['image','image'],['ideas','bulb'],['templates','grid'],['hashtags','hash'],['grp','Ещё'],['tg','send','Telegram',1],['me','user','Профиль']];
-const TABS=[['home','home','Главная'],['neuro','spark','Нейросети'],['tg','send','Telegram',1],['me','user','Профиль']];
+const SIDE=[['home','home','Главная'],['grp','Нейросети'],['chat','chat'],['image','image'],['ideas','bulb'],['templates','grid'],['hashtags','hash'],['grp','Ещё'],['tg','send','Telegram',1],['me','gear','Настройки']];
+const TABS=[['home','home','Главная'],['neuro','spark','Нейросети'],['tg','send','Telegram',1],['me','gear','Настройки']];
 function go(v,mode){if(mode)st.mode=mode;st.view=v;drawNav();draw()}
 function drawNav(){
  const on=n=>st.view==='neuro'?n===st.mode:n===st.view;
@@ -298,7 +331,7 @@ function drawNav(){
   bt.onclick=()=>M?go('neuro',id):go(id);sd.append(bt);
  });
  const ft=$('#foot');ft.innerHTML='';
- const u=el('button','usr');u.innerHTML='<span class="ava"></span><span class="sp"><b></b><small>Профиль</small></span>';
+ const u=el('button','usr');u.innerHTML='<span class="ava"></span><span class="sp"><b></b><small>Настройки</small></span>';
  u.querySelector('.ava').textContent=USER[0].toUpperCase();u.querySelector('b').textContent=USER;u.onclick=()=>go('me');
  const r=el('div');r.style.cssText='display:flex;gap:8px';
  const th=el('button','ibtn');th.id='tsd';th.setAttribute('aria-label','Сменить тему');th.onclick=toggleTheme;
@@ -309,21 +342,21 @@ function drawNav(){
  paintTheme();
 }
 function draw(){
- const m=$('#main');m.innerHTML='';
+ const m=$('#main');m.innerHTML='';m.classList.remove('view');void m.offsetWidth;m.classList.add('view');paintTheme();
  if(st.view==='home')home(m);else if(st.view==='neuro')neuro(m);else if(st.view==='tg')tg(m);else me(m);
 }
 function home(m){
- const sc=el('div','scroll');const hr=new Date().getHours();
+ const sc=el('div','scroll stg');const hr=new Date().getHours();
  const h=el('div','hello');
  h.innerHTML=`<h1>${hr<5?'Доброй ночи':hr<12?'Доброе утро':hr<18?'Добрый день':'Добрый вечер'}, <span></span></h1><p>Что будем делать сегодня?</p>`;h.querySelector('span').textContent=USER;sc.append(h);
  const hero=el('div','hero');
  hero.innerHTML=`<span class="pl">${svg('send',170)}</span><h2>Автоматизируй свой Telegram-канал</h2><p>Автопостинг по расписанию, посты и разбор видео — в приложении V-Agent.</p><div class="row"><a class="btn w" href="index.html#download">Скачать приложение</a><button class="btn g" id="hl">Подробнее</button></div>`;
  hero.querySelector('#hl').onclick=()=>go('tg');sc.append(hero);
  const s=el('div','sec');s.innerHTML='<h3>Быстрый доступ</h3>';sc.append(s);
- const g=el('div','bento');
+ const g=el('div','bento stg');g.style.setProperty('--b',3);
  Object.entries(MODES).forEach(([id,c],i)=>{const b=el('button','qc'+(i<2?' big':''));b.style.setProperty('--c',c.c);b.innerHTML=`<span class="ib">${svg(c.i,24)}</span><div><b>${c.t}</b><small>${c.s}</small></div><span class="go">${svg('arrow',18)}</span>`;b.onclick=()=>go('neuro',id);g.append(b)});
  const v=el('button','qc wide off');v.innerHTML=`<span class="ib">${svg('film',24)}</span><div><b>Видео</b><small>Пересказ и промпт — в приложении</small></div><span class="go">${svg('lock',18)}</span>`;v.onclick=()=>go('tg');g.append(v);
- sc.append(g);m.append(sc);
+ [...sc.children].forEach((c,i)=>c.style.setProperty('--i',i));[...g.children].forEach((c,i)=>c.style.setProperty('--i',i));sc.append(g);m.append(sc);
 }
 function tg(m){
  const sc=el('div','scroll');
@@ -400,15 +433,40 @@ function openSheet(){
  $('#sheet').classList.add('on');let y0=0;sh.ontouchstart=e=>y0=e.touches[0].clientY;sh.ontouchend=e=>{if(e.changedTouches[0].clientY-y0>70&&sh.scrollTop<=0)closeSheet()};
 }
 const closeSheet=()=>$('#sheet').classList.remove('on');
+function acc(ic,t,sub,badge,body,open){
+ const li=el('div','li'+(open?' open':''));
+ const h=el('button','lh');h.innerHTML=`<span class="ib">${svg(ic,17)}</span><span class="t"><b>${t}</b><small>${sub}</small></span>${badge||''}<span class="cv">${svg('chev',16)}</span>`;
+ const lb=el('div','lb');lb.innerHTML=`<div><div class="in">${body}</div></div>`;
+ h.onclick=()=>li.classList.toggle('open');li.append(h,lb);return li;
+}
+function row(ic,t,sub,right,cls){const b=el('button','lh '+(cls||''));b.innerHTML=`<span class="ib">${svg(ic,17)}</span><span class="t"><b>${t}</b><small>${sub}</small></span>${right||''}`;const li=el('div','li');li.append(b);return [li,b]}
+function grp(t,items){const w=el('div');w.append(el('div','grp2',t));const l=el('div','list');items.forEach(i=>l.append(i));w.append(l);return w}
 function me(m){
- const sc=el('div','scroll');const k=cf();
- sc.innerHTML=`<div class="cards" style="padding-top:12px">
- <div class="who"><div class="ava" id="ava2"></div><div><h2 id="nm2"></h2><p>Аккаунт V-Agent</p></div></div>
- <div class="card"><h3>Ключ Cloudflare <span class="badge ${k?'ok':''}"><i></i>${k?'Подключён':'Не добавлен'}</span></h3><p>Нужен для работы ИИ (текст и картинки). Хранится только в этом браузере.</p>
+ const sc=el('div','scroll stg');sc.style.cssText='max-width:680px;width:100%;margin:0 auto';const k=cf();const dark=document.documentElement.dataset.theme==='dark';
+ const who=el('div','who');who.style.marginTop='12px';who.innerHTML='<div class="ava" id="ava2"></div><div><h2 id="nm2"></h2><p>Настройки аккаунта V-Agent</p></div>';sc.append(who);
+ // appearance
+ const seg=`<div class="seg ${dark?'':'l'}" id="seg"><i></i><button data-t="dark" class="${dark?'on':''}" onclick="setTheme('dark')">${svg('moon',14)}Тёмная</button><button data-t="light" class="${dark?'':'on'}" onclick="setTheme('light')">${svg('sun',14)}Светлая</button></div>`;
+ const [rt]=row('pal','Тема','Оформление приложения',seg);
+ sc.append(grp('Внешний вид',[rt]));
+ // AI
+ const keyBody=`<p style="color:var(--mute);font-size:13px;margin:4px 0 8px">Нужен для работы ИИ (текст и картинки). Хранится только в этом браузере.</p>
  <input class="f" id="tk" type="password" placeholder="API токен (cfut_…)" value="${k?'••••••••':''}" autocomplete="off"><input class="f" id="ac" placeholder="Account ID (32 символа или вся ссылка)" value="${k?k.account:''}" autocomplete="off">
- <div class="row"><button class="btn" onclick="saveKey()">Сохранить и проверить</button>${k?'<button class="btn g" onclick="delKey()">Удалить</button>':''}</div><div class="st" id="ks"></div></div>
- <div class="card"><h3>Сменить пароль</h3><p>Введи старый и новый пароль.</p><input class="f" id="op" type="password" placeholder="Старый пароль" autocomplete="current-password"><input class="f" id="np" type="password" placeholder="Новый пароль (от 4 символов)" autocomplete="new-password"><div class="row"><button class="btn" onclick="chPass()">Сменить пароль</button></div><div class="st" id="ps"></div></div>
- <div class="card span2"><h3>О V-Agent</h3><p>Помощник для авторов и админов каналов: чат с ИИ, картинки, идеи, шаблоны постов и хештеги. Автопостинг в Telegram и разбор видео — в приложении.</p><div class="row"><a class="btn g" href="index.html#download">Скачать приложение</a><button class="btn g" onclick="logout()">${svg('out',16)}Выйти</button></div></div></div>`;
+ <div class="row"><button class="btn" onclick="saveKey()">Сохранить и проверить</button>${k?'<button class="btn g" onclick="delKey()">Удалить</button>':''}</div><div class="st" id="ks"></div>`;
+ sc.append(grp('Нейросети',[acc('key','Ключ Cloudflare',k?'Подключён — ИИ работает':'Добавь ключ, чтобы ИИ заработал',`<span class="badge ${k?'ok':''}"><i></i>${k?'Подключён':'Не добавлен'}</span>`,keyBody,!k)]));
+ // security
+ const pwBody=`<input class="f" id="op" type="password" placeholder="Старый пароль" autocomplete="current-password"><input class="f" id="np" type="password" placeholder="Новый пароль (от 4 символов)" autocomplete="new-password"><div class="row"><button class="btn" onclick="chPass()">Сменить пароль</button></div><div class="st" id="ps"></div>`;
+ sc.append(grp('Безопасность',[acc('shield','Сменить пароль','Введи старый и новый пароль','',pwBody,false)]));
+ // data
+ const total=Object.values(st.chats).reduce((n,a)=>n+(a?a.length:0),0);
+ const [rc,bc]=row('trash','Очистить историю чатов',total?total+' сообщ. в этом браузере':'История пуста','','danger');
+ bc.onclick=()=>{if(!total)return;if(!bc.dataset.sure){bc.dataset.sure=1;bc.querySelector('b').textContent='Нажми ещё раз для подтверждения';setTimeout(()=>{if(bc.isConnected){delete bc.dataset.sure;bc.querySelector('b').textContent='Очистить историю чатов'}},3000);return}st.chats={};save();draw()};
+ sc.append(grp('Данные',[rc]));
+ // about
+ const [ra,ba]=row('info','О V-Agent','Чат с ИИ, картинки, идеи, шаблоны и хештеги. Автопостинг и видео — в приложении.',svg('arrow',16));
+ ba.onclick=()=>{location.href='index.html#download'};ba.querySelector('.t small').style.whiteSpace='normal';
+ const [rl,bl]=row('out','Выйти из аккаунта',USER,'');bl.onclick=logout;
+ sc.append(grp('Приложение',[ra,rl]));
+ [...sc.children].forEach((c,i)=>c.style.setProperty('--i',i));
  m.append(sc);$('#ava2').textContent=USER[0].toUpperCase();$('#nm2').textContent=USER;
 }
 async function saveKey(){
