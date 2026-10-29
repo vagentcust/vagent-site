@@ -43,8 +43,8 @@
         }
         .logo{display:inline-flex;align-items:center;gap:10px}
 
-        /* ЛОГО В ПАНЕЛИ (icon.png) */
-        .logo img{height:40px;width:auto;border-radius:8px;object-fit:cover;display:block}
+        /* ВЕРНУЛ ТЕКСТОВЫЙ ЛОГОТИП (50px) */
+        .logo img{height:50px;width:auto;object-fit:contain;display:block}
 
         .nav nav{display:flex;gap:28px;height:100%;align-items:center}
         .nav nav a{color:#fff;opacity:.75;font-size:15px;transition:opacity .2s,color .2s;display:flex;align-items:center}
@@ -53,17 +53,17 @@
         /* USER BLOCK & DROPDOWN */
         #user-container { position: relative; }
         .user-block {
-            display: flex;align-items: center;gap: 12px;
-            cursor: pointer;padding: 6px 12px;border-radius: 20px;transition: background 0.3s;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; padding: 4px; border-radius: 50%;
+            transition: background 0.3s;
         }
         .user-block:hover { background: rgba(255,255,255,.1); }
         .user-avatar {
-            width: 32px;height: 32px;border-radius: 50%;
+            width: 36px;height: 36px;border-radius: 50%;
             background: var(--accent);color: #fff;
             display: flex;align-items: center;justify-content: center;
-            font-weight: 600;font-size: 14px;
+            font-weight: 600;font-size: 15px;
         }
-        .user-name { font-size: 14px;font-weight: 500;color: #fff; }
 
         /* Выпадающее меню профиля */
         .user-dropdown {
@@ -504,8 +504,8 @@
 
     <header class="nav">
         <div class="logo">
-            <!-- ВЕРНУЛ ICON.PNG -->
-            <img src="icon.png" alt="V-AGENT">
+            <!-- ТЕКСТОВЫЙ ЛОГОТИП -->
+            <img src="logo_text.png" alt="V-AGENT">
         </div>
         <div class="nav-right">
             <nav>
@@ -663,7 +663,7 @@
         </a>
     </div>
 
-    <!-- МОДАЛЬНОЕ ОКНО (1 В 1 КАК В WEB) -->
+    <!-- МОДАЛЬНОЕ ОКНО ВХОДА -->
     <div id="auth-modal" class="auth-modal" onclick="closeAuthModal(event)">
         <div class="auth-card" onclick="event.stopPropagation()">
             <button class="auth-close" onclick="closeAuthModal()">×</button>
@@ -712,12 +712,11 @@
             const user = localStorage.getItem('vagent_user');
             const container = $('#user-container');
             if (user) {
-                // ВЫПАДАЮЩЕЕ МЕНЮ ПРОФИЛЯ
+                // ВЫПАДАЮЩЕЕ МЕНЮ ПРОФИЛЯ (ТОЛЬКО АВАТАРКА)
                 container.innerHTML = `
                     <div class="user-wrapper" style="position: relative;">
                         <div class="user-block" onclick="toggleUserMenu(event)">
                             <div class="user-avatar">${user[0].toUpperCase()}</div>
-                            <span class="user-name">${user}</span>
                         </div>
                         <div class="user-dropdown" id="user-dropdown">
                             <button onclick="window.location.href='app.html'">
