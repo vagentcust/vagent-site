@@ -11,12 +11,12 @@
         :root{
           --bg:#F1F3F6; --card:#FFFFFF; --ink:#151A21; --mute:#667085;
           --line:#DCE1E8; --accent:#3D5AFE; --accent-soft:#E6EAFF;
-          --r:18px; --nav:rgba(14,17,22,.85); --on:#fff; --shadow:rgba(21,26,33,.2);
+          --r:18px; --nav-bg:rgba(10, 10, 15, 0.85); --on:#fff; --shadow:rgba(21,26,33,.2);
         }
         [data-theme="dark"]{
           --bg:#0E1116; --card:#171B22; --ink:#ECEFF4; --mute:#8B94A3;
           --line:#272D37; --accent:#8794FF; --accent-soft:#222949;
-          --nav:rgba(14,17,22,.85); --on:#0E1116; --shadow:rgba(0,0,0,.6);
+          --nav-bg:rgba(10, 10, 15, 0.85); --on:#0E1116; --shadow:rgba(0,0,0,.6);
           color-scheme:dark;
         }
         *{box-sizing:border-box;margin:0;padding:0}
@@ -29,70 +29,47 @@
         a{color:inherit;text-decoration:none}
         code{background:var(--accent-soft);padding:1px 7px;border-radius:6px;font-size:.9em}
 
-        /* NAV */
+        /* NAV (СТИЛЬ КАК В ОКНЕ РЕГИСТРАЦИИ, 850PX) */
         .nav{
-          position:sticky;top:0;z-index:10;
+          position:fixed;top:20px;left:50%;transform:translateX(-50%);
+          width:calc(100% - 40px);max-width:850px;
+          z-index:100;
           display:flex;justify-content:space-between;align-items:center;
-          height:64px;
-          padding:0 max(24px,calc((100% - 1040px)/2));
-          background:var(--nav);backdrop-filter:blur(12px);
-          border-bottom:1px solid var(--line);
+          height:60px;padding:0 24px;
+          background:var(--nav-bg);
+          backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+          border:1px solid var(--line);border-radius:24px;
+          box-shadow:0 10px 30px rgba(0,0,0,.6);
         }
         .logo{display:inline-flex;align-items:center;gap:10px}
-        /* УВЕЛИЧИВАЕМ ЛОГО В ПАНЕЛИ В 2 РАЗА */
-        .logo img{height:56px;width:auto;object-fit:contain;display:block}
-        .nav nav{display:flex;gap:28px;height:100%;align-items:center}
-        .nav nav a{color:#fff;opacity:.75;font-size:15px;transition:opacity .2s,color .2s;display:flex;align-items:center}
+        .logo img{height:32px;width:auto;object-fit:contain;display:block}
+        .nav nav{display:flex;gap:24px;height:100%;align-items:center}
+        .nav nav a{color:#fff;opacity:.75;font-size:14px;transition:opacity .2s,color .2s;display:flex;align-items:center;white-space:nowrap;}
         .nav nav a:hover{color:#fff;opacity:1}
 
-        /* USER BLOCK */
         .user-block {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            cursor: pointer;
-            padding: 6px 12px;
-            border-radius: 20px;
-            transition: background 0.3s;
+            display: flex;align-items: center;gap: 10px;
+            cursor: pointer;padding: 4px 12px 4px 4px;
+            border-radius: 20px;transition: background 0.3s;
         }
-        .user-block:hover {
-            background: rgba(255,255,255,.1);
-        }
+        .user-block:hover { background: rgba(255,255,255,.1); }
         .user-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: var(--accent);
-            color: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            font-size: 14px;
+            width: 30px;height: 30px;border-radius: 50%;
+            background: var(--accent);color: #fff;
+            display: flex;align-items: center;justify-content: center;
+            font-weight: 600;font-size: 13px;
         }
-        .user-name {
-            font-size: 14px;
-            font-weight: 500;
-            color: #fff;
-        }
+        .user-name { font-size: 14px;font-weight: 500;color: #fff; }
         .btn-login {
-            background: var(--accent);
-            color: #fff;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: transform 0.2s;
+            background: var(--accent);color: #fff;border: none;
+            padding: 8px 16px;border-radius: 20px;font-size: 14px;font-weight: 500;
+            cursor: pointer;transition: transform 0.2s;
         }
-        .btn-login:hover {
-            transform: scale(1.05);
-        }
+        .btn-login:hover { transform: scale(1.05); }
 
-        main{max-width:1040px;margin:0 auto;padding:0 24px}
+        /* Отступ для контента из-за фиксированной шапки */
+        main{max-width:1040px;margin:0 auto;padding:100px 24px 0}
 
-        /* HERO */
         .hero{padding:60px 0 70px;text-align:center}
         h1{
           font:600 clamp(34px,6vw,64px)/1.1 "Unbounded",sans-serif;
@@ -109,7 +86,6 @@
         }
         @keyframes rise{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
 
-        /* BUTTONS */
         .btn{
           display:inline-block;padding:13px 26px;border-radius:999px;
           border:1px solid var(--line);background:var(--card);
@@ -122,25 +98,17 @@
         .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
         .btn.primary:hover{box-shadow:0 10px 24px color-mix(in srgb,var(--accent) 40%,transparent)}
 
-        /* AI CHAT DEMO */
         @property --a{syntax:"<angle>";initial-value:0deg;inherits:false}
         @keyframes spin{to{--a:360deg}}
 
         .composer{
-          position:relative;
-          max-width: 680px;
-          min-height: 380px;
-          margin: 54px auto 0;
-          text-align:left;
-          background:var(--card);
-          border:1px solid var(--line);
-          border-radius:var(--r);
-          padding:24px 28px;
+          position:relative;max-width: 680px;min-height: 380px;margin: 54px auto 0;
+          text-align:left;background:var(--card);border:1px solid var(--line);
+          border-radius:var(--r);padding:24px 28px;
           box-shadow:0 30px 60px -30px var(--shadow);
           transition:box-shadow .6s;
           animation:rise 1s .4s cubic-bezier(.2,.7,.2,1) both;
-          display: flex;
-          flex-direction: column;
+          display: flex;flex-direction: column;
         }
         .composer::before{
           content:"";position:absolute;inset:-1px;border-radius:inherit;padding:1.5px;pointer-events:none;
@@ -156,13 +124,7 @@
         .dot{width:9px;height:9px;border-radius:50%;background:var(--line)}
         .composer-title{margin-left:10px;color:var(--mute);font-size:13px}
 
-        .chat{
-          flex: 1;
-          display:flex;
-          flex-direction:column;
-          gap:24px;
-          transition:opacity .5s,transform .5s;
-        }
+        .chat{flex: 1;display:flex;flex-direction:column;gap:24px;transition:opacity .5s,transform .5s;}
         .chat.out{opacity:0;transform:translateY(-8px)}
 
         .user-bubble{
@@ -175,19 +137,13 @@
         .ai-head{display:flex;align-items:center;gap:10px;margin-bottom:8px;font-size:13px;color:var(--mute)}
 
         .orb{
-          width: 24px;
-          height: 24px;
-          border-radius: 50%;
-          background-image: url('icon.png');
-          background-size: contain;
-          background-position: center;
-          background-repeat: no-repeat;
+          width: 24px;height: 24px;border-radius: 50%;
+          background-image: url('img.png');
+          background-size: contain;background-position: center;background-repeat: no-repeat;
           background-color: var(--accent-soft);
           transition: box-shadow .5s;
         }
-        .composer.busy .orb{
-          box-shadow: 0 0 20px var(--accent);
-        }
+        .composer.busy .orb{ box-shadow: 0 0 20px var(--accent); }
 
         .think{display:flex;gap:4px;opacity:0;transition:opacity .3s}
         .think.on{opacity:1}
@@ -196,10 +152,7 @@
         .think i:nth-child(3){animation-delay:.3s}
         @keyframes bounce{40%{transform:translateY(-5px)}}
 
-        .answer{
-          font-size: 18px;
-          line-height: 1.6;
-        }
+        .answer{font-size: 18px;line-height: 1.6;}
         .w{
           display:inline-block;white-space:pre;opacity:0;filter:blur(8px);transform:translateY(8px);
           transition:opacity .5s,filter .6s,transform .5s cubic-bezier(.2,.8,.2,1);
@@ -208,13 +161,11 @@
 
         .composer-bottom{
           display:flex;align-items:center;gap:10px;
-          margin-top: auto;
-          padding-top:16px;
+          margin-top: auto;padding-top:16px;
           border-top:1px solid var(--line);color:var(--mute);font-size:14px;
         }
         .composer-bottom svg{width:18px;height:18px;color:var(--accent);flex:none}
 
-        /* SECTIONS */
         .section{padding:80px 0}
         h2{font:600 clamp(26px,4vw,38px)/1.2 "Unbounded",sans-serif;letter-spacing:-.03em;margin-bottom:36px}
         h3{font-weight:600;font-size:18px;margin-bottom:6px}
@@ -226,7 +177,6 @@
         }
         .card p,.file p,.panel p{color:var(--mute)}
 
-        /* DOWNLOADS */
         .downloads{display:grid;gap:14px}
         .file{
           display:flex;justify-content:space-between;align-items:center;gap:20px;
@@ -238,30 +188,18 @@
           box-shadow: 0 8px 20px rgba(21,26,33,.08);
           border-color: var(--accent);
         }
+        .file .btn { min-width: 180px;text-align: center;flex-shrink: 0;padding: 13px 26px; }
 
-        .file .btn {
-          min-width: 180px;
-          text-align: center;
-          flex-shrink: 0;
-          padding: 13px 26px;
-        }
-
-        /* TABS */
         .tabs{
-          position:relative;
-          display:flex;
-          width: 100%;
-          gap:4px;padding:5px;
+          position:relative;display:flex;width: 100%;gap:4px;padding:5px;
           background:var(--card);border:1px solid var(--line);border-radius:999px;
           overflow-x:auto;
         }
         .tab{
           position:relative;z-index:1;border:0;background:none;cursor:pointer;
-          flex: 1 1 0px;
-          padding:12px 10px;
-          border-radius:999px;font:500 15px "Onest",sans-serif;
-          color:var(--mute);white-space:nowrap;transition:color .25s;
-          text-align: center;
+          flex: 1 1 0px;padding:12px 10px;border-radius:999px;
+          font:500 15px "Onest",sans-serif;color:var(--mute);white-space:nowrap;
+          transition:color .25s;text-align: center;
         }
         .tab.active{color:#fff}
         .tab-indicator{
@@ -282,34 +220,25 @@
         }
         .link:hover{background:var(--accent);color:#fff;transform:translateY(-2px)}
 
-        /* SCROLL REVEAL */
         .reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.2,1)}
         .reveal.in{opacity:1;transform:none}
 
         .footer{padding:50px 24px;text-align:center;color:var(--mute);font-size:14px}
 
-        /* A11Y */
         :focus-visible{outline:2px solid var(--accent);outline-offset:3px}
-        @media (max-width:640px){
-          .nav nav{gap:16px}
-          .hero{padding-top:40px}
-        }
-        @media (prefers-reduced-motion:reduce){
-          *{animation:none!important;transition:none!important}
-          .reveal{opacity:1;transform:none}
-        }
 
-        /* THEME TOGGLE */
-        .nav-right{display:flex;align-items:center;gap:22px}
+        .nav-right{display:flex;align-items:center;gap:16px}
+
+        /* Кнопка темы в стиле панели */
         .theme{
-          position:relative;width:40px;height:40px;border-radius:50%;cursor:pointer;
-          border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06);color:#fff;
-          transition:transform .2s,border-color .2s;
+          position:relative;width:36px;height:36px;border-radius:50%;cursor:pointer;
+          border:1px solid var(--line);background:rgba(255,255,255,.05);color:#fff;
+          transition:transform .2s,border-color .2s;display:grid;place-items:center;
         }
         .theme:hover{border-color:var(--accent)}
         .theme:active{transform:scale(.92)}
         .theme svg{
-          position:absolute;inset:9px;width:20px;height:20px;
+          position:absolute;width:18px;height:18px;
           transition:transform .6s cubic-bezier(.3,.8,.2,1),opacity .4s;
         }
         .sun{opacity:0;transform:rotate(-90deg) scale(.4)}
@@ -321,7 +250,6 @@
         ::view-transition-new(root){z-index:2}
         .fade-theme,.fade-theme *{transition:background-color .45s ease,color .45s ease,border-color .45s ease,fill .45s ease,box-shadow .45s ease!important}
 
-        /* SOCIALS */
         .socials{
           position:fixed;left:20px;bottom:20px;z-index:20;
           display:flex;gap:4px;padding:5px;
@@ -334,104 +262,61 @@
         .socials a:hover{background:var(--accent);color:#fff;transform:translateY(-3px)}
         .socials svg{width:20px;height:20px}
 
-        /* МОДАЛЬНОЕ ОКНО ВХОДА */
         .auth-modal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(8px);
-            z-index: 100;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
+            display: none;position: fixed;inset: 0;
+            background: rgba(0, 0, 0, 0.7);backdrop-filter: blur(8px);
+            z-index: 100;align-items: center;justify-content: center;padding: 20px;
         }
         .auth-modal.show { display: flex; }
         .auth-card {
-            background: var(--card);
-            border: 1px solid var(--line);
-            border-radius: 24px;
-            padding: 30px;
-            max-width: 400px;
-            width: 100%;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-            position: relative;
+            background: var(--card);border: 1px solid var(--line);border-radius: 24px;
+            padding: 30px;max-width: 400px;width: 100%;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);position: relative;
             animation: appear 0.3s cubic-bezier(.2,.7,.2,1) both;
         }
         .auth-close {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: none;
-            border: none;
-            color: var(--mute);
-            font-size: 24px;
-            cursor: pointer;
+            position: absolute;top: 15px;right: 15px;
+            background: none;border: none;color: var(--mute);
+            font-size: 24px;cursor: pointer;
         }
         .auth-title {
-            font-family: "Unbounded", sans-serif;
-            font-size: 24px;
-            margin-bottom: 20px;
-            text-align: center;
-            color: var(--ink);
+            font-family: "Unbounded", sans-serif;font-size: 24px;
+            margin-bottom: 20px;text-align: center;color: var(--ink);
         }
         .auth-input {
-            width: 100%;
-            padding: 14px 16px;
-            margin-bottom: 12px;
-            border-radius: 12px;
-            border: 1px solid var(--line);
-            background: var(--bg);
-            color: var(--ink);
-            font-size: 15px;
-            outline: none;
-            transition: 0.3s;
+            width: 100%;padding: 14px 16px;margin-bottom: 12px;
+            border-radius: 12px;border: 1px solid var(--line);
+            background: var(--bg);color: var(--ink);
+            font-size: 15px;outline: none;transition: 0.3s;
         }
-        .auth-input:focus {
-            border-color: var(--accent);
-        }
+        .auth-input:focus { border-color: var(--accent); }
         .auth-btn {
-            width: 100%;
-            padding: 14px;
-            border-radius: 12px;
-            border: none;
-            background: var(--accent);
-            color: #fff;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 10px;
-            transition: 0.3s;
+            width: 100%;padding: 14px;border-radius: 12px;border: none;
+            background: var(--accent);color: #fff;font-size: 15px;font-weight: 600;
+            cursor: pointer;margin-top: 10px;transition: 0.3s;
         }
         .auth-btn:hover { background: #6A7AFF; }
         .auth-switch {
-            text-align: center;
-            font-size: 13px;
-            color: var(--mute);
-            margin-top: 15px;
-            cursor: pointer;
+            text-align: center;font-size: 13px;color: var(--mute);
+            margin-top: 15px;cursor: pointer;
         }
         .auth-switch:hover { color: var(--ink); }
         .auth-error {
-            color: #FF5252;
-            font-size: 13px;
-            text-align: center;
-            margin-bottom: 10px;
-            display: none;
+            color: #FF5252;font-size: 13px;text-align: center;
+            margin-bottom: 10px;display: none;
         }
 
-        /* ================= MOBILE ================= */
         html,body{overflow-x:clip}
         html{-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent}
         button,a{touch-action:manipulation}
         img,svg{max-width:100%}
 
-        @media (max-width:760px){
-          .nav{padding:0 18px;height:56px}
-          .nav-right{gap:12px}
+        @media (max-width:850px){
+          .nav{top:10px;width:calc(100% - 20px);height:52px;padding:0 14px;border-radius:16px}
+          .nav-right{gap:10px}
           .nav nav{gap:14px}
-          .nav nav a{font-size:14px}
-          main{padding:0 18px}
+          .nav nav a{font-size:13px}
+          main{padding-top:80px}
           .hero{padding:24px 0 44px}
           .lead{font-size:16px;margin-top:18px}
           .cta{flex-wrap:wrap;margin-top:26px}
@@ -439,42 +324,26 @@
           h2{margin-bottom:26px}
           .card{padding:22px}
           .composer{margin-top:40px; min-height: 320px;}
+          .logo img{height:26px;}
         }
 
         @media (max-width:600px){
           .nav nav a:not([href="#download"]){display:none}
           h1{font-size:clamp(26px,8.4vw,40px);overflow-wrap:anywhere}
           h2{font-size:clamp(22px,6.6vw,30px)}
-          .logo img{height:36px} /* Увеличенный лого на мобилке */
-
           .btn{padding:10px 18px; font-size:14px;}
           .cta .btn{flex:1 1 140px;text-align:center; white-space: nowrap;}
-
-          .composer {
-            padding:16px;
-            min-height: 280px;
-            animation: rise 0.8s cubic-bezier(.2,.7,.2,1) both;
-          }
-
+          .composer {padding:16px;min-height: 280px;}
           .chat{gap:16px}
           .user-bubble{max-width:94%;font-size:14px}
           .answer{font-size:16px}
           .composer-bottom{font-size:13px;gap:8px}
-
           .file{flex-direction:column;align-items:stretch;padding:20px; gap: 15px;}
           .file .btn{min-width: 0; width: 100%; text-align: center; padding: 12px 20px;}
-
           .tabs{display:flex;width:100%; overflow-x: hidden; padding-bottom: 5px;}
           .tab{font-size:11px; padding:10px 2px; flex: 1 1 0;}
           .panel{padding:22px}
-
-          .socials{
-            left:12px;transform:none;
-            bottom:max(12px,env(safe-area-inset-bottom));
-            gap:2px;padding:4px;
-            background:color-mix(in srgb,var(--card) 88%,transparent);
-            backdrop-filter:blur(10px);
-          }
+          .socials{left:12px;transform:none;bottom:max(12px,env(safe-area-inset-bottom));gap:2px;padding:4px;background:color-mix(in srgb,var(--card) 88%,transparent);backdrop-filter:blur(10px);}
           .socials a{width:38px;height:38px}
           .footer{padding-bottom:96px;}
         }
@@ -492,7 +361,6 @@
 </head>
 <body>
 
-    <!-- NAV -->
     <header class="nav">
         <div class="logo">
             <img src="logo_text.png" alt="V-AGENT">
@@ -670,7 +538,6 @@
         const $$ = s => document.querySelectorAll(s);
         const sleep = ms => new Promise(r => setTimeout(r, ms));
         const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-
         const safe = fn => { try { fn(); } catch (e) { console.warn('V-agent script:', e); } };
 
         let isLoginMode = true;
@@ -697,19 +564,16 @@
             $('#auth-password').value = '';
             $('#auth-confirm').value = '';
         }
-
         function closeAuthModal(e) {
             if (e && e.target !== e.currentTarget) return;
             $('#auth-modal').classList.remove('show');
         }
-
         function toggleAuthMode() {
             isLoginMode = !isLoginMode;
             const title = $('#auth-title');
             const btn = $('#auth-submit');
             const switchBtn = $('#auth-switch');
             const confirm = $('#auth-confirm');
-
             if (isLoginMode) {
                 title.textContent = 'Вход';
                 btn.textContent = 'Войти';
@@ -735,7 +599,6 @@
                 errorBox.style.display = 'block';
                 return;
             }
-
             if (!isLoginMode && pass !== confirm) {
                 errorBox.textContent = 'Пароли не совпадают';
                 errorBox.style.display = 'block';
@@ -755,9 +618,7 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username: user, password: pass })
                 });
-
                 const data = await res.json();
-
                 if (res.ok) {
                     localStorage.setItem('vagent_user', user);
                     closeAuthModal();
@@ -776,7 +637,6 @@
         }
 
         checkUser();
-
         safe(() => { const y = $('#year'); if (y) y.textContent = new Date().getFullYear(); });
 
         safe(() => {
@@ -875,9 +735,7 @@
           const chat = $('#chat'), comp = $('#composer');
           if (!q || !ans) return;
           const bubble = q.parentElement;
-
           if (reduce) { q.textContent = QA[0][0]; ans.textContent = QA[0][1]; return; }
-
           let i = 0;
           while (true) {
             const [Q, A] = QA[i++ % QA.length];
@@ -888,12 +746,10 @@
             bubble.classList.add('ping');
             await sleep(350);
             bubble.classList.remove('ping');
-
             if (comp) comp.classList.add('busy');
             if (think) think.classList.add('on');
             await sleep(1500);
             if (think) think.classList.remove('on');
-
             const words = A.split(' ');
             for (const [k, w] of words.entries()) {
               const s = document.createElement('span');

@@ -40,7 +40,6 @@
             padding-bottom: 10px;
         }
 
-        /* ФОН */
         .bg-glow {
             position: fixed;
             top: 0; left: 0;
@@ -58,7 +57,6 @@
         }
         .bg-glow.loaded { opacity: 1; }
 
-        /* ЭКРАН ЗАГРУЗКИ */
         .loader-screen {
             position: fixed;
             inset: 0;
@@ -101,14 +99,14 @@
             transition: width 0.1s linear;
         }
 
-        /* ВЕРХНЯЯ ПАНЕЛЬ (Ширина 700px) */
+        /* ПАНЕЛЬ (850px, единый стиль) */
         .nav {
             position: absolute;
             top: 20px;
             left: 50%;
             transform: translateX(-50%);
             width: calc(100% - 40px);
-            max-width: 700px; /* Точно 700px */
+            max-width: 850px;
             z-index: 10000;
             display: flex;
             justify-content: space-between;
@@ -133,9 +131,8 @@
         }
         .nav-logo:hover { opacity: 0.8; }
 
-        /* ЛОГО В ПАНЕЛИ УВЕЛИЧЕНО */
         .nav-logo img.nav-icon {
-            height: 52px;
+            height: 32px;
             width: auto;
             object-fit: contain;
             display: block;
@@ -251,7 +248,6 @@
         .notif-item.error { border-left: 3px solid #FF3B30; color: #FF8A80; }
         .notif-item.success { border-left: 3px solid #4CAF50; color: #81C784; }
 
-        /* ФОРМА */
         .glass-container {
             position: relative;
             z-index: 10;
@@ -388,9 +384,9 @@
         .modal-content h3 { font-size: 16px; color: var(--accent); margin: 15px 0 5px; }
         .modal-content p { color: var(--mute); font-size: 14px; line-height: 1.5; margin-bottom: 10px; }
 
-        @media (max-width: 700px) {
+        @media (max-width: 850px) {
             .nav { top: 10px; width: calc(100% - 20px); height: 52px; padding: 0 14px; border-radius: 16px; }
-            .nav-logo img.nav-icon { height: 32px; }
+            .nav-logo img.nav-icon { height: 26px; }
             .nav-link[href*="#download"] { display: none; }
             .nav-right { gap: 10px; }
             .nav-link { font-size: 12px; padding: 6px 2px; }
@@ -423,7 +419,6 @@
         </div>
     </div>
 
-    <!-- ОСНОВНОЙ КОНТЕНТ -->
     <div class="bg-glow" id="bg-glow"></div>
 
     <!-- ПАНЕЛЬ -->
