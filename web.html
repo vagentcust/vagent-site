@@ -40,6 +40,7 @@
             padding-bottom: 10px;
         }
 
+        /* ФОН */
         .bg-glow {
             position: fixed;
             top: 0; left: 0;
@@ -52,8 +53,54 @@
                 radial-gradient(circle at 100% 100%, rgba(60, 15, 70, 0.3) 0%, transparent 50%);
             background-repeat: no-repeat;
             background-size: cover;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+        }
+        .bg-glow.loaded { opacity: 1; }
+
+        /* ЭКРАН ЗАГРУЗКИ */
+        .loader-screen {
+            position: fixed;
+            inset: 0;
+            background: #000000;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.6s ease;
+        }
+        .loader-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .loader-logo {
+            width: 240px;
+            max-width: 80vw;
+            margin-bottom: 30px;
+            animation: pulse 1.5s ease-in-out infinite alternate;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.8; }
+            100% { transform: scale(1.02); opacity: 1; }
+        }
+        .loader-bar-container {
+            width: 200px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .loader-bar {
+            width: 0%;
+            height: 100%;
+            background: #FFFFFF;
+            border-radius: 4px;
+            transition: width 0.1s linear;
         }
 
+        /* ВЕРХНЯЯ ПАНЕЛЬ (ВСЕГДА СВЕРХУ) */
         .nav {
             position: absolute;
             top: 20px;
@@ -73,7 +120,6 @@
             border-radius: 24px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
         }
-
         .nav-left { display: flex; align-items: center; }
         .nav-logo {
             display: flex;
@@ -87,9 +133,18 @@
             transition: opacity 0.3s;
         }
         .nav-logo:hover { opacity: 0.8; }
-        .nav-logo img.nav-icon { width: 32px; height: 32px; border-radius: 8px; object-fit: cover; }
+        .nav-logo img.nav-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
 
-        .nav-right { display: flex; align-items: center; gap: 20px; }
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
         .nav-link {
             position: relative;
             color: var(--mute);
@@ -104,7 +159,11 @@
             white-space: nowrap;
             padding: 8px 4px;
         }
-        .nav-link:hover { color: var(--ink); background: rgba(255,255,255,0.05); border-radius: 6px; }
+        .nav-link:hover {
+            color: var(--ink);
+            background: rgba(255,255,255,0.05);
+            border-radius: 6px;
+        }
 
         .bell-wrapper { position: relative; }
         .nav-bell {
@@ -120,9 +179,20 @@
             transition: all 0.3s;
             position: relative;
         }
-        .nav-bell:hover { background: rgba(255, 255, 255, 0.15); border-color: var(--accent); transform: scale(1.05); }
-        .nav-bell svg { width: 18px; height: 18px; stroke: var(--ink); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-
+        .nav-bell:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: var(--accent);
+            transform: scale(1.05);
+        }
+        .nav-bell svg {
+            width: 18px;
+            height: 18px;
+            stroke: var(--ink);
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
         .bell-badge {
             position: absolute;
             top: 2px;
@@ -155,7 +225,6 @@
             gap: 10px;
         }
         .notif-dropdown.show { display: flex; }
-
         .notif-header {
             font-size: 14px;
             font-weight: 600;
@@ -163,7 +232,6 @@
             padding-bottom: 8px;
             border-bottom: 1px solid var(--line);
         }
-
         .notif-list {
             display: flex;
             flex-direction: column;
@@ -171,7 +239,6 @@
             max-height: 250px;
             overflow-y: auto;
         }
-
         .notif-item {
             padding: 10px;
             background: rgba(255,255,255,0.03);
@@ -183,11 +250,12 @@
         .notif-item.error { border-left: 3px solid #FF3B30; color: #FF8A80; }
         .notif-item.success { border-left: 3px solid #4CAF50; color: #81C784; }
 
+        /* ФОРМА */
         .glass-container {
             position: relative;
             z-index: 10;
             width: 100%;
-            max-width: 440px; /* ВЕРНУЛ НОРМАЛЬНУЮ ШИРИНУ */
+            max-width: 440px;
             padding: 20px;
             margin-top: 40px;
             animation: appear 0.8s cubic-bezier(.2,.7,.2,1) both;
@@ -195,7 +263,10 @@
             justify-content: center;
             max-height: calc(100vh - 60px);
             overflow-y: auto;
+            opacity: 0;
+            transition: opacity 0.5s ease;
         }
+        .glass-container.loaded { opacity: 1; }
 
         @keyframes appear {
             from { opacity: 0; transform: translateY(30px) scale(0.95); }
@@ -284,10 +355,18 @@
             box-shadow: 0 8px 25px rgba(135, 148, 255, 0.4);
             margin-top: 8px;
         }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(135, 148, 255, 0.6); }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(135, 148, 255, 0.6);
+        }
         .btn-primary:disabled { opacity: 0.7; cursor: not-allowed; }
-
-        .btn-link { background: none; color: var(--mute); font-size: 13px; margin-top: 18px; padding: 5px; }
+        .btn-link {
+            background: none;
+            color: var(--mute);
+            font-size: 13px;
+            margin-top: 18px;
+            padding: 5px;
+        }
         .btn-link:hover { color: var(--ink); }
 
         .modal {
@@ -300,7 +379,10 @@
             border: 1px solid var(--line); max-width: 500px; width: 90%;
             position: relative; max-height: 80vh; overflow-y: auto;
         }
-        .modal-close { position: absolute; top: 15px; right: 15px; background: none; border: none; color: var(--mute); font-size: 24px; cursor: pointer; }
+        .modal-close {
+            position: absolute; top: 15px; right: 15px;
+            background: none; border: none; color: var(--mute); font-size: 24px; cursor: pointer;
+        }
         .modal-content h3 { font-size: 16px; color: var(--accent); margin: 15px 0 5px; }
         .modal-content p { color: var(--mute); font-size: 14px; line-height: 1.5; margin-bottom: 10px; }
 
@@ -323,12 +405,24 @@
             .input-icon { left: 14px; width: 18px; height: 18px; }
             .btn { padding: 13px; font-size: 14px; }
             .btn-link { margin-top: 14px; font-size: 12px; }
+
+            .loader-logo { width: 180px; }
+            .loader-bar-container { width: 160px; }
         }
     </style>
 </head>
 <body>
 
-    <div class="bg-glow"></div>
+    <!-- ЭКРАН ЗАГРУЗКИ -->
+    <div class="loader-screen" id="loader">
+        <img src="logo_text.png" alt="V-AGENT" class="loader-logo">
+        <div class="loader-bar-container">
+            <div class="loader-bar" id="loader-bar"></div>
+        </div>
+    </div>
+
+    <!-- ОСНОВНОЙ КОНТЕНТ -->
+    <div class="bg-glow" id="bg-glow"></div>
 
     <nav class="nav">
         <div class="nav-left">
@@ -360,7 +454,7 @@
         </div>
     </nav>
 
-    <div class="glass-container">
+    <div class="glass-container" id="main-form">
         <div class="glass-card">
 
             <div class="logo-block">
@@ -405,6 +499,30 @@
     </div>
 
     <script>
+        // Логика анимации загрузки
+        window.addEventListener('load', () => {
+            const bar = document.getElementById('loader-bar');
+            const loader = document.getElementById('loader');
+            const form = document.getElementById('main-form');
+            const bg = document.getElementById('bg-glow');
+
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += 5;
+                bar.style.width = progress + '%';
+
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        loader.classList.add('hidden');
+                        form.classList.add('loaded');
+                        bg.classList.add('loaded');
+                    }, 300);
+                }
+            }, 50);
+        });
+
+        // Уже вошел — сразу в веб-версию
         if (localStorage.getItem('vagent_user')) { location.replace('./app.html'); }
 
         const bellBtn = document.getElementById('bell-btn');
@@ -448,11 +566,11 @@
                     <h3>1. Никакого хранения в открытом виде</h3>
                     <p>Мы <b>никогда</b> не сохраняем ваш пароль в виде обычного текста. Если база данных будет украдена, злоумышленники не смогут прочитать пароли.</p>
                     <h3>2. Хеширование (SHA-256 и соль)</h3>
-                    <p>Ваш пароль превращается в уникальный набор символов с помощью криптографического алгоритма <b>SHA-256</b>. Перед этим к паролю добавляется случайная "соль".</p>
+                    <p>Ваш пароль превращается в уникальный набор символов с помощью криптографического алгоритма <b>SHA-256</b>. Перед этим к паролю добавляется случайная "соль" (уникальная строка для каждого пользователя). Это делает невозможным использование "радужных таблиц" для взлома.</p>
                     <h3>3. Где хранятся данные?</h3>
-                    <p>Данные хранятся в защищенном облаке Cloudflare (Workers KV).</p>
+                    <p>Данные хранятся в защищенном облаке Cloudflare (Workers KV). Cloudflare использует шифрование AES-256 для всех данных в состоянии покоя. Даже сотрудники Cloudflare не могут прочитать ваши данные.</p>
                     <h3>4. Мы не видим ваши пароли</h3>
-                    <p>Даже администраторы V-AGENT не имеют доступа к вашим паролям.</p>
+                    <p>Даже администраторы V-AGENT не имеют доступа к вашим паролям. Мы видим только хеш (набор символов). Восстановить из него исходный пароль математически невозможно.</p>
                 `;
             }
         }
