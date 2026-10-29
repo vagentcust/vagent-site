@@ -43,11 +43,11 @@
         }
         .logo{display:inline-flex;align-items:center;gap:10px}
 
-        /* ВЕРНУЛ ТЕКСТОВЫЙ ЛОГОТИП (50px) */
+        /* ЛОГО В ПАНЕЛИ (50px) */
         .logo img{height:50px;width:auto;object-fit:contain;display:block}
 
         .nav nav{display:flex;gap:28px;height:100%;align-items:center}
-        .nav nav a{color:#fff;opacity:.75;font-size:15px;transition:opacity .2s,color .2s;display:flex;align-items:center}
+        .nav nav a{color:#fff;opacity:.75;font-size:15px;transition:opacity .2s,color .2s;display:flex;align-items:center;cursor:pointer;}
         .nav nav a:hover{color:#fff;opacity:1}
 
         /* USER BLOCK & DROPDOWN */
@@ -180,7 +180,7 @@
 
         .orb{
           width: 24px;height: 24px;border-radius: 50%;
-          background-image: url('icon.png');
+          background-image: url('img.png');
           background-size: contain;background-position: center;background-repeat: no-repeat;
           background-color: var(--accent-soft);
           transition: box-shadow .5s;
@@ -438,6 +438,13 @@
             width: 100%;
         }
 
+        /* ===== МОДАЛЬНОЕ ОКНО ПРАВИЛ ===== */
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 1000; align-items: center; justify-content: center; }
+        .modal-content { background: var(--bg); padding: 30px; border-radius: 20px; border: 1px solid var(--line); max-width: 500px; width: 90%; position: relative; max-height: 80vh; overflow-y: auto; }
+        .modal-close { position: absolute; top: 15px; right: 15px; background: none; border: none; color: var(--mute); font-size: 24px; cursor: pointer; }
+        .modal-content h3 { font-size: 16px; color: var(--accent); margin: 15px 0 5px; }
+        .modal-content p { color: var(--mute); font-size: 14px; line-height: 1.5; margin-bottom: 10px; }
+
         .hidden { display: none !important; }
 
         html,body{overflow-x:clip}
@@ -504,7 +511,6 @@
 
     <header class="nav">
         <div class="logo">
-            <!-- ТЕКСТОВЫЙ ЛОГОТИП -->
             <img src="logo_text.png" alt="V-AGENT">
         </div>
         <div class="nav-right">
@@ -512,9 +518,9 @@
                 <a href="#features">Возможности</a>
                 <a href="#download">Получить доступ</a>
                 <a href="#socials">Соцсети</a>
+                <a href="javascript:void(0)" onclick="openRulesModal()">Правила</a>
             </nav>
 
-            <!-- БЛОК ПОЛЬЗОВАТЕЛЯ -->
             <div id="user-container">
                 <button class="btn-login" onclick="openAuthModal()">Войти</button>
             </div>
@@ -699,6 +705,15 @@
         </div>
     </div>
 
+    <!-- МОДАЛЬНОЕ ОКНО ПРАВИЛ -->
+    <div id="info-modal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeRulesModal()">×</button>
+            <h2 id="modal-title" style="margin-bottom: 15px; font-family: 'Unbounded';">Правила использования</h2>
+            <div id="modal-text" style="color: var(--mute); line-height: 1.6; font-size: 14px;"></div>
+        </div>
+    </div>
+
     <script>
         const $ = s => document.querySelector(s);
         const $$ = s => document.querySelectorAll(s);
@@ -712,7 +727,6 @@
             const user = localStorage.getItem('vagent_user');
             const container = $('#user-container');
             if (user) {
-                // ВЫПАДАЮЩЕЕ МЕНЮ ПРОФИЛЯ (ТОЛЬКО АВАТАРКА)
                 container.innerHTML = `
                     <div class="user-wrapper" style="position: relative;">
                         <div class="user-block" onclick="toggleUserMenu(event)">
@@ -831,6 +845,29 @@
                 btn.textContent = isLoginMode ? 'Войти' : 'Создать аккаунт';
             }
         }
+
+        /* --- ПРАВИЛА --- */
+        function openRulesModal() {
+            const modal = document.getElementById('info-modal');
+            modal.style.display = 'flex';
+            document.getElementById('modal-text').innerHTML = `
+                <p>Добро пожаловать в V-Agent! Чтобы всем было комфортно, соблюдайте простые правила:</p>
+                <h3>1. Запрещенный контент</h3>
+                <p>Запрещено генерировать контент, нарушающий законодательство, содержащий сцены насилия, экстремизм, порнографию или разжигание межнациональной розни.</p>
+                <h3>2. Авторские права</h3>
+                <p>Не используйте сервис для создания контента, нарушающего авторские права третьих лиц. Ответственность за сгенерированный контент несет пользователь.</p>
+                <h3>3. Спам и автоматизация</h3>
+                <p>Запрещено использовать сервис для массовой рассылки спама и создания вредоносных скриптов.</p>
+                <h3>4. Блокировка</h3>
+                <p>Администрация оставляет за собой право заблокировать аккаунт без предупреждения за нарушение данных правил.</p>
+            `;
+        }
+        function closeRulesModal() {
+            document.getElementById('info-modal').style.display = 'none';
+        }
+        document.getElementById('info-modal').addEventListener('click', (e) => {
+            if (e.target.id === 'info-modal') closeRulesModal();
+        });
 
         checkUser();
         safe(() => { const y = $('#year'); if (y) y.textContent = new Date().getFullYear(); });

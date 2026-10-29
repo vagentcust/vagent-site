@@ -169,6 +169,7 @@ main{flex:1;min-width:0;display:flex;flex-direction:column;height:calc(100dvh - 
   <!-- Кнопки как в регистрации -->
   <a class="lnk pcl" href="index.html#download">Скачать</a>
   <a class="lnk pcl" href="javascript:void(0)" onclick="openModal('privacy')">Безопасность</a>
+  <a class="lnk pcl" href="javascript:void(0)" onclick="openModal('rules')">Правила</a>
 
   <!-- Колокольчик уведомлений -->
   <div class="bell-wrapper">
@@ -208,7 +209,7 @@ main{flex:1;min-width:0;display:flex;flex-direction:column;height:calc(100dvh - 
 <div class="sheet" id="sheet" onclick="if(event.target===this)closeSheet()"><div class="sh" id="sh"></div></div>
 <div class="pwa" id="pwa"><img src="icon.png" alt=""><div><b>Установить V-Agent</b>Добавь на главный экран</div><button class="btn" id="pwab">Добавить</button><button class="lnk" onclick="closePwa()">✕</button></div>
 
-<!-- МОДАЛЬНОЕ ОКНО БЕЗОПАСНОСТИ -->
+<!-- МОДАЛЬНОЕ ОКНО -->
 <div id="info-modal" class="modal">
     <div class="modal-content">
         <button class="modal-close" onclick="closeModal()">×</button>
@@ -260,13 +261,16 @@ document.addEventListener('click', (e) => {
     }
 });
 
-/* --- МОДАЛЬНОЕ ОКНО БЕЗОПАСНОСТИ --- */
+/* --- МОДАЛЬНОЕ ОКНО --- */
 function openModal(type) {
     const modal = document.getElementById('info-modal');
     modal.style.display = 'flex';
+    const title = document.getElementById('modal-title');
+    const text = document.getElementById('modal-text');
+
     if (type === 'privacy') {
-        document.getElementById('modal-title').textContent = 'Конфиденциальность и Безопасность';
-        document.getElementById('modal-text').innerHTML = `
+        title.textContent = 'Конфиденциальность и Безопасность';
+        text.innerHTML = `
             <p>Мы серьезно относимся к защите ваших данных. Вот как именно мы обеспечиваем безопасность ваших паролей:</p>
             <h3>1. Никакого хранения в открытом виде</h3>
             <p>Мы <b>никогда</b> не сохраняем ваш пароль в виде обычного текста.</p>
@@ -274,6 +278,19 @@ function openModal(type) {
             <p>Ваш пароль превращается в уникальный набор символов с помощью алгоритма <b>SHA-256</b>.</p>
             <h3>3. Где хранятся данные?</h3>
             <p>Данные хранятся в защищенном облаке Cloudflare (Workers KV).</p>
+        `;
+    } else if (type === 'rules') {
+        title.textContent = 'Правила использования';
+        text.innerHTML = `
+            <p>Добро пожаловать в V-Agent! Чтобы всем было комфортно, соблюдайте простые правила:</p>
+            <h3>1. Запрещенный контент</h3>
+            <p>Запрещено генерировать контент, нарушающий законодательство, содержащий сцены насилия, экстремизм, порнографию или разжигание межнациональной розни.</p>
+            <h3>2. Авторские права</h3>
+            <p>Не используйте сервис для создания контента, нарушающего авторские права третьих лиц. Ответственность за сгенерированный контент несет пользователь.</p>
+            <h3>3. Спам и автоматизация</h3>
+            <p>Запрещено использовать сервис для массовой рассылки спама и создания вредоносных скриптов.</p>
+            <h3>4. Блокировка</h3>
+            <p>Администрация оставляет за собой право заблокировать аккаунт без предупреждения за нарушение данных правил.</p>
         `;
     }
 }
