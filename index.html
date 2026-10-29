@@ -43,13 +43,15 @@
         }
         .logo{display:inline-flex;align-items:center;gap:10px}
 
-        /* ЛОГО В ПАНЕЛИ (50px) */
-        .logo img{height:50px;width:auto;object-fit:contain;display:block}
+        /* ЛОГО В ПАНЕЛИ (icon.png) */
+        .logo img{height:40px;width:auto;border-radius:8px;object-fit:cover;display:block}
 
         .nav nav{display:flex;gap:28px;height:100%;align-items:center}
         .nav nav a{color:#fff;opacity:.75;font-size:15px;transition:opacity .2s,color .2s;display:flex;align-items:center}
         .nav nav a:hover{color:#fff;opacity:1}
 
+        /* USER BLOCK & DROPDOWN */
+        #user-container { position: relative; }
         .user-block {
             display: flex;align-items: center;gap: 12px;
             cursor: pointer;padding: 6px 12px;border-radius: 20px;transition: background 0.3s;
@@ -62,6 +64,45 @@
             font-weight: 600;font-size: 14px;
         }
         .user-name { font-size: 14px;font-weight: 500;color: #fff; }
+
+        /* Выпадающее меню профиля */
+        .user-dropdown {
+            position: absolute;
+            top: 50px;
+            right: 0;
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            padding: 6px;
+            display: none;
+            flex-direction: column;
+            min-width: 180px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+        .user-dropdown.show { display: flex; }
+        .user-dropdown button {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            padding: 10px 12px;
+            border: 0;
+            background: none;
+            color: var(--ink);
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: left;
+            font-family: "Onest", sans-serif;
+            transition: background 0.2s;
+        }
+        .user-dropdown button:hover { background: rgba(135,148,255,0.1); color: var(--accent); }
+        .user-dropdown .sep { height: 1px; background: var(--line); margin: 4px 6px; }
+        .user-dropdown button svg { color: var(--mute); }
+        .user-dropdown button:hover svg { color: var(--accent); }
+
         .btn-login {
             background: var(--accent);color: #fff;border: none;
             padding: 8px 16px;border-radius: 20px;font-size: 14px;font-weight: 500;
@@ -139,7 +180,7 @@
 
         .orb{
           width: 24px;height: 24px;border-radius: 50%;
-          background-image: url('img.png');
+          background-image: url('icon.png');
           background-size: contain;background-position: center;background-repeat: no-repeat;
           background-color: var(--accent-soft);
           transition: box-shadow .5s;
@@ -262,7 +303,7 @@
         .socials a:hover{background:var(--accent);color:#fff;transform:translateY(-3px)}
         .socials svg{width:20px;height:20px}
 
-        /* ===== МОДАЛЬНОЕ ОКНО ВХОДА (1 В 1 КАК В WEB.HTML) ===== */
+        /* ===== МОДАЛЬНОЕ ОКНО ВХОДА ===== */
         .auth-modal {
             display: none;
             position: fixed;
@@ -440,7 +481,6 @@
           .socials a{width:38px;height:38px}
           .footer{padding-bottom:96px;}
 
-          /* Мобильная адаптация окна входа */
           .auth-card { padding: 25px 20px 30px 20px; border-radius: 24px; }
           .auth-logo { width: 240px; }
           .auth-input { padding: 13px 14px 13px 42px; font-size: 14px; }
@@ -464,7 +504,8 @@
 
     <header class="nav">
         <div class="logo">
-            <img src="logo_text.png" alt="V-AGENT">
+            <!-- ВЕРНУЛ ICON.PNG -->
+            <img src="icon.png" alt="V-AGENT">
         </div>
         <div class="nav-right">
             <nav>
@@ -473,6 +514,7 @@
                 <a href="#socials">Соцсети</a>
             </nav>
 
+            <!-- БЛОК ПОЛЬЗОВАТЕЛЯ -->
             <div id="user-container">
                 <button class="btn-login" onclick="openAuthModal()">Войти</button>
             </div>
@@ -621,7 +663,7 @@
         </a>
     </div>
 
-    <!-- МОДАЛЬНОЕ ОКНО (ТЕПЕРЬ 1 В 1 КАК В WEB) -->
+    <!-- МОДАЛЬНОЕ ОКНО (1 В 1 КАК В WEB) -->
     <div id="auth-modal" class="auth-modal" onclick="closeAuthModal(event)">
         <div class="auth-card" onclick="event.stopPropagation()">
             <button class="auth-close" onclick="closeAuthModal()">×</button>
@@ -670,15 +712,47 @@
             const user = localStorage.getItem('vagent_user');
             const container = $('#user-container');
             if (user) {
+                // ВЫПАДАЮЩЕЕ МЕНЮ ПРОФИЛЯ
                 container.innerHTML = `
-                    <div class="user-block" onclick="window.location.href='app.html'">
-                        <div class="user-avatar">${user[0].toUpperCase()}</div>
-                        <span class="user-name">${user}</span>
+                    <div class="user-wrapper" style="position: relative;">
+                        <div class="user-block" onclick="toggleUserMenu(event)">
+                            <div class="user-avatar">${user[0].toUpperCase()}</div>
+                            <span class="user-name">${user}</span>
+                        </div>
+                        <div class="user-dropdown" id="user-dropdown">
+                            <button onclick="window.location.href='app.html'">
+                                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                                Настройки
+                            </button>
+                            <div class="sep"></div>
+                            <button onclick="logout()">
+                                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2.5"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg>
+                                Выйти
+                            </button>
+                        </div>
                     </div>
                 `;
             } else {
                 container.innerHTML = `<button class="btn-login" onclick="openAuthModal()">Войти</button>`;
             }
+        }
+
+        function toggleUserMenu(e) {
+            e.stopPropagation();
+            const menu = document.getElementById('user-dropdown');
+            if (menu) menu.classList.toggle('show');
+        }
+
+        document.addEventListener('click', e => {
+            const menu = document.getElementById('user-dropdown');
+            if (menu && !e.target.closest('.user-wrapper')) {
+                menu.classList.remove('show');
+            }
+        });
+
+        function logout() {
+            localStorage.removeItem('vagent_user');
+            location.reload();
         }
 
         function openAuthModal() {
