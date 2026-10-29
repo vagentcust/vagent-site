@@ -62,7 +62,7 @@
         .loader-screen {
             position: fixed;
             inset: 0;
-            background: #000000; /* Плотный черный фон, чтобы ничего не просвечивало */
+            background: #000000;
             z-index: 9998;
             display: flex;
             flex-direction: column;
@@ -76,7 +76,6 @@
             pointer-events: none;
         }
 
-        /* ЛОГО ПРИ ЗАГРУЗКЕ: IMG.PNG, УВЕЛИЧЕН В 2 РАЗА */
         .loader-logo {
             width: 520px;
             max-width: 90vw;
@@ -102,15 +101,15 @@
             transition: width 0.1s linear;
         }
 
-        /* ВЕРХНЯЯ ПАНЕЛЬ (Теперь короткая, как форма) */
+        /* ВЕРХНЯЯ ПАНЕЛЬ (Уменьшена по длине, как форма) */
         .nav {
             position: absolute;
             top: 20px;
             left: 50%;
             transform: translateX(-50%);
             width: calc(100% - 40px);
-            max-width: 480px; /* Ширина, как у формы входа */
-            z-index: 10000; /* Поверх загрузки */
+            max-width: 480px; /* Точно такой же размер, как у окна входа */
+            z-index: 10000;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -134,7 +133,7 @@
         }
         .nav-logo:hover { opacity: 0.8; }
 
-        /* ЛОГО В ПАНЕЛИ УВЕЛИЧЕНО В 2 РАЗА */
+        /* ЛОГО В ПАНЕЛИ УВЕЛИЧЕНО */
         .nav-logo img.nav-icon {
             height: 52px;
             width: auto;
@@ -296,7 +295,7 @@
             margin-bottom: 20px;
         }
 
-        /* ЛОГО НАД ФОРМОЙ (logo_text.png) */
+        /* ЛОГО НАД ФОРМОЙ (стандартный размер, как был) */
         .logo-img {
             width: 320px;
             max-width: 100%;
@@ -428,7 +427,7 @@
     <!-- ОСНОВНОЙ КОНТЕНТ -->
     <div class="bg-glow" id="bg-glow"></div>
 
-    <!-- ПАНЕЛЬ (Теперь короткая) -->
+    <!-- ПАНЕЛЬ -->
     <nav class="nav">
         <div class="nav-left">
             <a href="index.html" class="nav-logo">
