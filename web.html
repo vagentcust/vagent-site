@@ -40,6 +40,7 @@
             padding-bottom: 10px;
         }
 
+        /* ФОН */
         .bg-glow {
             position: fixed;
             top: 0; left: 0;
@@ -52,22 +53,21 @@
                 radial-gradient(circle at 100% 100%, rgba(60, 15, 70, 0.3) 0%, transparent 50%);
             background-repeat: no-repeat;
             background-size: cover;
-            opacity: 0;
-            transition: opacity 0.8s ease;
+            opacity: 1; /* Всегда видим */
         }
-        .bg-glow.loaded { opacity: 1; }
 
+        /* ЭКРАН ЗАГРУЗКИ */
         .loader-screen {
             position: fixed;
             inset: 0;
-            background: #000000;
+            background: rgba(5, 5, 8, 0.85); /* Полупрозрачный, чтобы не было глухого черного экрана */
             z-index: 9998;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             gap: 25px;
-            transition: opacity 0.6s ease;
+            transition: opacity 0.5s ease;
         }
         .loader-screen.hidden {
             opacity: 0;
@@ -96,9 +96,14 @@
             height: 100%;
             background: #FFFFFF;
             border-radius: 4px;
-            transition: width 0.1s linear;
+            animation: loadBar 1.5s ease-in-out forwards;
+        }
+        @keyframes loadBar {
+            0% { width: 0%; }
+            100% { width: 100%; }
         }
 
+        /* ВЕРХНЯЯ ПАНЕЛЬ (1000px) */
         .nav {
             position: absolute;
             top: 20px;
@@ -130,6 +135,7 @@
         }
         .nav-logo:hover { opacity: 0.8; }
 
+        /* ЛОГО В ПАНЕЛИ (50px) */
         .nav-logo img.nav-icon {
             height: 50px;
             width: auto;
@@ -247,6 +253,7 @@
         .notif-item.error { border-left: 3px solid #FF3B30; color: #FF8A80; }
         .notif-item.success { border-left: 3px solid #4CAF50; color: #81C784; }
 
+        /* ФОРМА */
         .glass-container {
             position: relative;
             z-index: 10;
@@ -259,10 +266,8 @@
             justify-content: center;
             max-height: calc(100vh - 60px);
             overflow-y: auto;
-            opacity: 0;
-            transition: opacity 0.5s ease;
+            opacity: 1; /* Форма всегда видима */
         }
-        .glass-container.loaded { opacity: 1; }
 
         @keyframes appear {
             from { opacity: 0; transform: translateY(30px) scale(0.95); }
@@ -290,6 +295,7 @@
             margin-bottom: 20px;
         }
 
+        /* ЛОГО НАД ФОРМОЙ (300px) */
         .logo-img {
             width: 300px;
             max-width: 100%;
@@ -369,7 +375,7 @@
         .modal {
             display: none; position: fixed; inset: 0;
             background: rgba(0,0,0,0.8); backdrop-filter: blur(5px);
-            z-index: 100; align-items: center; justify-content: center;
+            z-index: 1000; align-items: center; justify-content: center;
         }
         .modal-content {
             background: var(--bg); padding: 30px; border-radius: 20px;
@@ -410,7 +416,7 @@
 </head>
 <body>
 
-    <!-- ЭКРАН ЗАГРУЗКИ -->
+    <!-- ЭКРАН ЗАГРУЗКИ (Прозрачный фон, чтобы не было бага с черным экраном) -->
     <div class="loader-screen" id="loader">
         <img src="img.png" alt="V-AGENT" class="loader-logo">
         <div class="loader-bar-container">
@@ -495,26 +501,12 @@
     </div>
 
     <script>
+        // Упрощенный и надежный скрипт загрузки
         window.addEventListener('load', () => {
-            const bar = document.getElementById('loader-bar');
-            const loader = document.getElementById('loader');
-            const form = document.getElementById('main-form');
-            const bg = document.getElementById('bg-glow');
-
-            let progress = 0;
-            const interval = setInterval(() => {
-                progress += 2;
-                bar.style.width = Math.min(progress, 100) + '%';
-
-                if (progress >= 100) {
-                    clearInterval(interval);
-                    setTimeout(() => {
-                        loader.classList.add('hidden');
-                        form.classList.add('loaded');
-                        bg.classList.add('loaded');
-                    }, 300);
-                }
-            }, 50);
+            setTimeout(() => {
+                const loader = document.getElementById('loader');
+                if (loader) loader.classList.add('hidden');
+            }, 1500); // Ждем 1.5 секунды и убираем экран загрузки
         });
 
         if (localStorage.getItem('vagent_user')) { location.replace('./app.html'); }
