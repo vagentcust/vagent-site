@@ -101,14 +101,14 @@
             transition: width 0.1s linear;
         }
 
-        /* ВЕРХНЯЯ ПАНЕЛЬ (Уменьшена по длине, как форма) */
+        /* ВЕРХНЯЯ ПАНЕЛЬ (Ширина 700px) */
         .nav {
             position: absolute;
             top: 20px;
             left: 50%;
             transform: translateX(-50%);
             width: calc(100% - 40px);
-            max-width: 480px; /* Точно такой же размер, как у окна входа */
+            max-width: 700px; /* Точно 700px */
             z-index: 10000;
             display: flex;
             justify-content: space-between;
@@ -295,7 +295,6 @@
             margin-bottom: 20px;
         }
 
-        /* ЛОГО НАД ФОРМОЙ (стандартный размер, как был) */
         .logo-img {
             width: 320px;
             max-width: 100%;
@@ -389,7 +388,7 @@
         .modal-content h3 { font-size: 16px; color: var(--accent); margin: 15px 0 5px; }
         .modal-content p { color: var(--mute); font-size: 14px; line-height: 1.5; margin-bottom: 10px; }
 
-        @media (max-width: 600px) {
+        @media (max-width: 700px) {
             .nav { top: 10px; width: calc(100% - 20px); height: 52px; padding: 0 14px; border-radius: 16px; }
             .nav-logo img.nav-icon { height: 32px; }
             .nav-link[href*="#download"] { display: none; }
@@ -501,7 +500,6 @@
     </div>
 
     <script>
-        // 5 СЕКУНД ЗАГРУЗКИ
         window.addEventListener('load', () => {
             const bar = document.getElementById('loader-bar');
             const loader = document.getElementById('loader');

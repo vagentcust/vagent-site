@@ -16,17 +16,11 @@ button,input,textarea{font:inherit;color:inherit}
 [data-theme=light]{--bg:#EEF0F5;--card:rgba(255,255,255,.85);--ink:#151A21;--mute:#667085;--line:rgba(21,26,33,.12);--nav:rgba(10,10,15,.85);--sf:rgba(255,255,255,.8);--sf2:rgba(255,255,255,.95);--bub:#fff;--hov:rgba(21,26,33,.05);--gh:rgba(21,26,33,.07);--sheet:#fff}
 [data-theme=light] .glow{background:radial-gradient(circle at 0 0,rgba(135,148,255,.28),transparent 50%),radial-gradient(circle at 100% 100%,rgba(192,38,211,.14),transparent 50%)}
 [data-theme=light] .nav,[data-theme=light] .tabs{box-shadow:0 10px 30px rgba(21,26,33,.12)}
-.tsw{position:relative;width:56px;height:30px;border-radius:15px;border:1px solid var(--line);background:var(--gh);cursor:pointer;padding:0;flex:none;display:none}
-.tsw svg{position:absolute;top:6px;width:16px;height:16px;color:var(--mute);z-index:1;transition:color .3s}
-.tsw .s1{left:7px}.tsw .s2{right:7px}
-.tsw .k{position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,#8794FF,#6A7AFF);transition:transform .3s cubic-bezier(.3,.8,.2,1)}
-[data-theme=dark] .tsw .k{transform:translateX(26px)}
-[data-theme=dark] .tsw .s2,[data-theme=light] .tsw .s1{color:#fff;z-index:2}
-.tsw.in{display:none}@media(min-width:900px){.tsw.in{display:block}}
 .glow{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(circle at 0 0,rgba(30,40,90,.45),transparent 50%),radial-gradient(circle at 100% 100%,rgba(60,15,70,.35),transparent 50%)}
-.nav{position:fixed;top:12px;left:50%;transform:translateX(-50%);width:calc(100% - 24px);max-width:1180px;z-index:30;display:flex;justify-content:space-between;align-items:center;padding:9px 16px;background:var(--nav);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--line);border-radius:22px;box-shadow:0 10px 30px rgba(0,0,0,.6)}
 
-/* ЛОГОТИП В ПАНЕЛИ */
+/* ОБНОВЛЕННАЯ ПАНЕЛЬ (700px, без переключателя темы) */
+.nav{position:fixed;top:12px;left:50%;transform:translateX(-50%);width:calc(100% - 24px);max-width:700px;z-index:30;display:flex;justify-content:space-between;align-items:center;padding:9px 16px;background:var(--nav);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--line);border-radius:22px;box-shadow:0 10px 30px rgba(0,0,0,.6)}
+
 .logo{display:flex;align-items:center;text-decoration:none}
 .logo img{height:52px;width:auto;object-fit:contain;display:block}
 
@@ -98,7 +92,7 @@ main{flex:1;min-width:0;display:flex;flex-direction:column;height:calc(100dvh - 
 .pwa{display:none;position:fixed;left:12px;right:12px;bottom:92px;max-width:400px;margin:0 auto;z-index:50;background:var(--nav);backdrop-filter:blur(20px);border:1px solid var(--line);border-radius:20px;padding:12px;align-items:center;gap:12px}.pwa.on{display:flex}.pwa img{width:42px;height:42px;border-radius:11px}.pwa div{flex:1;font-size:12px;color:var(--mute)}.pwa b{display:block;color:var(--ink);font-size:14px}
 @media(min-width:900px){
  .side{display:flex}.tabs{display:none}.pc{display:block}.ph{display:none}.pill{cursor:default}.pill small{display:none}
- .grid{grid-template-columns:repeat(auto-fill,minmax(280px,1fr))}.qc{min-height:150px}.app{max-width:none;padding-left:24px;padding-right:24px}.nav{max-width:none;width:calc(100% - 48px)}.side{width:240px}.me.scroll{display:grid;grid-template-columns:repeat(auto-fit,minmax(380px,1fr));gap:14px;align-content:start}.me .card{margin:0}
+ .grid{grid-template-columns:repeat(auto-fill,minmax(280px,1fr))}.qc{min-height:150px}.app{max-width:none;padding-left:24px;padding-right:24px}.nav{max-width:700px;width:calc(100% - 48px)}.side{width:240px}.me.scroll{display:grid;grid-template-columns:repeat(auto-fit,minmax(380px,1fr));gap:14px;align-content:start}.me .card{margin:0}
  .hero{display:flex;justify-content:space-between;align-items:center;padding:28px 32px}.hero h2{font-size:26px;max-width:460px}
  .app{padding-top:84px}main{height:calc(100dvh - 96px)}.scroll{padding-bottom:20px}
  .nav{top:16px}.pwa{bottom:20px}
@@ -111,7 +105,7 @@ main{flex:1;min-width:0;display:flex;flex-direction:column;height:calc(100dvh - 
 <nav class="nav">
  <a class="logo" href="index.html"><img src="logo_text.png" alt="V-Agent"></a>
  <div class="nr">
-  <button class="tsw in pcl" id="tsw" onclick="toggleTheme()" aria-label="Тема"><span class="k"></span><span id="tsi"></span></button>
+  <!-- Переключатель темы УДАЛЕН -->
   <a class="lnk pcl" href="index.html#download">Скачать</a>
   <div class="chip" id="chip" onclick="togglePMenu(event)">
     <div class="ava" id="ava"></div>
@@ -142,8 +136,7 @@ const $=s=>document.querySelector(s);
 const el=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e};
 const P={home:'<path d="M3 11l9-8 9 8"/><path d="M5 10v10h5v-6h4v6h5V10"/>',chat:'<path d="M21 12a8 8 0 0 1-11.6 7.1L3 21l1.9-5.4A8 8 0 1 1 21 12z"/>',image:'<rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="1.6"/><path d="M21 16l-5-5-9 9"/>',bulb:'<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/>',grid:'<rect x="3" y="3" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="2"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="2"/>',hash:'<path d="M5 9h15M4 15h15M10 3L8 21M16 3l-2 18"/>',send:'<path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4z"/>',user:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',film:'<rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M3 9h18M3 15h18M8 4v16M16 4v16"/>',lock:'<rect x="5" y="11" width="14" height="10" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',spark:'<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8z"/>',sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',moon:'<path d="M21 13A9 9 0 1 1 11 3a7 7 0 0 0 10 10z"/>'};
 const svg=(n,s=20)=>`<svg viewBox="0 0 24 24" width="${s}" height="${s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${P[n]}</svg>`;
-function toggleTheme(){const r=document.documentElement;r.dataset.theme=r.dataset.theme==='dark'?'light':'dark';localStorage.setItem('vagent_theme',r.dataset.theme)}
-$('#tsi').outerHTML=svg('sun',16).replace('<svg','<svg class="s1"')+svg('moon',16).replace('<svg','<svg class="s2"');
+// toggleTheme удален, так как кнопки нет
 const MODES={
  chat:{t:'Чат с ИИ',s:'Спроси что угодно',i:'chat',h:'Напиши сообщение...',w:'Нейро думает',intro:'Задай любой вопрос или попроси написать текст.',ex:['Придумай название для кофейни','Объясни простыми словами, что такое NFT','Напиши пост про утреннюю пробежку']},
  image:{t:'Картинки',s:'7 стилей генерации',i:'image',h:'Опиши картинку...',w:'Рисую',intro:'Опиши, что нарисовать, и выбери стиль ниже.',ex:['Уютный домик в лесу на закате','Кот-космонавт на Луне','Неоновый город под дождём']},
