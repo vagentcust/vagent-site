@@ -33,16 +33,48 @@ button,input,textarea{font:inherit;color:inherit}
 /* ЛОГО В ПАНЕЛИ (50px) */
 .logo img{height:50px;width:auto;object-fit:contain;display:block}
 
-.nr{display:flex;align-items:center;gap:10px}
-.chip{position:relative;display:flex;align-items:center;gap:8px;padding:5px 12px 5px 5px;border:1px solid var(--line);border-radius:30px;background:rgba(255,255,255,.04);font-size:13px;cursor:pointer;user-select:none}
-.ava{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--ac),#c026d3);display:grid;place-items:center;font-weight:600;font-size:13px;color:#fff}
-.lnk{background:none;border:0;color:var(--mute);cursor:pointer;font-size:14px;padding:6px 8px;border-radius:8px;text-decoration:none}.lnk:hover{color:var(--ink);background:rgba(255,255,255,.06)}
+.nr{display:flex;align-items:center;gap:16px}
+
+/* ССЫЛКИ И БЕЗОПАСНОСТЬ */
+.lnk{background:none;border:0;color:var(--mute);cursor:pointer;font-size:14px;font-weight:500;padding:6px 8px;border-radius:8px;text-decoration:none;transition:all 0.3s;}
+.lnk:hover{color:var(--ink);background:rgba(255,255,255,.06)}
+
+/* КОЛОКОЛЬЧИК */
+.bell-wrapper { position: relative; }
+.nav-bell {
+    display: flex; align-items: center; justify-content: center;
+    width: 38px; height: 38px; border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05); border: 1px solid var(--line);
+    cursor: pointer; transition: all 0.3s; position: relative;
+}
+.nav-bell:hover { background: rgba(255, 255, 255, 0.15); border-color: var(--ac); transform: scale(1.05); }
+.nav-bell svg { width: 18px; height: 18px; stroke: var(--ink); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.bell-badge { position: absolute; top: 2px; right: 2px; width: 10px; height: 10px; background: #FF3B30; border-radius: 50%; border: 2px solid var(--bg); display: none; }
+.bell-badge.show { display: block; }
+
+.notif-dropdown {
+    display: none; position: absolute; top: 48px; right: 0; width: 320px; max-width: calc(100vw - 40px);
+    background: var(--sheet); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
+    border: 1px solid var(--line); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); padding: 15px; z-index: 50; flex-direction: column; gap: 10px;
+}
+.notif-dropdown.show { display: flex; }
+.notif-header { font-size: 14px; font-weight: 600; color: var(--ink); padding-bottom: 8px; border-bottom: 1px solid var(--line); }
+.notif-list { display: flex; flex-direction: column; gap: 8px; max-height: 250px; overflow-y: auto; }
+.notif-item { padding: 10px; background: rgba(255,255,255,0.03); border-radius: 8px; font-size: 13px; color: var(--mute); line-height: 1.4; }
+.notif-item.error { border-left: 3px solid #FF3B30; color: #FF8A80; }
+.notif-item.success { border-left: 3px solid #4CAF50; color: #81C784; }
+
+/* ПРОФИЛЬ */
+.chip{position:relative;display:flex;align-items:center;gap:8px;padding:3px;border-radius:30px;background:none;font-size:13px;cursor:pointer;user-select:none;transition:background 0.3s;}
+.chip:hover{background:rgba(255,255,255,.1)}
+.ava{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--ac),#c026d3);display:grid;place-items:center;font-weight:600;font-size:15px;color:#fff}
 .pmenu{position:absolute;top:46px;right:0;min-width:200px;background:var(--sheet);border:1px solid var(--line);border-radius:16px;box-shadow:0 20px 50px rgba(0,0,0,.6);padding:6px;display:none;z-index:60}
 .pmenu.on{display:block;animation:up .18s ease both}
-.pmenu button{display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;border:0;background:none;color:var(--ink);font-size:14px;border-radius:10px;cursor:pointer;text-align:left}
+.pmenu button{display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;border:0;background:none;color:var(--ink);font-size:14px;border-radius:10px;cursor:pointer;text-align:left;font-family:"Onest",sans-serif;}
 .pmenu button:hover{background:var(--hov)}
 .pmenu button svg{color:var(--mute)}
 .pmenu .sep{height:1px;background:var(--line);margin:4px 6px}
+
 .app{position:relative;z-index:1;height:100dvh;padding:100px 12px 0;display:flex;gap:16px;max-width:1180px;margin:0 auto}
 .side{width:230px;flex:none;display:none;flex-direction:column;gap:4px;padding:10px;background:var(--card);border:1px solid var(--line);border-radius:22px;align-self:flex-start;max-height:calc(100dvh - 120px);overflow:auto}
 .si{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:14px;background:none;border:0;cursor:pointer;text-align:left;color:var(--mute);font-size:14px;font-weight:500}
@@ -99,6 +131,14 @@ main{flex:1;min-width:0;display:flex;flex-direction:column;height:calc(100dvh - 
 .sh i{display:block;width:44px;height:4px;border-radius:2px;background:rgba(255,255,255,.25);margin:0 auto 12px}.sh .si{width:100%}
 @keyframes up{from{transform:translateY(60px);opacity:0}}
 .pwa{display:none;position:fixed;left:12px;right:12px;bottom:92px;max-width:400px;margin:0 auto;z-index:50;background:var(--nav);backdrop-filter:blur(20px);border:1px solid var(--line);border-radius:20px;padding:12px;align-items:center;gap:12px}.pwa.on{display:flex}.pwa img{width:42px;height:42px;border-radius:11px}.pwa div{flex:1;font-size:12px;color:var(--mute)}.pwa b{display:block;color:var(--ink);font-size:14px}
+
+/* МОДАЛЬНОЕ ОКНО */
+.modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 1000; align-items: center; justify-content: center; }
+.modal-content { background: var(--bg); padding: 30px; border-radius: 20px; border: 1px solid var(--line); max-width: 500px; width: 90%; position: relative; max-height: 80vh; overflow-y: auto; }
+.modal-close { position: absolute; top: 15px; right: 15px; background: none; border: none; color: var(--mute); font-size: 24px; cursor: pointer; }
+.modal-content h3 { font-size: 16px; color: var(--ac); margin: 15px 0 5px; }
+.modal-content p { color: var(--mute); font-size: 14px; line-height: 1.5; margin-bottom: 10px; }
+
 @media(min-width:900px){
  .side{display:flex}.tabs{display:none}.pc{display:block}.ph{display:none}.pill{cursor:default}.pill small{display:none}
  .grid{grid-template-columns:repeat(auto-fill,minmax(280px,1fr))}.qc{min-height:150px}.app{max-width:none;padding-left:24px;padding-right:24px;padding-top:110px}.nav{max-width:1000px;width:calc(100% - 48px)}.side{width:240px}.me.scroll{display:grid;grid-template-columns:repeat(auto-fit,minmax(380px,1fr));gap:14px;align-content:start}.me .card{margin:0}
@@ -108,12 +148,16 @@ main{flex:1;min-width:0;display:flex;flex-direction:column;height:calc(100dvh - 
 }
 @media(max-width:899px){
   .nav{top:10px;width:calc(100% - 20px);height:52px;padding:0 14px;border-radius:16px}
-  .nav .lnk.pcl,.chip span.nm{display:none}
-  .chip{padding:3px}
+  .lnk.pcl{display:none}
   .m{max-width:88%}
   .logo img{height:32px}
   .app{padding-top:80px}
   main{height:calc(100dvh - 92px)}
+  .nav-bell { width: 32px; height: 32px; }
+  .nav-bell svg { width: 16px; height: 16px; }
+  .bell-badge { width: 8px; height: 8px; top: 2px; right: 2px; border-width: 1.5px; }
+  .notif-dropdown { position: fixed; top: 70px; left: 50%; transform: translateX(-50%); width: calc(100vw - 30px); max-width: 340px; }
+  .ava { width: 32px; height: 32px; font-size: 13px; }
 }
 </style>
 </head>
@@ -122,10 +166,30 @@ main{flex:1;min-width:0;display:flex;flex-direction:column;height:calc(100dvh - 
 <nav class="nav">
  <a class="logo" href="index.html"><img src="logo_text.png" alt="V-Agent"></a>
  <div class="nr">
+  <!-- Кнопки как в регистрации -->
   <a class="lnk pcl" href="index.html#download">Скачать</a>
+  <a class="lnk pcl" href="javascript:void(0)" onclick="openModal('privacy')">Безопасность</a>
+
+  <!-- Колокольчик уведомлений -->
+  <div class="bell-wrapper">
+      <button class="nav-bell" id="bell-btn">
+          <svg viewBox="0 0 24 24">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+          </svg>
+          <div class="bell-badge" id="bell-badge"></div>
+      </button>
+      <div class="notif-dropdown" id="notif-menu">
+          <div class="notif-header">Уведомления</div>
+          <div class="notif-list" id="notif-list">
+              <div class="notif-item">Добро пожаловать в V-AGENT!</div>
+          </div>
+      </div>
+  </div>
+
+  <!-- Аватарка с меню -->
   <div class="chip" id="chip" onclick="togglePMenu(event)">
     <div class="ava" id="ava"></div>
-    <span class="nm" id="nm"></span>
   </div>
   <div class="pmenu" id="pmenu">
     <button onclick="closePMenu();go('me')"><span id="pm-ic1"></span>Настройки</button>
@@ -144,13 +208,22 @@ main{flex:1;min-width:0;display:flex;flex-direction:column;height:calc(100dvh - 
 <div class="sheet" id="sheet" onclick="if(event.target===this)closeSheet()"><div class="sh" id="sh"></div></div>
 <div class="pwa" id="pwa"><img src="icon.png" alt=""><div><b>Установить V-Agent</b>Добавь на главный экран</div><button class="btn" id="pwab">Добавить</button><button class="lnk" onclick="closePwa()">✕</button></div>
 
+<!-- МОДАЛЬНОЕ ОКНО БЕЗОПАСНОСТИ -->
+<div id="info-modal" class="modal">
+    <div class="modal-content">
+        <button class="modal-close" onclick="closeModal()">×</button>
+        <h2 id="modal-title" style="margin-bottom: 15px; font-family: 'Unbounded';">Заголовок</h2>
+        <div id="modal-text" style="color: var(--mute); line-height: 1.6; font-size: 14px;"></div>
+    </div>
+</div>
+
 <script>
 const API='https://vagent-backend.novalaim11.workers.dev';
 const USER=localStorage.getItem('vagent_user');
 if(!USER)location.href='web.html';
 const $=s=>document.querySelector(s);
 const el=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e};
-const P={home:'<path d="M3 11l9-8 9 8"/><path d="M5 10v10h5v-6h4v6h5V10"/>',chat:'<path d="M21 12a8 8 0 0 1-11.6 7.1L3 21l1.9-5.4A8 8 0 1 1 21 12z"/>',image:'<rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="1.6"/><path d="M21 16l-5-5-9 9"/>',bulb:'<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/>',grid:'<rect x="3" y="3" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="2"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="2"/>',hash:'<path d="M5 9h15M4 15h15M10 3L8 21M16 3l-2 18"/>',send:'<path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4z"/>',user:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',film:'<rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M3 9h18M3 15h18M8 4v16M16 4v16"/>',lock:'<rect x="5" y="11" width="14" height="10" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',spark:'<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8z"/>',sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',moon:'<path d="M21 13A9 9 0 1 1 11 3a7 7 0 0 0 10 10z"/>'};
+const P={home:'<path d="M3 11l9-8 9 8"/><path d="M5 10v10h5v-6h4v6h5V10"/>',chat:'<path d="M21 12a8 8 0 0 1-11.6 7.1L3 21l1.9-5.4A8 8 0 1 1 21 12z"/>',image:'<rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="1.6"/><path d="M21 16l-5-5-9 9"/>',bulb:'<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/>',grid:'<rect x="3" y="3" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="2"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="2"/>',hash:'<path d="M5 9h15M4 15h15M10 3L8 21M16 3l-2 18"/>',send:'<path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4z"/>',user:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',film:'<rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M3 9h18M3 15h18M8 4v16M16 4v16"/>',lock:'<rect x="5" y="11" width="14" height="10" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',spark:'<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8z"/>'};
 const svg=(n,s=20)=>`<svg viewBox="0 0 24 24" width="${s}" height="${s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${P[n]}</svg>`;
 const MODES={
  chat:{t:'Чат с ИИ',s:'Спроси что угодно',i:'chat',h:'Напиши сообщение...',w:'Нейро думает',intro:'Задай любой вопрос или попроси написать текст.',ex:['Придумай название для кофейни','Объясни простыми словами, что такое NFT','Напиши пост про утреннюю пробежку']},
@@ -169,6 +242,49 @@ const save=()=>{try{localStorage.setItem(LKEY,JSON.stringify(st.chats))}catch(e)
 const cf=()=>{try{return JSON.parse(localStorage.getItem(CKEY)||'null')}catch(e){return null}};
 $('#nm').textContent=USER;$('#ava').textContent=USER[0].toUpperCase();
 
+/* --- УВЕДОМЛЕНИЯ --- */
+const bellBtn = document.getElementById('bell-btn');
+const notifMenu = document.getElementById('notif-menu');
+const bellBadge = document.getElementById('bell-badge');
+
+bellBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    notifMenu.classList.toggle('show');
+    if (notifMenu.classList.contains('show')) {
+        bellBadge.classList.remove('show');
+    }
+});
+document.addEventListener('click', (e) => {
+    if (!notifMenu.contains(e.target) && e.target !== bellBtn) {
+        notifMenu.classList.remove('show');
+    }
+});
+
+/* --- МОДАЛЬНОЕ ОКНО БЕЗОПАСНОСТИ --- */
+function openModal(type) {
+    const modal = document.getElementById('info-modal');
+    modal.style.display = 'flex';
+    if (type === 'privacy') {
+        document.getElementById('modal-title').textContent = 'Конфиденциальность и Безопасность';
+        document.getElementById('modal-text').innerHTML = `
+            <p>Мы серьезно относимся к защите ваших данных. Вот как именно мы обеспечиваем безопасность ваших паролей:</p>
+            <h3>1. Никакого хранения в открытом виде</h3>
+            <p>Мы <b>никогда</b> не сохраняем ваш пароль в виде обычного текста.</p>
+            <h3>2. Хеширование (SHA-256 и соль)</h3>
+            <p>Ваш пароль превращается в уникальный набор символов с помощью алгоритма <b>SHA-256</b>.</p>
+            <h3>3. Где хранятся данные?</h3>
+            <p>Данные хранятся в защищенном облаке Cloudflare (Workers KV).</p>
+        `;
+    }
+}
+function closeModal() {
+    document.getElementById('info-modal').style.display = 'none';
+}
+document.getElementById('info-modal').addEventListener('click', (e) => {
+    if (e.target.id === 'info-modal') closeModal();
+});
+
+/* --- ПРОФИЛЬ --- */
 function togglePMenu(e){e.stopPropagation();$('#pmenu').classList.toggle('on')}
 function closePMenu(){$('#pmenu').classList.remove('on')}
 document.addEventListener('click',e=>{if(!e.target.closest('#chip')&&!e.target.closest('#pmenu'))closePMenu()});
