@@ -658,8 +658,8 @@ async function ai(path,body){
 }
 const chatAI=(messages,max)=>ai('/ai/text',{messages,max_tokens:max||900}).then(d=>(d.text||'').trim());
 
-const SIDE=[['home','home','Главная'],['grp','Нейросети'],['chat','chat'],['image','image'],['ideas','bulb'],['templates','grid'],['hashtags','hash'],['grp','Ещё'],['fmt','code','Форматирование'],['tg','send','Telegram'],['me','gear','Настройки']];
-const TABS=[['home','home','Главная'],['neuro','spark','Нейросети'],['fmt','code','Формат'],['tg','send','Telegram'],['me','gear','Настройки']];
+const SIDE=[['home','home','Главная'],['grp','Нейросети'],['chat','chat'],['image','image'],['ideas','bulb'],['templates','grid'],['hashtags','hash'],['grp','Ещё'],['an','chart','Анализ канала'],['tg','send','Telegram',1],['me','gear','Настройки']];
+const TABS=[['home','home','Главная'],['neuro','spark','Нейросети'],['an','chart','Анализ'],['tg','send','Telegram',1],['me','gear','Настройки']];
 function go(v,mode){if(mode)st.mode=mode;st.view=v;drawNav();draw()}
 function drawNav(){
  const on=n=>st.view==='neuro'?n===st.mode:n===st.view;
@@ -685,7 +685,7 @@ function drawNav(){
 }
 function draw(){
  const m=$('#main');m.innerHTML='';m.classList.remove('view');void m.offsetWidth;m.classList.add('view');paintTheme();
- if(st.view==='home')home(m);else if(st.view==='neuro')neuro(m);else if(st.view==='fmt')fmt(m);else if(st.view==='tg')tg(m);else me(m);
+ if(st.view==='home')home(m);else if(st.view==='neuro')neuro(m);else if(st.view==='an')tg(m);else if(st.view==='tg')locked(m);else me(m);
 }
 function home(m){
  const sc=el('div','scroll stg');const hr=new Date().getHours();
@@ -694,13 +694,13 @@ function home(m){
 
  const hero=el('div','hero');
  hero.innerHTML=`<span class="pl">${svg('send',170)}</span><h2>Автоматизируй свой Telegram-канал</h2><p>Анализ канала, посты в его стиле и автопостинг — прямо здесь и в приложении V-Agent.</p><div class="row"><a class="btn w" href="index.html#download">Скачать приложение</a><button class="btn g" id="hl">Анализ канала</button></div>`;
- hero.querySelector('#hl').onclick=()=>go('tg');sc.append(hero);
+ hero.querySelector('#hl').onclick=()=>go('an');sc.append(hero);
 
  const s=el('div','sec');s.innerHTML='<h3>Быстрый доступ</h3>';sc.append(s);
  const g=el('div','bento stg');g.style.setProperty('--b',3);
  Object.entries(MODES).forEach(([id,c],i)=>{const b=el('button','qc'+(i<2?' big':''));b.style.setProperty('--c',c.c);b.innerHTML=`<span class="ib">${svg(c.i,24)}</span><div><b>${c.t}</b><small>${c.s}</small></div><span class="go">${svg('arrow',18)}</span>`;b.onclick=()=>go('neuro',id);g.append(b)});
- const tq=el('button','qc wide');tq.style.setProperty('--c','#229ED9');tq.innerHTML=`<span class="ib">${svg('chart',24)}</span><div><b>Анализ Telegram-канала</b><small>Тип канала, факты по теме и оригинальный пост</small></div><span class="go">${svg('arrow',18)}</span>`;tq.onclick=()=>go('tg');g.append(tq);
- const fm=el('button','qc wide');fm.style.setProperty('--c','#38BDF8');fm.innerHTML=`<span class="ib">${svg('code',24)}</span><div><b>Форматирование</b><small>Текст из Telegram → код с тегами</small></div><span class="go">${svg('arrow',18)}</span>`;fm.onclick=()=>go('fmt');g.append(fm);
+ const tq=el('button','qc wide');tq.style.setProperty('--c','#229ED9');tq.innerHTML=`<span class="ib">${svg('chart',24)}</span><div><b>Анализ Telegram-канала</b><small>Тип канала, факты по теме и оригинальный пост</small></div><span class="go">${svg('arrow',18)}</span>`;tq.onclick=()=>go('an');g.append(tq);
+ 
  const v=el('button','qc wide off');v.innerHTML=`<span class="ib">${svg('film',24)}</span><div><b>Видео</b><small>Пересказ и промпт — в приложении</small></div><span class="go">${svg('lock',18)}</span>`;v.onclick=()=>go('tg');g.append(v);
  [...sc.children].forEach((c,i)=>c.style.setProperty('--i',i));[...g.children].forEach((c,i)=>c.style.setProperty('--i',i));sc.append(g);m.append(sc);
 }
@@ -892,25 +892,43 @@ async function tgClassify(){
  const t=tgs;
  const r=await chatAI([
   {role:'system',content:'Ты классификатор Telegram-каналов. Отвечай ТОЛЬКО валидным JSON без пояснений. Ничего не выдумывай: если из описания нельзя понять — пиши "не определено".'},
-  {role:'user',content:`Канал: «${t.title||t.name}»\nОписание канала (разбор его постов):\n${t.analysis.slice(0,1500)}\n\nОпредели и верни JSON вида:\n{"type":"общая категория, 1-3 слова, например Игры","sub":"конкретное направление, например Counter-Strike","queries":["до 3 точных названий статей русской Википедии по этой теме"]}`}
- ],300);
+  {role:'user',content:`Канал: «${t.title||t.name}»\nОписание канала (разбор его постов):\n${t.analysis.slice(0,1500)}\n\nОпредели и верни JSON вида:\n{"type":"общая категория, 1-3 слова, например Игры","sub":"конкретное направление, например Counter-Strike","queries":["до 3 точных названий статей русской Википедии по этой теме"],"search":["до 2 коротких запросов на русском для поиска свежих новостей по этой теме"]}`}
+ ],350);
+ const arr=(x,n)=>Array.isArray(x)?x.map(v=>String(v).trim()).filter(Boolean).slice(0,n):[];
  try{
   const j=JSON.parse((r.match(/\{[\s\S]*\}/)||['{}'])[0]);
-  return{type:String(j.type||'').trim(),sub:String(j.sub||'').trim(),queries:Array.isArray(j.queries)?j.queries.map(x=>String(x).trim()).filter(Boolean).slice(0,3):[]};
- }catch(e){return{type:'',sub:'',queries:[]}}
+  return{type:String(j.type||'').trim(),sub:String(j.sub||'').trim(),queries:arr(j.queries,3),search:arr(j.search,2)};
+ }catch(e){return{type:'',sub:'',queries:[],search:[]}}
+}
+
+/* --- веб-поиск через воркер (новости + сайты) --- */
+async function webFacts(queries){
+ const qs=[...new Set(queries.map(x=>x.trim()).filter(Boolean))].slice(0,3);
+ if(!qs.length)return{items:[],err:''};
+ const k=cf();
+ try{
+  const r=await fetch(API+'/search',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({queries:qs,token:k.token,account_id:k.account})});
+  if(r.status===404)return{items:[],err:'Веб-поиск недоступен: задеплой новый entry.js (wrangler deploy).'};
+  const d=await r.json().catch(()=>({}));
+  if(!r.ok)return{items:[],err:d.error||'Веб-поиск не сработал'};
+  const items=(d.results||[]).slice(0,10);
+  return{items,err:items.length?'':'Веб-поиск ничего не нашёл по этой теме.'};
+ }catch(e){return{items:[],err:'Веб-поиск не сработал'}}
 }
 
 /* --- генерация оригинального поста только по найденным фактам --- */
 async function tgGenerate(topic,avoid){
  const t=tgs;
- const F=t.facts.length?t.facts.map((f,i)=>`[${i+1}] ${f.title} (Википедия): ${f.text}`).join('\n\n'):'ФАКТОВ НЕ НАЙДЕНО.';
+ const wiki=t.facts.length?'ИЗ ВИКИПЕДИИ:\n'+t.facts.map((f,i)=>`[В${i+1}] ${f.title}: ${f.text}`).join('\n\n'):'';
+ const web=t.web&&t.web.length?'ИЗ ИНТЕРНЕТА (новости и сайты):\n'+t.web.map((w,i)=>`[И${i+1}] ${w.title}${w.source?' — '+w.source:''}${w.date?' ('+w.date+')':''}${w.snippet?': '+w.snippet:''}`).join('\n'):'';
+ const F=[wiki,web].filter(Boolean).join('\n\n')||'ФАКТОВ НЕ НАЙДЕНО.';
  const dir=[t.type,t.sub].filter(x=>!noDef(x)).join(' → ')||'не определено';
  const sys=`Ты автор Telegram-канала «${t.title||t.name}». Направление канала: ${dir}.
 Задача: написать ОДИН новый оригинальный пост по теме.
 ПРАВДИВОСТЬ (строго):
-1. Конкретные факты (имена, названия, цифры, даты, версии, цены, события, цитаты) бери ТОЛЬКО из блока «ПРОВЕРЕННЫЕ ФАКТЫ».
-2. Ничего не выдумывай и не додумывай. Не придумывай «свежие новости», обновления, рекорды, статистику.
-3. Если фактов мало или они не по теме — пиши общими формулировками без конкретики или задай вопрос аудитории. Лучше короче, чем с выдумкой.
+1. Конкретные факты (имена, названия, цифры, даты, версии, цены, события, цитаты) бери ТОЛЬКО из блока «ПРОВЕРЕННЫЕ ФАКТЫ» ниже.
+2. Новости из интернета передавай как сообщение источника («по данным …», с датой) и только то, что есть в заголовке или описании. Детали не домысливай.
+3. Ничего не выдумывай. Не придумывай обновления, рекорды, статистику. Если фактов мало или они не по теме — пиши общими формулировками без конкретики или задай вопрос аудитории. Лучше короче, чем с выдумкой.
 ОРИГИНАЛЬНОСТЬ: не переписывай и не копируй ничего из описания канала, пиши свой текст по теме. Из описания канала бери только стиль: структуру, тон, длину, подачу, эмодзи — но не факты.
 ОФОРМЛЕНИЕ как в Telegram (HTML-теги): заголовок в <b>…</b>; важное — <b>; акценты — <i>; главную мысль или факт оформи цитатой <blockquote>…</blockquote>; термины — <code>…</code>; 3–6 уместных эмодзи. Без Markdown, без пояснений — только текст поста.`;
  const usr=`Описание стиля канала (используй только оформление и тон):\n${t.analysis.slice(0,1200)}\n\nТема поста: ${topic||'выбери сам, опираясь на факты ниже'}\n\nПРОВЕРЕННЫЕ ФАКТЫ:\n${F}${avoid?`\n\nПрошлый вариант начинался так: «${avoid}». Не повторяй его, возьми другой ракурс.`:''}`;
@@ -937,15 +955,17 @@ function tgRender(){
  r1.innerHTML=`<h3><span class="ib">${svg('check',16)}</span>Канал прочитан — <span></span></h3>`;
  r1.querySelector('h3 span:last-child').textContent=t.title||('@'+t.name);
  const sg=el('div','sg');
- [[noDef(t.type)?'не определено':t.type,'тип канала'],[noDef(t.sub)?'не определено':t.sub,'направление'],[t.count||'—','постов прочитано'],[t.facts?t.facts.length:0,'фактов найдено']].forEach(([v,l])=>{const c=el('div','sc2');c.innerHTML='<b></b><small></small>';c.querySelector('b').textContent=v;c.querySelector('small').textContent=l;sg.append(c)});
+ [[noDef(t.type)?'не определено':t.type,'тип канала'],[noDef(t.sub)?'не определено':t.sub,'направление'],[t.count||'—','постов прочитано'],[(t.facts?t.facts.length:0)+(t.web?t.web.length:0),'источников найдено']].forEach(([v,l])=>{const c=el('div','sc2');c.innerHTML='<b></b><small></small>';c.querySelector('b').textContent=v;c.querySelector('small').textContent=l;sg.append(c)});
  r1.append(sg);
- if(t.facts&&t.facts.length){
+ const all=[...(t.facts||[]).map(f=>({title:f.title,url:f.url,meta:'Википедия',text:f.text})),...(t.web||[]).map(w=>({title:w.title,url:w.url,meta:[w.source,w.date].filter(Boolean).join(' · ')||'Интернет',text:w.snippet||''}))];
+ if(all.length){
   const srcs=el('div','srcs');srcs.style.display='none';
-  t.facts.forEach(f=>{const d=el('div','src');const a=el('a','',f.title);a.href=f.url;a.target='_blank';a.rel='noopener';d.append(a,el('p','',f.text));srcs.append(d)});
-  const tb=el('button','btn g sm');tb.style.marginTop='12px';tb.innerHTML=svg('chev',15)+'<span>Показать источники фактов</span>';
-  tb.onclick=()=>{const open=srcs.style.display==='none';srcs.style.display=open?'grid':'none';tb.querySelector('span').textContent=open?'Скрыть источники':'Показать источники фактов'};
+  all.forEach(f=>{const d=el('div','src');const a=el('a','',f.title);a.href=f.url;a.target='_blank';a.rel='noopener';const mt=el('div','note',f.meta);mt.style.marginTop='2px';d.append(a,mt);if(f.text)d.append(el('p','',f.text));srcs.append(d)});
+  const tb=el('button','btn g sm');tb.style.marginTop='12px';tb.innerHTML=svg('chev',15)+'<span>Показать источники</span>';
+  tb.onclick=()=>{const open=srcs.style.display==='none';srcs.style.display=open?'grid':'none';tb.querySelector('span').textContent=open?'Скрыть источники':'Показать источники'};
   r1.append(tb,srcs);
- }else r1.append(el('div','note','По этой теме не нашлось проверенных фактов в Википедии, поэтому пост написан без конкретики.'));
+ }else r1.append(el('div','note','Источники не найдены, поэтому пост написан без конкретики.'));
+ if(t.webErr)r1.append(el('div','note',t.webErr));
  box.append(r1);
  // 2. стиль
  if(t.analysis){const r2=el('div','rs');r2.innerHTML=`<h3><span class="ib">${svg('chart',16)}</span>Как устроены посты канала</h3>`;r2.append(el('div','txt',t.analysis.replace(/\*\*/g,'')));box.append(r2)}
@@ -964,7 +984,7 @@ function tgRender(){
  sg2.onclick=e=>{const b=e.target.closest('button');if(!b)return;tgPrem=b.dataset.v==='1';localStorage.setItem('vagent_pe',tgPrem?'1':'0');sg2.classList.toggle('l',!tgPrem);[...sg2.querySelectorAll('button')].forEach(x=>x.classList.toggle('on',x===b));paintPost()};
  paintPost();
  if(t.err)r3.append(el('div','st er',t.err));
- r3.append(el('div','note','Факты взяты из Википедии, а не из свежих новостей. Перед публикацией проверь их — ИИ тоже может ошибаться.'));
+ r3.append(el('div','note','Факты взяты из Википедии и поиска в интернете. Перед публикацией проверь их — ИИ тоже может ошибаться.'));
  const flash=(b,txt,orig)=>{b.querySelector('span').textContent=txt;setTimeout(()=>b.querySelector('span').textContent=orig,1500)};
  cp.onclick=async()=>{
   if(!tgs.html)return;
@@ -998,14 +1018,14 @@ async function tgAnalyze(){
  const topic=($('#tgt').value||'').trim();
  btn.disabled=true;o.innerHTML='';
  const sl=el('div','steps tgn');
- ['Читаю канал и разбираю стиль','Определяю тип и направление','Ищу проверенные факты по теме','Пишу оригинальный пост'].forEach(t=>{const r=el('div','stp');r.innerHTML='<i></i><span></span>';r.querySelector('span').textContent=t;sl.append(r)});
+ ['Читаю канал и разбираю стиль','Определяю тип и направление','Ищу факты и свежие новости','Пишу оригинальный пост'].forEach(t=>{const r=el('div','stp');r.innerHTML='<i></i><span></span>';r.querySelector('span').textContent=t;sl.append(r)});
  o.append(sl);
  const mark=(i,c)=>{if(sl.children[i])sl.children[i].className='stp '+c};
  let loaded=false;
  try{
   mark(0,'run');
   let r;
-  try{r=await fetch(API+'/tg/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({channel:ch,topic:'',token:k.token,account_id:k.account})})}
+  try{r=await fetch(API+'/tg/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({channel:ch,topic:'',style_only:true,token:k.token,account_id:k.account})})}
   catch(e){throw new Error('Нет связи с сервером')}
   const d=await r.json().catch(()=>({}));
   if(!r.ok)throw new Error(d.error||'Не удалось прочитать канал');
@@ -1013,7 +1033,7 @@ async function tgAnalyze(){
   const res=String(d.result||'').replace(/\*\*/g,'');
   const analysis=res.split(/\[НОВЫЙ ПОСТ\]/i)[0].replace(/\[АНАЛИЗ СТИЛЯ\]/i,'').trim();
   if(!analysis)throw new Error('Пустой ответ, попробуй ещё раз');
-  tgs={name:ch,title:d.title||'',count:d.posts_count||0,analysis,type:'',sub:'',facts:[],html:'',err:''};loaded=true;
+  tgs={name:ch,title:d.title||'',count:d.posts_count||0,analysis,type:'',sub:'',facts:[],web:[],webErr:'',html:'',err:''};loaded=true;
   mark(0,'done');
   mark(1,'run');
   const c=await tgClassify();tgs.type=c.type;tgs.sub=c.sub;
@@ -1022,7 +1042,11 @@ async function tgAnalyze(){
   let qs=c.queries.slice();
   if(!qs.length)qs=[c.sub,c.type].filter(x=>!noDef(x));
   if(topic)qs.unshift(topic);
-  tgs.facts=qs.length?await wikiFacts(qs):[];
+  let sq=c.search.slice();
+  if(!sq.length)sq=[c.sub,c.type].filter(x=>!noDef(x)).slice(0,1);
+  if(topic)sq.unshift(topic);
+  const [wk,wb]=await Promise.all([qs.length?wikiFacts(qs):[],webFacts(sq)]);
+  tgs.facts=wk;tgs.web=wb.items;tgs.webErr=wb.err;
   mark(2,'done');
   mark(3,'run');
   tgs.html=await tgGenerate(topic);
@@ -1032,11 +1056,19 @@ async function tgAnalyze(){
  }
  btn.disabled=false;tgRender();
 }
+function locked(m){
+ const sc=el('div','scroll');
+ const p=el('div','lockp');
+ p.innerHTML=`<div class="ib">${svg('lock',38)}</div><h3>Telegram-автоматизация</h3><p>Автоведение канала доступно в приложении V-Agent по Premium-подписке.</p>
+ <div class="feat"><div><span class="ib">${svg('clock',17)}</span>Автопостинг в Telegram по расписанию</div><div><span class="ib">${svg('zap',17)}</span>Автосоздание постов для канала</div><div><span class="ib">${svg('film',17)}</span>Разбор видео: текст, пересказ и промпт</div></div>
+ <a class="btn" href="index.html#download">Скачать приложение</a>`;
+ sc.append(p);m.append(sc);
+}
 function tg(m){
  const sc=el('div','scroll');
  const w=el('div','tgw');
  const a=el('div','card tga');
- a.innerHTML=`<h3><span class="ib">${svg('chart',17)}</span>Анализ канала</h3><p>Вставь ссылку на публичный Telegram-канал. Я определю его тип и направление, найду проверенные факты по теме и напишу новый оригинальный пост в стиле канала.</p>
+ a.innerHTML=`<h3><span class="ib">${svg('chart',17)}</span>Анализ канала</h3><p>Вставь ссылку на публичный Telegram-канал. Я определю его тип и направление, найду факты и свежие новости по теме и напишу новый оригинальный пост в стиле канала.</p>
  <input class="f" id="tgl" placeholder="t.me/название_канала или @название" autocomplete="off" autocapitalize="off" spellcheck="false">
  <input class="f" id="tgt" placeholder="Тема нового поста (необязательно)" autocomplete="off">
  <div class="row"><button class="btn" id="tga">${svg('search',16)}<span>Анализировать</span></button></div><div class="st" id="tgs"></div>`;
@@ -1045,7 +1077,7 @@ function tg(m){
  lk.innerHTML=`<h3><span class="ib">${svg('lock',17)}</span>Больше — в приложении</h3><p>Автоведение канала доступно в приложении V-Agent по Premium-подписке.</p>
  <div class="feat" style="margin-bottom:14px"><div><span class="ib">${svg('clock',17)}</span>Автопостинг в Telegram по расписанию</div><div><span class="ib">${svg('zap',17)}</span>Автосоздание постов для канала</div><div><span class="ib">${svg('film',17)}</span>Разбор видео: текст, пересказ и промпт</div></div>
  <a class="btn g" href="index.html#download">Скачать приложение</a>`;
- w.append(a,out,lk);sc.append(w);m.append(sc);
+ w.append(a,out);sc.append(w);m.append(sc);
  sc.querySelector('#tga').onclick=tgAnalyze;
  sc.querySelector('#tgl').onkeydown=e=>{if(e.key==='Enter')tgAnalyze()};
  if(tgs){sc.querySelector('#tgl').value='t.me/'+tgs.name;tgRender()}
