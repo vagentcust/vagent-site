@@ -106,6 +106,7 @@ main{flex:1;min-height:0;position:relative;display:flex;flex-direction:column;wi
 /* buttons */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:14px;padding:11px 18px;font-weight:600;font-size:14px;background:linear-gradient(135deg,var(--ac),var(--ac2));color:#fff;text-decoration:none;box-shadow:0 8px 22px -8px var(--ac2);transition:transform .12s,filter .15s}
 .btn:hover{filter:brightness(1.08)}.btn:active{transform:scale(.97)}
+.btn:disabled{opacity:.5;pointer-events:none}
 .btn.g{background:var(--p3);color:var(--ink);box-shadow:none;border:1px solid var(--line)}
 .btn.w{background:#fff;color:#15183A;box-shadow:none}
 .btn.sm{padding:8px 14px;font-size:13px;border-radius:12px}
@@ -369,6 +370,35 @@ main{flex:1;min-height:0;position:relative;display:flex;flex-direction:column;wi
 .fmt .ed tg-spoiler:hover,.fmt .ed tg-spoiler.show{background:var(--p3);color:inherit}
 .fmt .hint{color:var(--mute);font-size:12px;margin-top:8px}
 
+/* === АНАЛИЗ TELEGRAM-КАНАЛА === */
+.tgw{display:grid;gap:12px;padding-top:12px}
+.tga h3 .ib{width:34px;height:34px;border-radius:11px}
+.steps{display:grid;gap:8px;margin-top:2px}
+.stp{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:16px;background:var(--p1);border:1px solid var(--line);color:var(--dim);font-size:14px;transition:color .2s,border-color .2s}
+.stp i{width:18px;height:18px;border-radius:50%;border:2px solid var(--line2);flex:none;transition:all .25s}
+.stp.run{color:var(--ink);border-color:var(--line2)}
+.stp.run i{border-color:var(--ink) transparent var(--ink) var(--ink);animation:rot .8s linear infinite}
+.stp.done{color:var(--ink)}
+.stp.done i{background:var(--ok);border-color:var(--ok);box-shadow:inset 0 0 0 3px var(--p1)}
+@keyframes rot{to{transform:rotate(360deg)}}
+.rs{padding:18px;border-radius:24px;background:var(--p1);border:1px solid var(--line)}
+.rs h3{font-size:16px;font-weight:600;margin-bottom:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.rs h3 .grow{flex:1}
+.rs .ib{width:30px;height:30px;border-radius:10px}
+.sg{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}
+.sc2{padding:12px 14px;border-radius:16px;background:var(--p2);border:1px solid var(--line)}
+.sc2 b{display:block;font:600 20px Unbounded,sans-serif;letter-spacing:-.02em}
+.sc2 small{display:block;color:var(--mute);font-size:12px;margin-top:2px}
+.txt{white-space:pre-wrap;word-break:break-word;font-size:15px;line-height:1.6}
+.gen{padding:16px 18px;border-radius:18px;background:var(--p2);border:1px solid var(--line2)}
+.plist{display:grid;gap:8px;margin-top:12px}
+.pit{padding:10px 12px;border-radius:14px;background:var(--p2);border:1px solid var(--line);font-size:13px}
+.pit .mt{display:flex;gap:10px;flex-wrap:wrap;color:var(--mute);font-size:12px;margin-bottom:4px}
+.pit .mt a{color:var(--mute);text-decoration:underline}
+.pit .tx{white-space:pre-wrap;word-break:break-word;color:var(--ink);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.pit.open .tx{-webkit-line-clamp:unset;display:block}
+.pit{cursor:pointer}
+.tgn{margin-top:4px}
 
 @media(min-width:900px){
  .gearf{display:grid;position:fixed;top:18px;right:24px;z-index:5}
@@ -418,7 +448,7 @@ main{flex:1;min-height:0;position:relative;display:flex;flex-direction:column;wi
   <div class="foot" id="foot"></div>
  </aside>
  <div class="stage">
-  
+
   <!-- НОВАЯ ПАНЕЛЬ СВЕРХУ -->
   <nav class="top-nav">
     <a class="logo" href="javascript:void(0)" onclick="go('home')"><img src="logo_text.png" alt="V-Agent"></a>
@@ -426,7 +456,7 @@ main{flex:1;min-height:0;position:relative;display:flex;flex-direction:column;wi
       <a href="index.html#download" class="lnk">Скачать</a>
       <a href="javascript:void(0)" class="lnk" onclick="openModal('privacy')">Безопасность</a>
       <a href="javascript:void(0)" class="lnk" onclick="openModal('rules')">Правила</a>
-      
+
       <div class="bell-wrapper">
           <button class="nav-bell" id="bell-btn">
               <svg viewBox="0 0 24 24">
@@ -451,14 +481,14 @@ main{flex:1;min-height:0;position:relative;display:flex;flex-direction:column;wi
       </div>
     </div>
   </nav>
-  
+
   <header class="top">
    <!-- КЛИКАБЕЛЬНЫЙ ЛОГОТИП МОБИЛКА -->
    <a class="brand" href="javascript:void(0)" onclick="go('home')"><img src="icon.png" alt=""><span>V-Agent</span></a>
    <button class="ibtn gear" id="gm" onclick="go('me')" aria-label="Настройки"></button>
    <button class="ava" id="avm" onclick="go('me')" aria-label="Профиль"></button>
   </header>
-  
+
   <button class="ibtn gear gearf" id="gf" onclick="go('me')" aria-label="Настройки"></button>
   <main id="main"></main>
   <div class="tabs" id="tabs"></div>
@@ -484,13 +514,13 @@ window.addEventListener('load', () => {
     const loader = document.getElementById('loader');
     let progress = 0;
     const interval = setInterval(() => {
-        progress += 5; 
+        progress += 5;
         if (bar) bar.style.width = Math.min(progress, 100) + '%';
         if (progress >= 100) {
             clearInterval(interval);
             setTimeout(() => { if (loader) loader.classList.add('hidden'); }, 200);
         }
-    }, 30); 
+    }, 30);
 });
 
 const API='https://vagent-backend.novalaim11.workers.dev';
@@ -498,7 +528,7 @@ const USER=localStorage.getItem('vagent_user');
 if(!USER)location.href='web.html';
 const $=s=>document.querySelector(s);
 const el=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e};
-const P={home:'<path d="M3 11l9-8 9 8"/><path d="M5 10v10h5v-6h4v6h5V10"/>',chat:'<path d="M21 12a8 8 0 0 1-11.6 7.1L3 21l1.9-5.4A8 8 0 1 1 21 12z"/>',image:'<rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="1.6"/><path d="M21 16l-5-5-9 9"/>',bulb:'<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/>',grid:'<rect x="3" y="3" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="2"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="2"/>',hash:'<path d="M5 9h15M4 15h15M10 3L8 21M16 3l-2 18"/>',send:'<path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4z"/>',user:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',film:'<rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M3 9h18M3 15h18M8 4v16M16 4v16"/>',lock:'<rect x="5" y="11" width="14" height="10" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',spark:'<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8z"/>',sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',moon:'<path d="M21 13A9 9 0 1 1 11 3a7 7 0 0 0 10 10z"/>',up:'<path d="M12 19V5M5 12l7-7 7 7"/>',plus:'<path d="M12 5v14M5 12h14"/>',chev:'<path d="M6 9l6 6 6-6"/>',arrow:'<path d="M7 17L17 7M8 7h9v9"/>',copy:'<rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/>',down:'<path d="M12 4v12M6 11l6 6 6-6M5 21h14"/>',out:'<path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3M10 8l-4 4 4 4M6 12h11"/>',check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',key:'<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M16 7l3 3"/>',alert:'<path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18v.01"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',zap:'<path d="M13 2L4 14h7l-1 8 9-12h-7z"/>',bot:'<rect x="4" y="8" width="16" height="12" rx="4"/><path d="M12 8V5M9 14v.01M15 14v.01"/><circle cx="12" cy="3.6" r="1.1"/><path d="M2 13v3M22 13v3"/>',gear:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>',trash:'<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>',pal:'<circle cx="12" cy="12" r="9"/><path d="M12 3v18"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/>',shield:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/>',info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.01"/>',code:'<path d="M8 8l-5 4 5 4M16 8l5 4-5 4M14 5l-4 14"/>'};
+const P={home:'<path d="M3 11l9-8 9 8"/><path d="M5 10v10h5v-6h4v6h5V10"/>',chat:'<path d="M21 12a8 8 0 0 1-11.6 7.1L3 21l1.9-5.4A8 8 0 1 1 21 12z"/>',image:'<rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="1.6"/><path d="M21 16l-5-5-9 9"/>',bulb:'<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/>',grid:'<rect x="3" y="3" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="2"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="2"/>',hash:'<path d="M5 9h15M4 15h15M10 3L8 21M16 3l-2 18"/>',send:'<path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4z"/>',user:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',film:'<rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M3 9h18M3 15h18M8 4v16M16 4v16"/>',lock:'<rect x="5" y="11" width="14" height="10" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',spark:'<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8z"/>',sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',moon:'<path d="M21 13A9 9 0 1 1 11 3a7 7 0 0 0 10 10z"/>',up:'<path d="M12 19V5M5 12l7-7 7 7"/>',plus:'<path d="M12 5v14M5 12h14"/>',chev:'<path d="M6 9l6 6 6-6"/>',arrow:'<path d="M7 17L17 7M8 7h9v9"/>',copy:'<rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/>',down:'<path d="M12 4v12M6 11l6 6 6-6M5 21h14"/>',out:'<path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3M10 8l-4 4 4 4M6 12h11"/>',check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',key:'<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M16 7l3 3"/>',alert:'<path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18v.01"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',zap:'<path d="M13 2L4 14h7l-1 8 9-12h-7z"/>',bot:'<rect x="4" y="8" width="16" height="12" rx="4"/><path d="M12 8V5M9 14v.01M15 14v.01"/><circle cx="12" cy="3.6" r="1.1"/><path d="M2 13v3M22 13v3"/>',gear:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>',trash:'<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>',pal:'<circle cx="12" cy="12" r="9"/><path d="M12 3v18"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/>',shield:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/>',info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.01"/>',code:'<path d="M8 8l-5 4 5 4M16 8l5 4-5 4M14 5l-4 14"/>',search:'<circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/>',chart:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',refresh:'<path d="M20 11a8 8 0 0 0-14.5-4M4 4v4h4M4 13a8 8 0 0 0 14.5 4M20 20v-4h-4"/>'};
 const svg=(n,s=20)=>`<svg viewBox="0 0 24 24" width="${s}" height="${s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${P[n]}</svg>`;
 function paintTheme(){const d=document.documentElement.dataset.theme==='dark';const b=$('#tsd');if(b)b.innerHTML=svg(d?'sun':'moon',18);const g=$('#gm');if(g)g.innerHTML=svg('gear',19);const f=$('#gf');if(f)f.innerHTML=svg('gear',19);[g,f].forEach(x=>x&&(x.hidden=st.view==='me'))}
 function setTheme(t){const r=document.documentElement;if(r.dataset.theme===t)return;r.dataset.theme=t;localStorage.setItem('vagent_theme',t);const m=document.querySelector('meta[name=theme-color]');if(m)m.content=t==='dark'?'#07080D':'#EFF1F7';paintTheme();const b=$('#tsd');if(b){b.classList.remove('spin');void b.offsetWidth;b.classList.add('spin')}const sg=$('#seg');if(sg){sg.classList.toggle('l',t==='light');[...sg.querySelectorAll('button')].forEach(x=>x.classList.toggle('on',x.dataset.t===t))}}
@@ -533,13 +563,13 @@ function addNotification(text, type = 'error') {
     item.className = 'notif-item ' + (type === 'success' ? 'success' : '');
     const iconSvg = `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>`;
     item.innerHTML = `<div class="n-icon">${iconSvg}</div><div class="n-text">${text}</div>`;
-    
+
     const empty = notifList.querySelector('.notif-empty');
     if (empty) empty.remove();
 
     notifList.prepend(item);
     bellBadge.classList.add('show');
-    
+
     if (notifList.children.length > 10) {
         notifList.lastElementChild.remove();
     }
@@ -572,7 +602,7 @@ function openModal(type) {
     modal.style.display = 'flex';
     const title = document.getElementById('modal-title');
     const text = document.getElementById('modal-text');
-    
+
     if (type === 'privacy') {
         title.textContent = 'Конфиденциальность и Безопасность';
         text.innerHTML = `<p>Мы серьезно относимся к защите ваших данных. Вот как именно мы обеспечиваем безопасность ваших паролей:</p>
@@ -614,8 +644,8 @@ async function ai(path,body){
 }
 const chatAI=(messages,max)=>ai('/ai/text',{messages,max_tokens:max||900}).then(d=>(d.text||'').trim());
 
-const SIDE=[['home','home','Главная'],['grp','Нейросети'],['chat','chat'],['image','image'],['ideas','bulb'],['templates','grid'],['hashtags','hash'],['grp','Ещё'],['fmt','code','Форматирование'],['tg','send','Telegram',1],['me','gear','Настройки']];
-const TABS=[['home','home','Главная'],['neuro','spark','Нейросети'],['fmt','code','Формат'],['tg','send','Telegram',1],['me','gear','Настройки']];
+const SIDE=[['home','home','Главная'],['grp','Нейросети'],['chat','chat'],['image','image'],['ideas','bulb'],['templates','grid'],['hashtags','hash'],['grp','Ещё'],['fmt','code','Форматирование'],['tg','send','Telegram'],['me','gear','Настройки']];
+const TABS=[['home','home','Главная'],['neuro','spark','Нейросети'],['fmt','code','Формат'],['tg','send','Telegram'],['me','gear','Настройки']];
 function go(v,mode){if(mode)st.mode=mode;st.view=v;drawNav();draw()}
 function drawNav(){
  const on=n=>st.view==='neuro'?n===st.mode:n===st.view;
@@ -647,15 +677,16 @@ function home(m){
  const sc=el('div','scroll stg');const hr=new Date().getHours();
  const h=el('div','hello');
  h.innerHTML=`<h1>${hr<5?'Доброй ночи':hr<12?'Доброе утро':hr<18?'Добрый день':'Добрый вечер'}, <span></span></h1><p>Что будем делать сегодня?</p>`;h.querySelector('span').textContent=USER;sc.append(h);
- 
+
  // АНИМИРОВАННЫЙ БАННЕР
  const hero=el('div','hero');
- hero.innerHTML=`<span class="pl">${svg('send',170)}</span><h2>Автоматизируй свой Telegram-канал</h2><p>Автопостинг по расписанию, посты и разбор видео — в приложении V-Agent.</p><div class="row"><a class="btn w" href="index.html#download">Скачать приложение</a><button class="btn g" id="hl">Подробнее</button></div>`;
+ hero.innerHTML=`<span class="pl">${svg('send',170)}</span><h2>Автоматизируй свой Telegram-канал</h2><p>Анализ канала, посты в его стиле и автопостинг — прямо здесь и в приложении V-Agent.</p><div class="row"><a class="btn w" href="index.html#download">Скачать приложение</a><button class="btn g" id="hl">Анализ канала</button></div>`;
  hero.querySelector('#hl').onclick=()=>go('tg');sc.append(hero);
- 
+
  const s=el('div','sec');s.innerHTML='<h3>Быстрый доступ</h3>';sc.append(s);
  const g=el('div','bento stg');g.style.setProperty('--b',3);
  Object.entries(MODES).forEach(([id,c],i)=>{const b=el('button','qc'+(i<2?' big':''));b.style.setProperty('--c',c.c);b.innerHTML=`<span class="ib">${svg(c.i,24)}</span><div><b>${c.t}</b><small>${c.s}</small></div><span class="go">${svg('arrow',18)}</span>`;b.onclick=()=>go('neuro',id);g.append(b)});
+ const tq=el('button','qc wide');tq.style.setProperty('--c','#229ED9');tq.innerHTML=`<span class="ib">${svg('chart',24)}</span><div><b>Анализ Telegram-канала</b><small>Разбор последних 15 постов и пост в том же стиле</small></div><span class="go">${svg('arrow',18)}</span>`;tq.onclick=()=>go('tg');g.append(tq);
  const fm=el('button','qc wide');fm.style.setProperty('--c','#38BDF8');fm.innerHTML=`<span class="ib">${svg('code',24)}</span><div><b>Форматирование</b><small>Текст из Telegram → код с тегами</small></div><span class="go">${svg('arrow',18)}</span>`;fm.onclick=()=>go('fmt');g.append(fm);
  const v=el('button','qc wide off');v.innerHTML=`<span class="ib">${svg('film',24)}</span><div><b>Видео</b><small>Пересказ и промпт — в приложении</small></div><span class="go">${svg('lock',18)}</span>`;v.onclick=()=>go('tg');g.append(v);
  [...sc.children].forEach((c,i)=>c.style.setProperty('--i',i));[...g.children].forEach((c,i)=>c.style.setProperty('--i',i));sc.append(g);m.append(sc);
@@ -667,7 +698,7 @@ function tgFromNode(root){
   const BLOCK=/^(DIV|P|LI|UL|OL|H[1-6]|TR)$/;
   const wrap=(t,tag,a)=>t.trim()?`<${tag}${a||''}>${t}</${tag}>`:t;
   function walk(n){
-    if(n.nodeType===3)return esc(n.nodeValue.replace(/\u00a0/g,' ').replace(/\u200b/g,''));
+    if(n.nodeType===3)return esc(n.nodeValue.replace(/ /g,' ').replace(/​/g,''));
     if(n.nodeType!==1)return '';
     const tag=n.nodeName;
     if(/^(SCRIPT|STYLE|META|HEAD|IFRAME|OBJECT)$/.test(tag))return '';
@@ -776,12 +807,106 @@ function fmt(m){
   upd();
 }
 
+/* ===== TELEGRAM: анализ канала + пост в его стиле ===== */
+let tgs=null; // последний результат: {name,title,posts,stats,analysis,gen,err}
+const tgChannel=v=>{v=(v||'').trim();const m=v.match(/(?:t\.me\/(?:s\/)?|telegram\.me\/|^@)([A-Za-z][A-Za-z0-9_]{3,31})/i)||v.match(/^([A-Za-z][A-Za-z0-9_]{3,31})$/);return m?m[1]:''};
+const fmtN=n=>n>=1e6?(n/1e6).toFixed(1).replace('.0','')+'M':n>=1e3?(n/1e3).toFixed(1).replace('.0','')+'K':String(Math.round(n));
+function tgStats(posts){
+ const n=posts.length,sum=a=>a.reduce((x,y)=>x+y,0);
+ const withText=posts.filter(p=>p.text);
+ const len=withText.map(p=>p.text.length);
+ const emo=withText.map(p=>(p.text.match(/\p{Extended_Pictographic}/gu)||[]).length);
+ const tags=withText.map(p=>(p.text.match(/#[\p{L}\d_]+/gu)||[]).length);
+ const views=posts.map(p=>p.views).filter(v=>v!=null);
+ const dates=posts.map(p=>Date.parse(p.date)).filter(x=>!isNaN(x)).sort((a,b)=>a-b);
+ let cadence='—';
+ if(dates.length>1){const h=(dates[dates.length-1]-dates[0])/(dates.length-1)/36e5;cadence=h<1?'каждые '+Math.max(1,Math.round(h*60))+' мин':h<36?'каждые '+Math.round(h)+' ч':'каждые '+(h/24).toFixed(1).replace('.0','')+' дн.'}
+ return{n,avgLen:withText.length?Math.round(sum(len)/withText.length):0,emoji:withText.length?+(sum(emo)/withText.length).toFixed(1):0,tags:withText.length?+(sum(tags)/withText.length).toFixed(1):0,media:Math.round(posts.filter(p=>p.media).length/n*100),views:views.length?fmtN(sum(views)/views.length):'—',cadence};
+}
+const tgSamples=(posts,k,cut)=>posts.filter(p=>p.text.length>30).slice(-k).map(p=>p.text.slice(0,cut)).join('\n\n---\n\n');
+async function tgAnalysis(){
+ const t=tgs,body=t.posts.filter(p=>p.text).map((p,i)=>`Пост ${i+1}: ${p.text.slice(0,370)}`).join('\n\n');
+ return chatAI([{role:'system',content:'Ты редактор-аналитик Telegram-каналов. Отвечай по-русски, коротко и конкретно, без Markdown. Опирайся только на присланные посты.'},{role:'user',content:`Вот последние посты канала «${t.title||t.name}»:\n\n${body}\n\nСделай разбор по пунктам, каждый пункт — отдельная строка в формате «Название: суть»:\nТематика — о чём канал и какие темы повторяются.\nФормат постов — что за посты (новости, советы, истории, подборки…).\nСтруктура — как строится типичный пост: заголовок, абзацы, вывод, призыв.\nТон — как автор говорит с аудиторией.\nОформление — эмодзи, списки, жирный текст, хештеги, ссылки.\nЧто работает — что делает посты узнаваемыми.`}],800);
+}
+async function tgGenerate(topic){
+ const t=tgs,s=t.stats;
+ const topicLine=topic?`Тема нового поста: ${topic}`:'Тему выбери сам: новая, в рамках тематики канала, не повторяй примеры.';
+ return chatAI([{role:'system',content:`Ты автор Telegram-канала «${t.title||t.name}». Пишешь новые посты так, что их не отличить от старых: та же тематика, структура, тон, длина и оформление. Выдавай только текст поста, без пояснений, кавычек и Markdown.`},{role:'user',content:`Разбор стиля канала:\n${t.analysis||'нет'}\n\nЦифры: средняя длина поста ~${s.avgLen} символов, эмодзи ~${s.emoji} на пост, хештегов ~${s.tags} на пост.`},{role:'user',content:`Примеры постов канала (от старых к новым):\n\n${tgSamples(t.posts,5,800)}\n\n${topicLine}\nНапиши один НОВЫЙ пост. Не копируй фразы из примеров.`}],1000).then(x=>x.replace(/\*\*/g,'').trim());
+}
+function tgRender(){
+ const o=$('#tgo');if(!o||!tgs)return;o.innerHTML='';const t=tgs,s=t.stats;
+ const box=el('div','tgw');
+ // 1. доказательство, что всё прочитано
+ const r1=el('div','rs');
+ r1.innerHTML=`<h3><span class="ib">${svg('check',16)}</span>Прочитано ${s.n} последних постов — ${'<span></span>'}</h3>`;r1.querySelector('h3 span:last-child').textContent=t.title||('@'+t.name);
+ const sg=el('div','sg');
+ [[s.n,'постов прочитано'],[s.avgLen,'символов в среднем'],[s.emoji,'эмодзи на пост'],[s.tags,'хештегов на пост'],[s.media+'%','постов с медиа'],[s.views,'просмотров в среднем'],[s.cadence,'частота постов']].forEach(([v,l])=>{const c=el('div','sc2');c.innerHTML='<b></b><small></small>';c.querySelector('b').textContent=v;c.querySelector('small').textContent=l;sg.append(c)});
+ r1.append(sg);
+ const pl=el('div','plist');
+ [...t.posts].reverse().forEach(p=>{const it=el('div','pit');const d=Date.parse(p.date);const mt=el('div','mt');mt.append(el('span','',isNaN(d)?'':new Date(d).toLocaleString('ru',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})));if(p.views!=null)mt.append(el('span','','👁 '+fmtN(p.views)));if(p.media)mt.append(el('span','','медиа'));if(p.id){const a=el('a','','открыть');a.href='https://t.me/'+p.id;a.target='_blank';a.rel='noopener';a.onclick=e=>e.stopPropagation();mt.append(a)}
+  it.append(mt,el('div','tx',p.text||'(только медиа, без текста)'));it.onclick=()=>it.classList.toggle('open');pl.append(it)});
+ const det=el('div');det.style.marginTop='12px';const tb=el('button','btn g sm');tb.innerHTML=svg('chev',15)+'<span>Показать все посты</span>';pl.style.display='none';tb.onclick=()=>{const open=pl.style.display==='none';pl.style.display=open?'grid':'none';tb.querySelector('span').textContent=open?'Скрыть посты':'Показать все посты'};det.append(tb);r1.append(det,pl);
+ box.append(r1);
+ // 2. разбор
+ if(t.analysis){const r2=el('div','rs');r2.innerHTML=`<h3><span class="ib">${svg('chart',16)}</span>Как устроены посты канала</h3>`;r2.append(el('div','txt',t.analysis.replace(/\*\*/g,'')));box.append(r2)}
+ // 3. новый пост
+ const r3=el('div','rs');r3.innerHTML=`<h3><span class="ib">${svg('spark',16)}</span>Похожий пост<span class="grow"></span></h3>`;
+ const bs=el('div');bs.style.cssText='display:flex;gap:6px;flex-wrap:wrap';
+ const cp=el('button','btn g sm');cp.innerHTML=svg('copy',15)+'<span>Копировать</span>';
+ const rg=el('button','btn sm');rg.innerHTML=svg('refresh',15)+'<span>Ещё вариант</span>';
+ bs.append(cp,rg);r3.querySelector('h3').append(bs);
+ const gen=el('div','gen txt',t.gen||'');if(!t.gen)gen.style.display='none';r3.append(gen);
+ if(t.err){const e=el('div','st er',t.err);r3.append(e)}
+ cp.onclick=()=>{if(!tgs.gen)return;navigator.clipboard&&navigator.clipboard.writeText(tgs.gen);cp.querySelector('span').textContent='Скопировано ✓';setTimeout(()=>cp.querySelector('span').textContent='Копировать',1500)};
+ rg.onclick=async()=>{rg.disabled=true;gen.style.display='block';gen.style.opacity='.5';try{tgs.gen=await tgGenerate(($('#tgt')||{}).value||'');tgs.err='';gen.textContent=tgs.gen}catch(e){const er=r3.querySelector('.st.er')||r3.appendChild(el('div','st er'));er.textContent=e.message}gen.style.opacity='1';rg.disabled=false};
+ box.append(r3);
+ [...box.children].forEach((c,i)=>c.style.setProperty('--i',i));
+ box.classList.add('stg');o.append(box);
+}
+async function tgAnalyze(){
+ const btn=$('#tga'),s=$('#tgs'),o=$('#tgo');
+ const ch=tgChannel($('#tgl').value);
+ s.className='st';s.textContent='';
+ if(!ch){s.className='st er';s.textContent='Не похоже на ссылку. Пример: t.me/durov';return}
+ if(!cf()){s.className='st er';s.textContent='Сначала добавь ключ Cloudflare в настройках — он нужен для ИИ.';return}
+ btn.disabled=true;o.innerHTML='';
+ const sl=el('div','steps tgn');['Загружаю последние 15 постов','Считаю статистику','Разбираю стиль и тематику','Пишу похожий пост'].forEach(t=>{const r=el('div','stp');r.innerHTML='<i></i><span></span>';r.querySelector('span').textContent=t;sl.append(r)});o.append(sl);
+ const mark=(i,c)=>{if(sl.children[i])sl.children[i].className='stp '+c};
+ let loaded=false;
+ try{
+  mark(0,'run');
+  let r;try{r=await fetch(API+'/tg/posts',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({channel:ch})})}catch(e){throw new Error('Нет связи с сервером')}
+  const d=await r.json().catch(()=>({}));
+  if(r.status===404&&!d.error)throw new Error('Сервер ещё не обновлён: задеплой новый cloudflare_worker (команда wrangler deploy).');
+  if(!r.ok)throw new Error(d.error||'Не удалось загрузить канал');
+  mark(0,'done');mark(1,'run');
+  tgs={name:ch,title:d.title||'',posts:d.posts,stats:tgStats(d.posts),analysis:'',gen:'',err:''};loaded=true;
+  mark(1,'done');mark(2,'run');
+  tgs.analysis=await tgAnalysis();mark(2,'done');
+  mark(3,'run');tgs.gen=await tgGenerate(($('#tgt').value||'').trim());mark(3,'done');
+ }catch(e){
+  if(loaded&&tgs){tgs.err=e.message}else{o.innerHTML='';s.className='st er';s.textContent=e.message;btn.disabled=false;return}
+ }
+ btn.disabled=false;tgRender();
+}
 function tg(m){
  const sc=el('div','scroll');
- sc.innerHTML=`<div class="lockp"><div class="ib">${svg('lock',38)}</div><h3>Только в приложении</h3><p>Эти функции работают в приложении V-Agent и доступны по Premium-подписке.</p>
- <div class="feat"><div><span class="ib" style="--c:#38BDF8">${svg('clock',17)}</span>Автопостинг в Telegram по расписанию</div><div><span class="ib" style="--c:#FBBF24">${svg('zap',17)}</span>Автосоздание постов для канала</div><div><span class="ib" style="--c:#E879F9">${svg('film',17)}</span>Разбор видео: текст, пересказ и промпт</div></div>
- <a class="btn" href="index.html#download">Скачать приложение</a></div>`;
- m.append(sc);
+ const w=el('div','tgw');
+ const a=el('div','card tga');
+ a.innerHTML=`<h3><span class="ib">${svg('chart',17)}</span>Анализ канала</h3><p>Вставь ссылку на публичный Telegram-канал. Я прочитаю последние 15 постов, покажу, как они построены, и напишу похожий пост.</p>
+ <input class="f" id="tgl" placeholder="t.me/название_канала или @название" autocomplete="off" autocapitalize="off" spellcheck="false">
+ <input class="f" id="tgt" placeholder="Тема нового поста (необязательно)" autocomplete="off">
+ <div class="row"><button class="btn" id="tga">${svg('search',16)}<span>Анализировать</span></button></div><div class="st" id="tgs"></div>`;
+ const out=el('div');out.id='tgo';
+ const lk=el('div','card');
+ lk.innerHTML=`<h3><span class="ib">${svg('lock',17)}</span>Больше — в приложении</h3><p>Автоведение канала доступно в приложении V-Agent по Premium-подписке.</p>
+ <div class="feat" style="margin-bottom:14px"><div><span class="ib">${svg('clock',17)}</span>Автопостинг в Telegram по расписанию</div><div><span class="ib">${svg('zap',17)}</span>Автосоздание постов для канала</div><div><span class="ib">${svg('film',17)}</span>Разбор видео: текст, пересказ и промпт</div></div>
+ <a class="btn g" href="index.html#download">Скачать приложение</a>`;
+ w.append(a,out,lk);sc.append(w);m.append(sc);
+ if(tgs){$('#tgl')&&0;}
+ sc.querySelector('#tga').onclick=tgAnalyze;
+ sc.querySelector('#tgl').onkeydown=e=>{if(e.key==='Enter')tgAnalyze()};
+ if(tgs){sc.querySelector('#tgl').value='t.me/'+tgs.name;tgRender()}
 }
 function neuro(m){
  const c=MODES[st.mode];st.chats[st.mode]||(st.chats[st.mode]=[]);
@@ -873,14 +998,14 @@ function me(m){
         <b>Как получить ключ (бесплатно):</b>
         <ol>
             <li>
-                <a href="https://dash.cloudflare.com/profile/api-tokens" target="_blank">Перейди на страницу API Tokens</a> 
-                (или вручную: My Profile → API Tokens) и нажми <b>Create Token</b>. 
-                Создай токен с правами <b>Workers AI (Read)</b>. 
+                <a href="https://dash.cloudflare.com/profile/api-tokens" target="_blank">Перейди на страницу API Tokens</a>
+                (или вручную: My Profile → API Tokens) и нажми <b>Create Token</b>.
+                Создай токен с правами <b>Workers AI (Read)</b>.
                 Скопируй токен (начинается на cfut_...).
             </li>
             <li>
-                <a href="https://dash.cloudflare.com/?to=/:account/workers-and-pages" target="_blank">Перейди в раздел Workers & Pages</a>. 
-                Там в блоке <b>Account Details</b> найди и скопируй свой <b>Account ID</b> (32 символа). 
+                <a href="https://dash.cloudflare.com/?to=/:account/workers-and-pages" target="_blank">Перейди в раздел Workers & Pages</a>.
+                Там в блоке <b>Account Details</b> найди и скопируй свой <b>Account ID</b> (32 символа).
                 (Или нажми CMD/CTRL+K и введи "Copy account ID").
             </li>
             <li>Вставь оба ключа в поля ниже и нажми «Сохранить и проверить».</li>
