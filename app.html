@@ -387,24 +387,17 @@ main{flex:1;min-height:0;position:relative;display:flex;flex-direction:column;wi
 .rs .ib{width:30px;height:30px;border-radius:10px}
 .sg{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}
 .sc2{padding:12px 14px;border-radius:16px;background:var(--p2);border:1px solid var(--line)}
-.sc2 b{display:block;font:600 20px Unbounded,sans-serif;letter-spacing:-.02em}
+.sc2 b{display:block;font:600 20px Unbounded,sans-serif;letter-spacing:-.02em;word-break:break-word}
 .sc2 small{display:block;color:var(--mute);font-size:12px;margin-top:2px}
 .txt{white-space:pre-wrap;word-break:break-word;font-size:15px;line-height:1.6}
 .gen{padding:16px 18px;border-radius:18px;background:var(--p2);border:1px solid var(--line2)}
-.plist{display:grid;gap:8px;margin-top:12px}
-.pit{padding:10px 12px;border-radius:14px;background:var(--p2);border:1px solid var(--line);font-size:13px}
-.pit .mt{display:flex;gap:10px;flex-wrap:wrap;color:var(--mute);font-size:12px;margin-bottom:4px}
-.pit .mt a{color:var(--mute);text-decoration:underline}
-.pit .tx{white-space:pre-wrap;word-break:break-word;color:var(--ink);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-.pit.open .tx{-webkit-line-clamp:unset;display:block}
-.pit{cursor:pointer}
 .tgn{margin-top:4px}
 
 @media(min-width:900px){
  .gearf{display:grid;position:fixed;top:18px;right:24px;z-index:5}
  .side{display:flex}.tabs,.top{display:none}
- .top-nav{display:flex; background: #0D0F17; border-color: rgba(255,255,255,0.08);} /* Черная панель */
- main{padding:20px 32px 0;max-width:960px} /* СДВИГ ТЕКСТА ВНИЗ */
+ .top-nav{display:flex; background: #0D0F17; border-color: rgba(255,255,255,0.08);}
+ main{padding:20px 32px 0;max-width:960px}
  .hello{padding-top:10px}.hello h1{font-size:30px}
  .hero{padding:34px 36px}.hero h2{font-size:28px;max-width:480px}
  .bento{grid-template-columns:repeat(6,1fr)}
@@ -416,7 +409,6 @@ main{flex:1;min-height:0;position:relative;display:flex;flex-direction:column;wi
 }
 @media(max-width:899px){
  .qc.big{grid-column:span 1}.qc:first-child{grid-column:span 2}.m .bd{max-width:90%}
- /* форматирование — удобно с телефона */
  .fmt{grid-template-columns:1fr;gap:10px;padding-top:6px}
  .fmt .card{padding:14px;border-radius:20px}
  .fmt .ed,.fmt .out{min-height:170px;max-height:36dvh;font-size:16px}
@@ -442,14 +434,12 @@ main{flex:1;min-height:0;position:relative;display:flex;flex-direction:column;wi
 <div class="aurora"></div>
 <div class="shell">
  <aside class="side">
-  <!-- КЛИКАБЕЛЬНЫЙ ЛОГОТИП -->
   <a class="brand" href="javascript:void(0)" onclick="go('home')"><img src="icon.png" alt=""><span>V-Agent</span></a>
   <nav class="nav" id="side"></nav>
   <div class="foot" id="foot"></div>
  </aside>
  <div class="stage">
 
-  <!-- НОВАЯ ПАНЕЛЬ СВЕРХУ -->
   <nav class="top-nav">
     <a class="logo" href="javascript:void(0)" onclick="go('home')"><img src="logo_text.png" alt="V-Agent"></a>
     <div class="nav-right">
@@ -483,7 +473,6 @@ main{flex:1;min-height:0;position:relative;display:flex;flex-direction:column;wi
   </nav>
 
   <header class="top">
-   <!-- КЛИКАБЕЛЬНЫЙ ЛОГОТИП МОБИЛКА -->
    <a class="brand" href="javascript:void(0)" onclick="go('home')"><img src="icon.png" alt=""><span>V-Agent</span></a>
    <button class="ibtn gear" id="gm" onclick="go('me')" aria-label="Настройки"></button>
    <button class="ava" id="avm" onclick="go('me')" aria-label="Профиль"></button>
@@ -562,7 +551,9 @@ function addNotification(text, type = 'error') {
     const item = document.createElement('div');
     item.className = 'notif-item ' + (type === 'success' ? 'success' : '');
     const iconSvg = `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>`;
-    item.innerHTML = `<div class="n-icon">${iconSvg}</div><div class="n-text">${text}</div>`;
+    const ic = document.createElement('div'); ic.className = 'n-icon'; ic.innerHTML = iconSvg;
+    const tx = document.createElement('div'); tx.className = 'n-text'; tx.textContent = text;
+    item.append(ic, tx);
 
     const empty = notifList.querySelector('.notif-empty');
     if (empty) empty.remove();
@@ -591,7 +582,7 @@ bellBtn.addEventListener('click', (e) => {
 });
 
 document.addEventListener('click', (e) => {
-    if (!notifMenu.contains(e.target) && e.target !== bellBtn) {
+    if (!notifMenu.contains(e.target) && !bellBtn.contains(e.target)) {
         notifMenu.classList.remove('show');
     }
 });
@@ -678,7 +669,6 @@ function home(m){
  const h=el('div','hello');
  h.innerHTML=`<h1>${hr<5?'Доброй ночи':hr<12?'Доброе утро':hr<18?'Добрый день':'Добрый вечер'}, <span></span></h1><p>Что будем делать сегодня?</p>`;h.querySelector('span').textContent=USER;sc.append(h);
 
- // АНИМИРОВАННЫЙ БАННЕР
  const hero=el('div','hero');
  hero.innerHTML=`<span class="pl">${svg('send',170)}</span><h2>Автоматизируй свой Telegram-канал</h2><p>Анализ канала, посты в его стиле и автопостинг — прямо здесь и в приложении V-Agent.</p><div class="row"><a class="btn w" href="index.html#download">Скачать приложение</a><button class="btn g" id="hl">Анализ канала</button></div>`;
  hero.querySelector('#hl').onclick=()=>go('tg');sc.append(hero);
@@ -686,7 +676,7 @@ function home(m){
  const s=el('div','sec');s.innerHTML='<h3>Быстрый доступ</h3>';sc.append(s);
  const g=el('div','bento stg');g.style.setProperty('--b',3);
  Object.entries(MODES).forEach(([id,c],i)=>{const b=el('button','qc'+(i<2?' big':''));b.style.setProperty('--c',c.c);b.innerHTML=`<span class="ib">${svg(c.i,24)}</span><div><b>${c.t}</b><small>${c.s}</small></div><span class="go">${svg('arrow',18)}</span>`;b.onclick=()=>go('neuro',id);g.append(b)});
- const tq=el('button','qc wide');tq.style.setProperty('--c','#229ED9');tq.innerHTML=`<span class="ib">${svg('chart',24)}</span><div><b>Анализ Telegram-канала</b><small>Разбор последних 15 постов и пост в том же стиле</small></div><span class="go">${svg('arrow',18)}</span>`;tq.onclick=()=>go('tg');g.append(tq);
+ const tq=el('button','qc wide');tq.style.setProperty('--c','#229ED9');tq.innerHTML=`<span class="ib">${svg('chart',24)}</span><div><b>Анализ Telegram-канала</b><small>Разбор стиля канала и пост в том же стиле</small></div><span class="go">${svg('arrow',18)}</span>`;tq.onclick=()=>go('tg');g.append(tq);
  const fm=el('button','qc wide');fm.style.setProperty('--c','#38BDF8');fm.innerHTML=`<span class="ib">${svg('code',24)}</span><div><b>Форматирование</b><small>Текст из Telegram → код с тегами</small></div><span class="go">${svg('arrow',18)}</span>`;fm.onclick=()=>go('fmt');g.append(fm);
  const v=el('button','qc wide off');v.innerHTML=`<span class="ib">${svg('film',24)}</span><div><b>Видео</b><small>Пересказ и промпт — в приложении</small></div><span class="go">${svg('lock',18)}</span>`;v.onclick=()=>go('tg');g.append(v);
  [...sc.children].forEach((c,i)=>c.style.setProperty('--i',i));[...g.children].forEach((c,i)=>c.style.setProperty('--i',i));sc.append(g);m.append(sc);
@@ -698,7 +688,7 @@ function tgFromNode(root){
   const BLOCK=/^(DIV|P|LI|UL|OL|H[1-6]|TR)$/;
   const wrap=(t,tag,a)=>t.trim()?`<${tag}${a||''}>${t}</${tag}>`:t;
   function walk(n){
-    if(n.nodeType===3)return esc(n.nodeValue.replace(/ /g,' ').replace(/​/g,''));
+    if(n.nodeType===3)return esc(n.nodeValue.replace(/\u00a0/g,' ').replace(/[\u200b-\u200d\ufeff]/g,''));
     if(n.nodeType!==1)return '';
     const tag=n.nodeName;
     if(/^(SCRIPT|STYLE|META|HEAD|IFRAME|OBJECT)$/.test(tag))return '';
@@ -769,7 +759,6 @@ function fmt(m){
   });
   ed.addEventListener('input',upd);
   ed.addEventListener('click',e=>{const sp=e.target.closest&&e.target.closest('tg-spoiler');if(sp)sp.classList.toggle('show')});
-  /* Кнопка «Вставить» — для телефона (читает буфер обмена) */
   $('#fpst').onclick=async()=>{
     const lab=$('#fpst span');
     try{
@@ -807,46 +796,29 @@ function fmt(m){
   upd();
 }
 
-/* ===== TELEGRAM: анализ канала + пост в его стиле ===== */
-let tgs=null; // последний результат: {name,title,posts,stats,analysis,gen,err}
+/* ===== TELEGRAM: анализ канала + пост в его стиле (через /tg/analyze) ===== */
+let tgs=null; // {name,title,count,analysis,gen,err}
 const tgChannel=v=>{v=(v||'').trim();const m=v.match(/(?:t\.me\/(?:s\/)?|telegram\.me\/|^@)([A-Za-z][A-Za-z0-9_]{3,31})/i)||v.match(/^([A-Za-z][A-Za-z0-9_]{3,31})$/);return m?m[1]:''};
-const fmtN=n=>n>=1e6?(n/1e6).toFixed(1).replace('.0','')+'M':n>=1e3?(n/1e3).toFixed(1).replace('.0','')+'K':String(Math.round(n));
-function tgStats(posts){
- const n=posts.length,sum=a=>a.reduce((x,y)=>x+y,0);
- const withText=posts.filter(p=>p.text);
- const len=withText.map(p=>p.text.length);
- const emo=withText.map(p=>(p.text.match(/\p{Extended_Pictographic}/gu)||[]).length);
- const tags=withText.map(p=>(p.text.match(/#[\p{L}\d_]+/gu)||[]).length);
- const views=posts.map(p=>p.views).filter(v=>v!=null);
- const dates=posts.map(p=>Date.parse(p.date)).filter(x=>!isNaN(x)).sort((a,b)=>a-b);
- let cadence='—';
- if(dates.length>1){const h=(dates[dates.length-1]-dates[0])/(dates.length-1)/36e5;cadence=h<1?'каждые '+Math.max(1,Math.round(h*60))+' мин':h<36?'каждые '+Math.round(h)+' ч':'каждые '+(h/24).toFixed(1).replace('.0','')+' дн.'}
- return{n,avgLen:withText.length?Math.round(sum(len)/withText.length):0,emoji:withText.length?+(sum(emo)/withText.length).toFixed(1):0,tags:withText.length?+(sum(tags)/withText.length).toFixed(1):0,media:Math.round(posts.filter(p=>p.media).length/n*100),views:views.length?fmtN(sum(views)/views.length):'—',cadence};
-}
-const tgSamples=(posts,k,cut)=>posts.filter(p=>p.text.length>30).slice(-k).map(p=>p.text.slice(0,cut)).join('\n\n---\n\n');
-async function tgAnalysis(){
- const t=tgs,body=t.posts.filter(p=>p.text).map((p,i)=>`Пост ${i+1}: ${p.text.slice(0,370)}`).join('\n\n');
- return chatAI([{role:'system',content:'Ты редактор-аналитик Telegram-каналов. Отвечай по-русски, коротко и конкретно, без Markdown. Опирайся только на присланные посты.'},{role:'user',content:`Вот последние посты канала «${t.title||t.name}»:\n\n${body}\n\nСделай разбор по пунктам, каждый пункт — отдельная строка в формате «Название: суть»:\nТематика — о чём канал и какие темы повторяются.\nФормат постов — что за посты (новости, советы, истории, подборки…).\nСтруктура — как строится типичный пост: заголовок, абзацы, вывод, призыв.\nТон — как автор говорит с аудиторией.\nОформление — эмодзи, списки, жирный текст, хештеги, ссылки.\nЧто работает — что делает посты узнаваемыми.`}],800);
-}
+
 async function tgGenerate(topic){
- const t=tgs,s=t.stats;
- const topicLine=topic?`Тема нового поста: ${topic}`:'Тему выбери сам: новая, в рамках тематики канала, не повторяй примеры.';
- return chatAI([{role:'system',content:`Ты автор Telegram-канала «${t.title||t.name}». Пишешь новые посты так, что их не отличить от старых: та же тематика, структура, тон, длина и оформление. Выдавай только текст поста, без пояснений, кавычек и Markdown.`},{role:'user',content:`Разбор стиля канала:\n${t.analysis||'нет'}\n\nЦифры: средняя длина поста ~${s.avgLen} символов, эмодзи ~${s.emoji} на пост, хештегов ~${s.tags} на пост.`},{role:'user',content:`Примеры постов канала (от старых к новым):\n\n${tgSamples(t.posts,5,800)}\n\n${topicLine}\nНапиши один НОВЫЙ пост. Не копируй фразы из примеров.`}],1000).then(x=>x.replace(/\*\*/g,'').trim());
+ const t=tgs;
+ const topicLine=topic?`Тема нового поста: ${topic}`:'Тему выбери сам: новая, в рамках тематики канала.';
+ return chatAI([
+  {role:'system',content:`Ты автор Telegram-канала «${t.title||t.name}». Пишешь новые посты в стиле этого канала: та же тематика, структура, тон, длина и оформление. Выдавай только текст поста, без пояснений, кавычек и Markdown.`},
+  {role:'user',content:`Разбор стиля канала:\n${t.analysis||'нет'}\n\nПример предыдущего поста в этом стиле:\n${t.gen||'нет'}\n\n${topicLine}\nНапиши один НОВЫЙ пост. Не копируй фразы из примера.`}
+ ],1000).then(x=>x.replace(/\*\*/g,'').trim());
 }
+
 function tgRender(){
- const o=$('#tgo');if(!o||!tgs)return;o.innerHTML='';const t=tgs,s=t.stats;
+ const o=$('#tgo');if(!o||!tgs)return;o.innerHTML='';const t=tgs;
  const box=el('div','tgw');
- // 1. доказательство, что всё прочитано
+ // 1. прочитано
  const r1=el('div','rs');
- r1.innerHTML=`<h3><span class="ib">${svg('check',16)}</span>Прочитано ${s.n} последних постов — ${'<span></span>'}</h3>`;r1.querySelector('h3 span:last-child').textContent=t.title||('@'+t.name);
+ r1.innerHTML=`<h3><span class="ib">${svg('check',16)}</span>Канал прочитан — <span></span></h3>`;
+ r1.querySelector('h3 span:last-child').textContent=t.title||('@'+t.name);
  const sg=el('div','sg');
- [[s.n,'постов прочитано'],[s.avgLen,'символов в среднем'],[s.emoji,'эмодзи на пост'],[s.tags,'хештегов на пост'],[s.media+'%','постов с медиа'],[s.views,'просмотров в среднем'],[s.cadence,'частота постов']].forEach(([v,l])=>{const c=el('div','sc2');c.innerHTML='<b></b><small></small>';c.querySelector('b').textContent=v;c.querySelector('small').textContent=l;sg.append(c)});
- r1.append(sg);
- const pl=el('div','plist');
- [...t.posts].reverse().forEach(p=>{const it=el('div','pit');const d=Date.parse(p.date);const mt=el('div','mt');mt.append(el('span','',isNaN(d)?'':new Date(d).toLocaleString('ru',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})));if(p.views!=null)mt.append(el('span','','👁 '+fmtN(p.views)));if(p.media)mt.append(el('span','','медиа'));if(p.id){const a=el('a','','открыть');a.href='https://t.me/'+p.id;a.target='_blank';a.rel='noopener';a.onclick=e=>e.stopPropagation();mt.append(a)}
-  it.append(mt,el('div','tx',p.text||'(только медиа, без текста)'));it.onclick=()=>it.classList.toggle('open');pl.append(it)});
- const det=el('div');det.style.marginTop='12px';const tb=el('button','btn g sm');tb.innerHTML=svg('chev',15)+'<span>Показать все посты</span>';pl.style.display='none';tb.onclick=()=>{const open=pl.style.display==='none';pl.style.display=open?'grid':'none';tb.querySelector('span').textContent=open?'Скрыть посты':'Показать все посты'};det.append(tb);r1.append(det,pl);
- box.append(r1);
+ [[t.count||'—','постов прочитано'],['@'+t.name,'канал']].forEach(([v,l])=>{const c=el('div','sc2');c.innerHTML='<b></b><small></small>';c.querySelector('b').textContent=v;c.querySelector('small').textContent=l;sg.append(c)});
+ r1.append(sg);box.append(r1);
  // 2. разбор
  if(t.analysis){const r2=el('div','rs');r2.innerHTML=`<h3><span class="ib">${svg('chart',16)}</span>Как устроены посты канала</h3>`;r2.append(el('div','txt',t.analysis.replace(/\*\*/g,'')));box.append(r2)}
  // 3. новый пост
@@ -856,44 +828,60 @@ function tgRender(){
  const rg=el('button','btn sm');rg.innerHTML=svg('refresh',15)+'<span>Ещё вариант</span>';
  bs.append(cp,rg);r3.querySelector('h3').append(bs);
  const gen=el('div','gen txt',t.gen||'');if(!t.gen)gen.style.display='none';r3.append(gen);
- if(t.err){const e=el('div','st er',t.err);r3.append(e)}
+ if(t.err){r3.append(el('div','st er',t.err))}
  cp.onclick=()=>{if(!tgs.gen)return;navigator.clipboard&&navigator.clipboard.writeText(tgs.gen);cp.querySelector('span').textContent='Скопировано ✓';setTimeout(()=>cp.querySelector('span').textContent='Копировать',1500)};
- rg.onclick=async()=>{rg.disabled=true;gen.style.display='block';gen.style.opacity='.5';try{tgs.gen=await tgGenerate(($('#tgt')||{}).value||'');tgs.err='';gen.textContent=tgs.gen}catch(e){const er=r3.querySelector('.st.er')||r3.appendChild(el('div','st er'));er.textContent=e.message}gen.style.opacity='1';rg.disabled=false};
+ rg.onclick=async()=>{
+  rg.disabled=true;gen.style.display='block';gen.style.opacity='.5';
+  try{tgs.gen=await tgGenerate((($('#tgt')||{}).value||'').trim());tgs.err='';gen.textContent=tgs.gen;const er=r3.querySelector('.st.er');if(er)er.remove()}
+  catch(e){const er=r3.querySelector('.st.er')||r3.appendChild(el('div','st er'));er.textContent=e.message}
+  gen.style.opacity='1';rg.disabled=false;
+ };
  box.append(r3);
  [...box.children].forEach((c,i)=>c.style.setProperty('--i',i));
  box.classList.add('stg');o.append(box);
 }
+
 async function tgAnalyze(){
  const btn=$('#tga'),s=$('#tgs'),o=$('#tgo');
  const ch=tgChannel($('#tgl').value);
  s.className='st';s.textContent='';
  if(!ch){s.className='st er';s.textContent='Не похоже на ссылку. Пример: t.me/durov';return}
- if(!cf()){s.className='st er';s.textContent='Сначала добавь ключ Cloudflare в настройках — он нужен для ИИ.';return}
+ const k=cf();
+ if(!k){s.className='st er';s.textContent='Сначала добавь ключ Cloudflare в настройках — он нужен для ИИ.';return}
  btn.disabled=true;o.innerHTML='';
- const sl=el('div','steps tgn');['Загружаю последние 15 постов','Считаю статистику','Разбираю стиль и тематику','Пишу похожий пост'].forEach(t=>{const r=el('div','stp');r.innerHTML='<i></i><span></span>';r.querySelector('span').textContent=t;sl.append(r)});o.append(sl);
+ const sl=el('div','steps tgn');
+ ['Загружаю последние посты','Разбираю стиль и тематику','Пишу похожий пост'].forEach(t=>{const r=el('div','stp');r.innerHTML='<i></i><span></span>';r.querySelector('span').textContent=t;sl.append(r)});
+ o.append(sl);
  const mark=(i,c)=>{if(sl.children[i])sl.children[i].className='stp '+c};
- let loaded=false;
+ mark(0,'run');
+ // сервер отвечает одним запросом, поэтому шаги показываем по таймеру
+ const t1=setTimeout(()=>{mark(0,'done');mark(1,'run')},2500);
+ const t2=setTimeout(()=>{mark(1,'done');mark(2,'run')},6000);
  try{
-  mark(0,'run');
-  let r;try{r=await fetch(API+'/tg/posts',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({channel:ch})})}catch(e){throw new Error('Нет связи с сервером')}
+  let r;
+  try{
+   r=await fetch(API+'/tg/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({channel:ch,topic:($('#tgt').value||'').trim(),token:k.token,account_id:k.account})});
+  }catch(e){throw new Error('Нет связи с сервером')}
   const d=await r.json().catch(()=>({}));
-  if(r.status===404&&!d.error)throw new Error('Сервер ещё не обновлён: задеплой новый cloudflare_worker (команда wrangler deploy).');
-  if(!r.ok)throw new Error(d.error||'Не удалось загрузить канал');
-  mark(0,'done');mark(1,'run');
-  tgs={name:ch,title:d.title||'',posts:d.posts,stats:tgStats(d.posts),analysis:'',gen:'',err:''};loaded=true;
-  mark(1,'done');mark(2,'run');
-  tgs.analysis=await tgAnalysis();mark(2,'done');
-  mark(3,'run');tgs.gen=await tgGenerate(($('#tgt').value||'').trim());mark(3,'done');
+  if(!r.ok)throw new Error(d.error||'Не удалось проанализировать канал');
+  const res=String(d.result||'').replace(/\*\*/g,'');
+  const a=res.match(/\[АНАЛИЗ СТИЛЯ\]([\s\S]*?)(?=\[НОВЫЙ ПОСТ\]|$)/i);
+  const p=res.match(/\[НОВЫЙ ПОСТ\]([\s\S]*)$/i);
+  tgs={name:ch,title:d.title||'',count:d.posts_count||0,analysis:(a?a[1]:res).trim(),gen:(p?p[1]:'').trim(),err:''};
+  if(!tgs.gen&&!tgs.analysis)throw new Error('Пустой ответ, попробуй ещё раз');
  }catch(e){
-  if(loaded&&tgs){tgs.err=e.message}else{o.innerHTML='';s.className='st er';s.textContent=e.message;btn.disabled=false;return}
+  clearTimeout(t1);clearTimeout(t2);
+  o.innerHTML='';s.className='st er';s.textContent=e.message;btn.disabled=false;return;
  }
+ clearTimeout(t1);clearTimeout(t2);
+ [0,1,2].forEach(i=>mark(i,'done'));
  btn.disabled=false;tgRender();
 }
 function tg(m){
  const sc=el('div','scroll');
  const w=el('div','tgw');
  const a=el('div','card tga');
- a.innerHTML=`<h3><span class="ib">${svg('chart',17)}</span>Анализ канала</h3><p>Вставь ссылку на публичный Telegram-канал. Я прочитаю последние 15 постов, покажу, как они построены, и напишу похожий пост.</p>
+ a.innerHTML=`<h3><span class="ib">${svg('chart',17)}</span>Анализ канала</h3><p>Вставь ссылку на публичный Telegram-канал. Я прочитаю его последние посты, покажу, как они построены, и напишу похожий пост.</p>
  <input class="f" id="tgl" placeholder="t.me/название_канала или @название" autocomplete="off" autocapitalize="off" spellcheck="false">
  <input class="f" id="tgt" placeholder="Тема нового поста (необязательно)" autocomplete="off">
  <div class="row"><button class="btn" id="tga">${svg('search',16)}<span>Анализировать</span></button></div><div class="st" id="tgs"></div>`;
@@ -903,7 +891,6 @@ function tg(m){
  <div class="feat" style="margin-bottom:14px"><div><span class="ib">${svg('clock',17)}</span>Автопостинг в Telegram по расписанию</div><div><span class="ib">${svg('zap',17)}</span>Автосоздание постов для канала</div><div><span class="ib">${svg('film',17)}</span>Разбор видео: текст, пересказ и промпт</div></div>
  <a class="btn g" href="index.html#download">Скачать приложение</a>`;
  w.append(a,out,lk);sc.append(w);m.append(sc);
- if(tgs){$('#tgl')&&0;}
  sc.querySelector('#tga').onclick=tgAnalyze;
  sc.querySelector('#tgl').onkeydown=e=>{if(e.key==='Enter')tgAnalyze()};
  if(tgs){sc.querySelector('#tgl').value='t.me/'+tgs.name;tgRender()}
@@ -988,11 +975,9 @@ function grp(t,items){const w=el('div');w.append(el('div','grp2',t));const l=el(
 function me(m){
  const sc=el('div','scroll stg');sc.style.cssText='max-width:680px;width:100%;margin:0 auto';const k=cf();const dark=document.documentElement.dataset.theme==='dark';
  const who=el('div','who');who.style.marginTop='12px';who.innerHTML='<div class="ava" id="ava2"></div><div><h2 id="nm2"></h2><p>Настройки аккаунта V-Agent</p></div>';sc.append(who);
- // appearance
  const seg=`<div class="seg ${dark?'':'l'}" id="seg"><i></i><button data-t="dark" class="${dark?'on':''}" onclick="setTheme('dark')">${svg('moon',14)}Тёмная</button><button data-t="light" class="${dark?'':'on'}" onclick="setTheme('light')">${svg('sun',14)}Светлая</button></div>`;
  const [rt]=row('pal','Тема','Оформление приложения',seg);
  sc.append(grp('Внешний вид',[rt]));
- // AI
  const cloudInstructions = `
     <div class="cloud-steps">
         <b>Как получить ключ (бесплатно):</b>
@@ -1016,15 +1001,12 @@ function me(m){
  <input class="f" id="tk" type="password" placeholder="API токен (cfut_…)" value="${k?'••••••••':''}" autocomplete="off"><input class="f" id="ac" placeholder="Account ID (32 символа или вся ссылка)" value="${k?k.account:''}" autocomplete="off">
  <div class="row"><button class="btn" onclick="saveKey()">Сохранить и проверить</button>${k?'<button class="btn g" onclick="delKey()">Удалить</button>':''}</div><div class="st" id="ks"></div>`;
  sc.append(grp('Нейросети',[acc('key','Ключ Cloudflare',k?'Подключён — ИИ работает':'Добавь ключ, чтобы ИИ заработал',`<span class="badge ${k?'ok':''}"><i></i>${k?'Подключён':'Не добавлен'}</span>`,keyBody,!k)]));
- // security
  const pwBody=`<input class="f" id="op" type="password" placeholder="Старый пароль" autocomplete="current-password"><input class="f" id="np" type="password" placeholder="Новый пароль (от 4 символов)" autocomplete="new-password"><div class="row"><button class="btn" onclick="chPass()">Сменить пароль</button></div><div class="st" id="ps"></div>`;
  sc.append(grp('Безопасность',[acc('shield','Сменить пароль','Введи старый и новый пароль','',pwBody,false)]));
- // data
  const total=Object.values(st.chats).reduce((n,a)=>n+(a?a.length:0),0);
  const [rc,bc]=row('trash','Очистить историю чатов',total?total+' сообщ. в этом браузере':'История пуста','','danger');
  bc.onclick=()=>{if(!total)return;if(!bc.dataset.sure){bc.dataset.sure=1;bc.querySelector('b').textContent='Нажми ещё раз для подтверждения';setTimeout(()=>{if(bc.isConnected){delete bc.dataset.sure;bc.querySelector('b').textContent='Очистить историю чатов'}},3000);return}st.chats={};save();draw()};
  sc.append(grp('Данные',[rc]));
- // about
  const [ra,ba]=row('info','О V-Agent','Чат с ИИ, картинки, идеи, шаблоны и хештеги. Автопостинг и видео — в приложении.',svg('arrow',16));
  ba.onclick=()=>{location.href='index.html#download'};ba.querySelector('.t small').style.whiteSpace='normal';
  const [rl,bl]=row('out','Выйти из аккаунта',USER,'');bl.onclick=logout;
@@ -1057,7 +1039,6 @@ const showPwa = () => {
     }
 };
 
-// Принудительно показываем баннер на мобильных (включая iOS), если он еще не закрыт
 if (innerWidth < 900 && !localStorage.getItem('pwa_dismissed')) {
     if (ios) $('#pwab').textContent = 'Как?';
     showPwa();
@@ -1066,7 +1047,6 @@ if (innerWidth < 900 && !localStorage.getItem('pwa_dismissed')) {
 addEventListener('beforeinstallprompt', e => {
     e.preventDefault();
     dp = e;
-    // Показываем баннер, если это не iOS
     if (!ios) showPwa();
 });
 
