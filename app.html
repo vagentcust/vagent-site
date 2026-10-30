@@ -656,7 +656,7 @@ async function ai(path,body){
  let r;try{r=await fetch(API+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...body,token:k.token,account_id:k.account})})}catch(e){throw new Error('Нет связи с сервером')}
  const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||'Ошибка ИИ');return d;
 }
-const chatAI=(messages,max)=>ai('/ai/text',{messages,max_tokens:max||900}).then(d=>(d.text||'').trim());
+const chatAI=(messages,max)=>ai('/ai/text',{messages,max_tokens:max||900}).then(d=>{const t=d.text;return (typeof t==='string'?t:t==null?'':JSON.stringify(t)).trim()});
 
 const SIDE=[['home','home','Главная'],['grp','Нейросети'],['chat','chat'],['image','image'],['ideas','bulb'],['templates','grid'],['hashtags','hash'],['grp','Ещё'],['an','chart','Анализ канала'],['tg','send','Telegram',1],['me','gear','Настройки']];
 const TABS=[['home','home','Главная'],['neuro','spark','Нейросети'],['an','chart','Анализ'],['tg','send','Telegram',1],['me','gear','Настройки']];
