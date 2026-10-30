@@ -393,6 +393,29 @@ main{flex:1;min-height:0;position:relative;display:flex;flex-direction:column;wi
 .gen{padding:16px 18px;border-radius:18px;background:var(--p2);border:1px solid var(--line2)}
 .tgn{margin-top:4px}
 
+/* === Telegram-превью поста === */
+.pe{width:1.3em;height:1.3em;vertical-align:-.3em;display:inline-block;margin:0 1px;object-fit:contain}
+.tgm{display:flex;gap:10px;align-items:flex-end;margin-top:12px}
+.tgav{width:38px;height:38px;border-radius:50%;flex:none;display:grid;place-items:center;font:600 16px Unbounded,sans-serif;color:#fff;background:linear-gradient(135deg,#4FACFE,#7B61FF)}
+.tgb{min-width:0;max-width:100%;padding:8px 12px 6px;border-radius:18px 18px 18px 5px;background:var(--p2);border:1px solid var(--line2)}
+.tgnm{font-size:14px;font-weight:600;color:var(--ac);margin-bottom:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tgbody{white-space:pre-wrap;word-break:break-word;font-size:15px;line-height:1.5}
+.tgbody b{font-weight:700}
+.tgbody a{color:var(--ac);text-decoration:underline}
+.tgbody code{font:13.5px ui-monospace,Consolas,monospace;background:var(--p3);padding:1px 5px;border-radius:5px;color:var(--ac)}
+.tgbody pre{font:13px ui-monospace,Consolas,monospace;background:var(--p3);padding:10px;border-radius:10px;overflow:auto;margin:4px 0}
+.tgbody blockquote{position:relative;margin:6px 0;padding:5px 26px 5px 12px;border-left:3px solid var(--ac);background:color-mix(in srgb,var(--ac) 12%,transparent);border-radius:4px 10px 10px 4px}
+.tgbody blockquote:after{content:"\201D";position:absolute;top:-2px;right:8px;font:700 26px Georgia,serif;color:var(--ac);opacity:.5}
+.tgbody tg-spoiler{background:var(--dim);color:transparent;border-radius:4px;cursor:pointer;transition:.2s}
+.tgbody tg-spoiler.show{background:var(--p3);color:inherit}
+.tgbody tg-spoiler .pe{opacity:0}.tgbody tg-spoiler.show .pe{opacity:1}
+.tgf{text-align:right;color:var(--dim);font-size:11px;margin-top:2px}
+.srcs{display:grid;gap:8px;margin-top:12px}
+.src{padding:10px 12px;border-radius:14px;background:var(--p2);border:1px solid var(--line);font-size:13px}
+.src a{color:var(--ac);font-weight:600;text-decoration:underline}
+.src p{color:var(--mute);margin-top:4px;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+.note{color:var(--mute);font-size:12px;margin-top:10px}
+
 @media(min-width:900px){
  .gearf{display:grid;position:fixed;top:18px;right:24px;z-index:5}
  .side{display:flex}.tabs,.top{display:none}
@@ -676,7 +699,7 @@ function home(m){
  const s=el('div','sec');s.innerHTML='<h3>Быстрый доступ</h3>';sc.append(s);
  const g=el('div','bento stg');g.style.setProperty('--b',3);
  Object.entries(MODES).forEach(([id,c],i)=>{const b=el('button','qc'+(i<2?' big':''));b.style.setProperty('--c',c.c);b.innerHTML=`<span class="ib">${svg(c.i,24)}</span><div><b>${c.t}</b><small>${c.s}</small></div><span class="go">${svg('arrow',18)}</span>`;b.onclick=()=>go('neuro',id);g.append(b)});
- const tq=el('button','qc wide');tq.style.setProperty('--c','#229ED9');tq.innerHTML=`<span class="ib">${svg('chart',24)}</span><div><b>Анализ Telegram-канала</b><small>Разбор стиля канала и пост в том же стиле</small></div><span class="go">${svg('arrow',18)}</span>`;tq.onclick=()=>go('tg');g.append(tq);
+ const tq=el('button','qc wide');tq.style.setProperty('--c','#229ED9');tq.innerHTML=`<span class="ib">${svg('chart',24)}</span><div><b>Анализ Telegram-канала</b><small>Тип канала, факты по теме и оригинальный пост</small></div><span class="go">${svg('arrow',18)}</span>`;tq.onclick=()=>go('tg');g.append(tq);
  const fm=el('button','qc wide');fm.style.setProperty('--c','#38BDF8');fm.innerHTML=`<span class="ib">${svg('code',24)}</span><div><b>Форматирование</b><small>Текст из Telegram → код с тегами</small></div><span class="go">${svg('arrow',18)}</span>`;fm.onclick=()=>go('fmt');g.append(fm);
  const v=el('button','qc wide off');v.innerHTML=`<span class="ib">${svg('film',24)}</span><div><b>Видео</b><small>Пересказ и промпт — в приложении</small></div><span class="go">${svg('lock',18)}</span>`;v.onclick=()=>go('tg');g.append(v);
  [...sc.children].forEach((c,i)=>c.style.setProperty('--i',i));[...g.children].forEach((c,i)=>c.style.setProperty('--i',i));sc.append(g);m.append(sc);
@@ -796,45 +819,169 @@ function fmt(m){
   upd();
 }
 
-/* ===== TELEGRAM: анализ канала + пост в его стиле (через /tg/analyze) ===== */
-let tgs=null; // {name,title,count,analysis,gen,err}
+/* ===== TELEGRAM: тип канала → факты → оригинальный пост ===== */
+let tgs=null; // {name,title,count,analysis,type,sub,facts,html,err}
+let tgPrem=localStorage.getItem('vagent_pe')!=='0';
 const tgChannel=v=>{v=(v||'').trim();const m=v.match(/(?:t\.me\/(?:s\/)?|telegram\.me\/|^@)([A-Za-z][A-Za-z0-9_]{3,31})/i)||v.match(/^([A-Za-z][A-Za-z0-9_]{3,31})$/);return m?m[1]:''};
+const noDef=x=>!x||/не определено/i.test(x);
 
-async function tgGenerate(topic){
- const t=tgs;
- const topicLine=topic?`Тема нового поста: ${topic}`:'Тему выбери сам: новая, в рамках тематики канала.';
- return chatAI([
-  {role:'system',content:`Ты автор Telegram-канала «${t.title||t.name}». Пишешь новые посты в стиле этого канала: та же тематика, структура, тон, длина и оформление. Выдавай только текст поста, без пояснений, кавычек и Markdown.`},
-  {role:'user',content:`Разбор стиля канала:\n${t.analysis||'нет'}\n\nПример предыдущего поста в этом стиле:\n${t.gen||'нет'}\n\n${topicLine}\nНапиши один НОВЫЙ пост. Не копируй фразы из примера.`}
- ],1000).then(x=>x.replace(/\*\*/g,'').trim());
+/* --- очистка ответа ИИ до безопасного Telegram-HTML --- */
+const TG_OK={B:'b',STRONG:'b',I:'i',EM:'i',U:'u',INS:'u',S:'s',STRIKE:'s',DEL:'s',CODE:'code',PRE:'pre',BLOCKQUOTE:'blockquote','TG-SPOILER':'tg-spoiler'};
+function tgClean(src){
+ src=String(src||'').replace(/\r/g,'')
+  .replace(/\*\*([^*\n]+?)\*\*/g,'<b>$1</b>')
+  .replace(/(^|\n)((?:> ?[^\n]*)(?:\n> ?[^\n]*)*)/g,(m,a,b)=>a+'<blockquote>'+b.replace(/^> ?/gm,'')+'</blockquote>')
+  .replace(/<\/blockquote>\n/g,'</blockquote>');
+ const doc=new DOMParser().parseFromString('<body>'+src+'</body>','text/html');
+ const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+ const walk=n=>{
+  if(n.nodeType===3)return esc(n.nodeValue);
+  if(n.nodeType!==1)return '';
+  const tg=n.nodeName;
+  if(/^(SCRIPT|STYLE|IFRAME|OBJECT)$/.test(tg))return '';
+  if(tg==='BR')return '\n';
+  const k=[...n.childNodes].map(walk).join('');
+  if(tg==='BLOCKQUOTE'){const q=k.trim();return q?'<blockquote>'+q+'</blockquote>':''}
+  if(TG_OK[tg])return k.trim()?`<${TG_OK[tg]}>${k}</${TG_OK[tg]}>`:k;
+  if(tg==='A'){const h=(n.getAttribute('href')||'').trim();return /^https?:/i.test(h)?`<a href="${h.replace(/&/g,'&amp;').replace(/"/g,'&quot;')}">${k}</a>`:k}
+  if(/^(P|DIV|LI|H[1-6])$/.test(tg))return k.replace(/\n*$/,'')+'\n';
+  return k;
+ };
+ return walk(doc.body).replace(/\n{3,}/g,'\n\n').trim();
 }
 
+/* --- «премиум»-эмодзи: анимированные картинки вместо обычных символов --- */
+const PE_RE=/(\p{Extended_Pictographic}(?:[\uFE0F\u{1F3FB}-\u{1F3FF}]|\u200D\p{Extended_Pictographic})*\uFE0F?)/gu;
+function peImg(ch){
+ const cps=[...ch].map(c=>c.codePointAt(0));
+ const c1=cps.map(x=>x.toString(16)).join('_'),c2=cps.filter(x=>x!==0xfe0f).map(x=>x.toString(16)).join('_');
+ const list=[...new Set([c1,c2])];let i=0;
+ const base='https://fonts.gstatic.com/s/e/notoemoji/latest/';
+ const im=document.createElement('img');im.className='pe';im.alt=ch;im.src=base+list[0]+'/512.webp';
+ im.onerror=()=>{i++;if(i<list.length)im.src=base+list[i]+'/512.webp';else im.replaceWith(document.createTextNode(ch))};
+ return im;
+}
+function premiumize(root){
+ const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT),ns=[];while(w.nextNode())ns.push(w.currentNode);
+ ns.forEach(n=>{
+  const parts=n.nodeValue.split(PE_RE);if(parts.length<2)return;
+  const f=document.createDocumentFragment();
+  parts.forEach((p,i)=>{if(!p)return;f.append(i%2?peImg(p):document.createTextNode(p))});
+  n.replaceWith(f);
+ });
+}
+
+/* --- факты: русская Википедия (работает из браузера, без сервера) --- */
+async function wikiFacts(queries){
+ const seen=new Set(),out=[];
+ for(const q of queries.slice(0,4)){
+  try{
+   const u='https://ru.wikipedia.org/w/api.php?action=query&format=json&origin=*&generator=search&gsrlimit=2&prop=extracts%7Cinfo&exintro=1&explaintext=1&exchars=900&inprop=url&gsrsearch='+encodeURIComponent(q);
+   const r=await fetch(u);if(!r.ok)continue;
+   const d=await r.json();
+   const pages=Object.values((d.query&&d.query.pages)||{}).sort((a,b)=>a.index-b.index);
+   const p=pages.find(x=>x.extract&&!seen.has(x.pageid));
+   if(p){seen.add(p.pageid);out.push({title:p.title,url:p.fullurl,text:p.extract.trim().replace(/\n{2,}/g,'\n')})}
+  }catch(e){}
+ }
+ return out.slice(0,4);
+}
+
+/* --- определение типа и направления канала --- */
+async function tgClassify(){
+ const t=tgs;
+ const r=await chatAI([
+  {role:'system',content:'Ты классификатор Telegram-каналов. Отвечай ТОЛЬКО валидным JSON без пояснений. Ничего не выдумывай: если из описания нельзя понять — пиши "не определено".'},
+  {role:'user',content:`Канал: «${t.title||t.name}»\nОписание канала (разбор его постов):\n${t.analysis.slice(0,1500)}\n\nОпредели и верни JSON вида:\n{"type":"общая категория, 1-3 слова, например Игры","sub":"конкретное направление, например Counter-Strike","queries":["до 3 точных названий статей русской Википедии по этой теме"]}`}
+ ],300);
+ try{
+  const j=JSON.parse((r.match(/\{[\s\S]*\}/)||['{}'])[0]);
+  return{type:String(j.type||'').trim(),sub:String(j.sub||'').trim(),queries:Array.isArray(j.queries)?j.queries.map(x=>String(x).trim()).filter(Boolean).slice(0,3):[]};
+ }catch(e){return{type:'',sub:'',queries:[]}}
+}
+
+/* --- генерация оригинального поста только по найденным фактам --- */
+async function tgGenerate(topic,avoid){
+ const t=tgs;
+ const F=t.facts.length?t.facts.map((f,i)=>`[${i+1}] ${f.title} (Википедия): ${f.text}`).join('\n\n'):'ФАКТОВ НЕ НАЙДЕНО.';
+ const dir=[t.type,t.sub].filter(x=>!noDef(x)).join(' → ')||'не определено';
+ const sys=`Ты автор Telegram-канала «${t.title||t.name}». Направление канала: ${dir}.
+Задача: написать ОДИН новый оригинальный пост по теме.
+ПРАВДИВОСТЬ (строго):
+1. Конкретные факты (имена, названия, цифры, даты, версии, цены, события, цитаты) бери ТОЛЬКО из блока «ПРОВЕРЕННЫЕ ФАКТЫ».
+2. Ничего не выдумывай и не додумывай. Не придумывай «свежие новости», обновления, рекорды, статистику.
+3. Если фактов мало или они не по теме — пиши общими формулировками без конкретики или задай вопрос аудитории. Лучше короче, чем с выдумкой.
+ОРИГИНАЛЬНОСТЬ: не переписывай и не копируй ничего из описания канала, пиши свой текст по теме. Из описания канала бери только стиль: структуру, тон, длину, подачу, эмодзи — но не факты.
+ОФОРМЛЕНИЕ как в Telegram (HTML-теги): заголовок в <b>…</b>; важное — <b>; акценты — <i>; главную мысль или факт оформи цитатой <blockquote>…</blockquote>; термины — <code>…</code>; 3–6 уместных эмодзи. Без Markdown, без пояснений — только текст поста.`;
+ const usr=`Описание стиля канала (используй только оформление и тон):\n${t.analysis.slice(0,1200)}\n\nТема поста: ${topic||'выбери сам, опираясь на факты ниже'}\n\nПРОВЕРЕННЫЕ ФАКТЫ:\n${F}${avoid?`\n\nПрошлый вариант начинался так: «${avoid}». Не повторяй его, возьми другой ракурс.`:''}`;
+ return tgClean(await chatAI([{role:'system',content:sys},{role:'user',content:usr}],1000));
+}
+
+/* --- вывод результата --- */
+function tgBubble(){
+ const t=tgs,w=el('div','tgm');
+ const av=el('div','tgav',(t.title||t.name||'?')[0].toUpperCase());
+ const b=el('div','tgb');
+ b.append(el('div','tgnm',t.title||('@'+t.name)));
+ const body=el('div','tgbody');body.innerHTML=t.html;
+ if(tgPrem)premiumize(body);
+ body.onclick=e=>{const sp=e.target.closest&&e.target.closest('tg-spoiler');if(sp)sp.classList.toggle('show')};
+ b.append(body,el('div','tgf','черновик'));
+ w.append(av,b);return w;
+}
 function tgRender(){
  const o=$('#tgo');if(!o||!tgs)return;o.innerHTML='';const t=tgs;
  const box=el('div','tgw');
- // 1. прочитано
+ // 1. канал, тип, факты
  const r1=el('div','rs');
  r1.innerHTML=`<h3><span class="ib">${svg('check',16)}</span>Канал прочитан — <span></span></h3>`;
  r1.querySelector('h3 span:last-child').textContent=t.title||('@'+t.name);
  const sg=el('div','sg');
- [[t.count||'—','постов прочитано'],['@'+t.name,'канал']].forEach(([v,l])=>{const c=el('div','sc2');c.innerHTML='<b></b><small></small>';c.querySelector('b').textContent=v;c.querySelector('small').textContent=l;sg.append(c)});
- r1.append(sg);box.append(r1);
- // 2. разбор
+ [[noDef(t.type)?'не определено':t.type,'тип канала'],[noDef(t.sub)?'не определено':t.sub,'направление'],[t.count||'—','постов прочитано'],[t.facts?t.facts.length:0,'фактов найдено']].forEach(([v,l])=>{const c=el('div','sc2');c.innerHTML='<b></b><small></small>';c.querySelector('b').textContent=v;c.querySelector('small').textContent=l;sg.append(c)});
+ r1.append(sg);
+ if(t.facts&&t.facts.length){
+  const srcs=el('div','srcs');srcs.style.display='none';
+  t.facts.forEach(f=>{const d=el('div','src');const a=el('a','',f.title);a.href=f.url;a.target='_blank';a.rel='noopener';d.append(a,el('p','',f.text));srcs.append(d)});
+  const tb=el('button','btn g sm');tb.style.marginTop='12px';tb.innerHTML=svg('chev',15)+'<span>Показать источники фактов</span>';
+  tb.onclick=()=>{const open=srcs.style.display==='none';srcs.style.display=open?'grid':'none';tb.querySelector('span').textContent=open?'Скрыть источники':'Показать источники фактов'};
+  r1.append(tb,srcs);
+ }else r1.append(el('div','note','По этой теме не нашлось проверенных фактов в Википедии, поэтому пост написан без конкретики.'));
+ box.append(r1);
+ // 2. стиль
  if(t.analysis){const r2=el('div','rs');r2.innerHTML=`<h3><span class="ib">${svg('chart',16)}</span>Как устроены посты канала</h3>`;r2.append(el('div','txt',t.analysis.replace(/\*\*/g,'')));box.append(r2)}
- // 3. новый пост
- const r3=el('div','rs');r3.innerHTML=`<h3><span class="ib">${svg('spark',16)}</span>Похожий пост<span class="grow"></span></h3>`;
+ // 3. пост
+ const r3=el('div','rs');r3.innerHTML=`<h3><span class="ib">${svg('spark',16)}</span>Новый пост<span class="grow"></span></h3>`;
  const bs=el('div');bs.style.cssText='display:flex;gap:6px;flex-wrap:wrap';
  const cp=el('button','btn g sm');cp.innerHTML=svg('copy',15)+'<span>Копировать</span>';
+ const cd=el('button','btn g sm');cd.innerHTML=svg('code',15)+'<span>Код</span>';
  const rg=el('button','btn sm');rg.innerHTML=svg('refresh',15)+'<span>Ещё вариант</span>';
- bs.append(cp,rg);r3.querySelector('h3').append(bs);
- const gen=el('div','gen txt',t.gen||'');if(!t.gen)gen.style.display='none';r3.append(gen);
- if(t.err){r3.append(el('div','st er',t.err))}
- cp.onclick=()=>{if(!tgs.gen)return;navigator.clipboard&&navigator.clipboard.writeText(tgs.gen);cp.querySelector('span').textContent='Скопировано ✓';setTimeout(()=>cp.querySelector('span').textContent='Копировать',1500)};
+ bs.append(cp,cd,rg);r3.querySelector('h3').append(bs);
+ const sg2=el('div','seg'+(tgPrem?'':' l'));sg2.style.cssText='max-width:280px;margin-bottom:4px';
+ sg2.innerHTML=`<i></i><button data-v="1" class="${tgPrem?'on':''}">✨ Премиум</button><button data-v="0" class="${tgPrem?'':'on'}">Обычные</button>`;
+ r3.append(sg2);
+ const holder=el('div');r3.append(holder);
+ const paintPost=()=>{holder.innerHTML='';if(tgs.html)holder.append(tgBubble())};
+ sg2.onclick=e=>{const b=e.target.closest('button');if(!b)return;tgPrem=b.dataset.v==='1';localStorage.setItem('vagent_pe',tgPrem?'1':'0');sg2.classList.toggle('l',!tgPrem);[...sg2.querySelectorAll('button')].forEach(x=>x.classList.toggle('on',x===b));paintPost()};
+ paintPost();
+ if(t.err)r3.append(el('div','st er',t.err));
+ r3.append(el('div','note','Факты взяты из Википедии, а не из свежих новостей. Перед публикацией проверь их — ИИ тоже может ошибаться.'));
+ const flash=(b,txt,orig)=>{b.querySelector('span').textContent=txt;setTimeout(()=>b.querySelector('span').textContent=orig,1500)};
+ cp.onclick=async()=>{
+  if(!tgs.html)return;
+  const tmp=document.createElement('div');tmp.innerHTML=tgs.html;const text=tmp.textContent;
+  try{await navigator.clipboard.write([new ClipboardItem({'text/html':new Blob([tgs.html.replace(/\n/g,'<br>')],{type:'text/html'}),'text/plain':new Blob([text],{type:'text/plain'})})])}
+  catch(e){try{await navigator.clipboard.writeText(text)}catch(_){}}
+  flash(cp,'Скопировано ✓','Копировать');
+ };
+ cd.onclick=()=>{if(!tgs.html)return;navigator.clipboard&&navigator.clipboard.writeText(tgs.html);flash(cd,'Скопировано ✓','Код')};
  rg.onclick=async()=>{
-  rg.disabled=true;gen.style.display='block';gen.style.opacity='.5';
-  try{tgs.gen=await tgGenerate((($('#tgt')||{}).value||'').trim());tgs.err='';gen.textContent=tgs.gen;const er=r3.querySelector('.st.er');if(er)er.remove()}
-  catch(e){const er=r3.querySelector('.st.er')||r3.appendChild(el('div','st er'));er.textContent=e.message}
-  gen.style.opacity='1';rg.disabled=false;
+  rg.disabled=true;holder.style.opacity='.5';
+  try{
+   const avoid=(tgs.html||'').replace(/<[^>]+>/g,'').slice(0,80);
+   tgs.html=await tgGenerate((($('#tgt')||{}).value||'').trim(),avoid);tgs.err='';
+   const er=r3.querySelector('.st.er');if(er)er.remove();paintPost();
+  }catch(e){const er=r3.querySelector('.st.er')||r3.appendChild(el('div','st er'));er.textContent=e.message}
+  holder.style.opacity='1';rg.disabled=false;
  };
  box.append(r3);
  [...box.children].forEach((c,i)=>c.style.setProperty('--i',i));
@@ -848,40 +995,48 @@ async function tgAnalyze(){
  if(!ch){s.className='st er';s.textContent='Не похоже на ссылку. Пример: t.me/durov';return}
  const k=cf();
  if(!k){s.className='st er';s.textContent='Сначала добавь ключ Cloudflare в настройках — он нужен для ИИ.';return}
+ const topic=($('#tgt').value||'').trim();
  btn.disabled=true;o.innerHTML='';
  const sl=el('div','steps tgn');
- ['Загружаю последние посты','Разбираю стиль и тематику','Пишу похожий пост'].forEach(t=>{const r=el('div','stp');r.innerHTML='<i></i><span></span>';r.querySelector('span').textContent=t;sl.append(r)});
+ ['Читаю канал и разбираю стиль','Определяю тип и направление','Ищу проверенные факты по теме','Пишу оригинальный пост'].forEach(t=>{const r=el('div','stp');r.innerHTML='<i></i><span></span>';r.querySelector('span').textContent=t;sl.append(r)});
  o.append(sl);
  const mark=(i,c)=>{if(sl.children[i])sl.children[i].className='stp '+c};
- mark(0,'run');
- // сервер отвечает одним запросом, поэтому шаги показываем по таймеру
- const t1=setTimeout(()=>{mark(0,'done');mark(1,'run')},2500);
- const t2=setTimeout(()=>{mark(1,'done');mark(2,'run')},6000);
+ let loaded=false;
  try{
+  mark(0,'run');
   let r;
-  try{
-   r=await fetch(API+'/tg/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({channel:ch,topic:($('#tgt').value||'').trim(),token:k.token,account_id:k.account})});
-  }catch(e){throw new Error('Нет связи с сервером')}
+  try{r=await fetch(API+'/tg/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({channel:ch,topic:'',token:k.token,account_id:k.account})})}
+  catch(e){throw new Error('Нет связи с сервером')}
   const d=await r.json().catch(()=>({}));
-  if(!r.ok)throw new Error(d.error||'Не удалось проанализировать канал');
+  if(!r.ok)throw new Error(d.error||'Не удалось прочитать канал');
+  // берём только разбор стиля: готовый пост от сервера не используем, чтобы не копировать чужое
   const res=String(d.result||'').replace(/\*\*/g,'');
-  const a=res.match(/\[АНАЛИЗ СТИЛЯ\]([\s\S]*?)(?=\[НОВЫЙ ПОСТ\]|$)/i);
-  const p=res.match(/\[НОВЫЙ ПОСТ\]([\s\S]*)$/i);
-  tgs={name:ch,title:d.title||'',count:d.posts_count||0,analysis:(a?a[1]:res).trim(),gen:(p?p[1]:'').trim(),err:''};
-  if(!tgs.gen&&!tgs.analysis)throw new Error('Пустой ответ, попробуй ещё раз');
+  const analysis=res.split(/\[НОВЫЙ ПОСТ\]/i)[0].replace(/\[АНАЛИЗ СТИЛЯ\]/i,'').trim();
+  if(!analysis)throw new Error('Пустой ответ, попробуй ещё раз');
+  tgs={name:ch,title:d.title||'',count:d.posts_count||0,analysis,type:'',sub:'',facts:[],html:'',err:''};loaded=true;
+  mark(0,'done');
+  mark(1,'run');
+  const c=await tgClassify();tgs.type=c.type;tgs.sub=c.sub;
+  mark(1,'done');
+  mark(2,'run');
+  let qs=c.queries.slice();
+  if(!qs.length)qs=[c.sub,c.type].filter(x=>!noDef(x));
+  if(topic)qs.unshift(topic);
+  tgs.facts=qs.length?await wikiFacts(qs):[];
+  mark(2,'done');
+  mark(3,'run');
+  tgs.html=await tgGenerate(topic);
+  mark(3,'done');
  }catch(e){
-  clearTimeout(t1);clearTimeout(t2);
-  o.innerHTML='';s.className='st er';s.textContent=e.message;btn.disabled=false;return;
+  if(loaded&&tgs){tgs.err=e.message}else{o.innerHTML='';s.className='st er';s.textContent=e.message;btn.disabled=false;return}
  }
- clearTimeout(t1);clearTimeout(t2);
- [0,1,2].forEach(i=>mark(i,'done'));
  btn.disabled=false;tgRender();
 }
 function tg(m){
  const sc=el('div','scroll');
  const w=el('div','tgw');
  const a=el('div','card tga');
- a.innerHTML=`<h3><span class="ib">${svg('chart',17)}</span>Анализ канала</h3><p>Вставь ссылку на публичный Telegram-канал. Я прочитаю его последние посты, покажу, как они построены, и напишу похожий пост.</p>
+ a.innerHTML=`<h3><span class="ib">${svg('chart',17)}</span>Анализ канала</h3><p>Вставь ссылку на публичный Telegram-канал. Я определю его тип и направление, найду проверенные факты по теме и напишу новый оригинальный пост в стиле канала.</p>
  <input class="f" id="tgl" placeholder="t.me/название_канала или @название" autocomplete="off" autocapitalize="off" spellcheck="false">
  <input class="f" id="tgt" placeholder="Тема нового поста (необязательно)" autocomplete="off">
  <div class="row"><button class="btn" id="tga">${svg('search',16)}<span>Анализировать</span></button></div><div class="st" id="tgs"></div>`;
