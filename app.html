@@ -350,6 +350,25 @@ main{flex:1;min-height:0;position:relative;display:flex;flex-direction:column;wi
 .cloud-steps li { margin-bottom: 6px; }
 .cloud-steps a { color: var(--ac); text-decoration: underline; cursor: pointer; }
 
+/* === ФОРМАТИРОВАНИЕ ИЗ TELEGRAM === */
+.fmt{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding-top:12px}
+.fmt .card{display:flex;flex-direction:column;min-width:0}
+.fmt .hd{display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.fmt .hd h3{margin:0;flex:1;min-width:120px}
+.fmt .hd small{color:var(--mute);font-size:12px}
+.fmt .ed,.fmt .out{min-height:280px;max-height:60dvh;overflow:auto;padding:12px 14px;border-radius:14px;background:var(--p2);border:1px solid var(--line);outline:0;white-space:pre-wrap;word-break:break-word;font-size:15px;transition:border-color .15s;-webkit-overflow-scrolling:touch}
+.fmt .ed{-webkit-user-select:text;user-select:text}
+.fmt .ed:focus{border-color:var(--ac)}
+.fmt .ed:empty:before{content:attr(data-ph);color:var(--dim)}
+.fmt .out{margin:0;font:13px/1.55 ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--ink);-webkit-user-select:text;user-select:text}
+.fmt .ed a{color:var(--ac);text-decoration:underline}
+.fmt .ed blockquote{border-left:3px solid var(--ac);padding:2px 10px;margin:4px 0;background:var(--p3);border-radius:0 8px 8px 0}
+.fmt .ed code{font-family:ui-monospace,Consolas,monospace;background:var(--p3);padding:1px 5px;border-radius:5px}
+.fmt .ed pre{background:var(--p3);padding:10px;border-radius:10px;overflow:auto;margin:4px 0}
+.fmt .ed tg-spoiler{background:var(--dim);color:transparent;border-radius:4px;transition:.2s;cursor:pointer}
+.fmt .ed tg-spoiler:hover,.fmt .ed tg-spoiler.show{background:var(--p3);color:inherit}
+.fmt .hint{color:var(--mute);font-size:12px;margin-top:8px}
+
 
 @media(min-width:900px){
  .gearf{display:grid;position:fixed;top:18px;right:24px;z-index:5}
@@ -365,7 +384,18 @@ main{flex:1;min-height:0;position:relative;display:flex;flex-direction:column;wi
  .cards{grid-template-columns:1fr 1fr}.cards .who,.cards .span2{grid-column:span 2}
  .pwa{display:none!important}
 }
-@media(max-width:899px){.qc.big{grid-column:span 1}.qc:first-child{grid-column:span 2}.m .bd{max-width:90%}}
+@media(max-width:899px){
+ .qc.big{grid-column:span 1}.qc:first-child{grid-column:span 2}.m .bd{max-width:90%}
+ /* форматирование — удобно с телефона */
+ .fmt{grid-template-columns:1fr;gap:10px;padding-top:6px}
+ .fmt .card{padding:14px;border-radius:20px}
+ .fmt .ed,.fmt .out{min-height:170px;max-height:36dvh;font-size:16px}
+ .fmt .out{font-size:13px}
+ .fmt .hd .btn{padding:9px 14px}
+ .fmt .hd h3{flex-basis:100%}
+ .fmt .hd .btn,.fmt .hd small{order:2}
+ .fmt .hd .grow{flex:1}
+}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -468,7 +498,7 @@ const USER=localStorage.getItem('vagent_user');
 if(!USER)location.href='web.html';
 const $=s=>document.querySelector(s);
 const el=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e};
-const P={home:'<path d="M3 11l9-8 9 8"/><path d="M5 10v10h5v-6h4v6h5V10"/>',chat:'<path d="M21 12a8 8 0 0 1-11.6 7.1L3 21l1.9-5.4A8 8 0 1 1 21 12z"/>',image:'<rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="1.6"/><path d="M21 16l-5-5-9 9"/>',bulb:'<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/>',grid:'<rect x="3" y="3" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="2"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="2"/>',hash:'<path d="M5 9h15M4 15h15M10 3L8 21M16 3l-2 18"/>',send:'<path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4z"/>',user:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',film:'<rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M3 9h18M3 15h18M8 4v16M16 4v16"/>',lock:'<rect x="5" y="11" width="14" height="10" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',spark:'<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8z"/>',sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',moon:'<path d="M21 13A9 9 0 1 1 11 3a7 7 0 0 0 10 10z"/>',up:'<path d="M12 19V5M5 12l7-7 7 7"/>',plus:'<path d="M12 5v14M5 12h14"/>',chev:'<path d="M6 9l6 6 6-6"/>',arrow:'<path d="M7 17L17 7M8 7h9v9"/>',copy:'<rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/>',down:'<path d="M12 4v12M6 11l6 6 6-6M5 21h14"/>',out:'<path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3M10 8l-4 4 4 4M6 12h11"/>',check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',key:'<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M16 7l3 3"/>',alert:'<path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18v.01"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',zap:'<path d="M13 2L4 14h7l-1 8 9-12h-7z"/>',bot:'<rect x="4" y="8" width="16" height="12" rx="4"/><path d="M12 8V5M9 14v.01M15 14v.01"/><circle cx="12" cy="3.6" r="1.1"/><path d="M2 13v3M22 13v3"/>',gear:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>',trash:'<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>',pal:'<circle cx="12" cy="12" r="9"/><path d="M12 3v18"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/>',shield:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/>',info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.01"/>'};
+const P={home:'<path d="M3 11l9-8 9 8"/><path d="M5 10v10h5v-6h4v6h5V10"/>',chat:'<path d="M21 12a8 8 0 0 1-11.6 7.1L3 21l1.9-5.4A8 8 0 1 1 21 12z"/>',image:'<rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="1.6"/><path d="M21 16l-5-5-9 9"/>',bulb:'<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/>',grid:'<rect x="3" y="3" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="2"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="2"/>',hash:'<path d="M5 9h15M4 15h15M10 3L8 21M16 3l-2 18"/>',send:'<path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4z"/>',user:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',film:'<rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M3 9h18M3 15h18M8 4v16M16 4v16"/>',lock:'<rect x="5" y="11" width="14" height="10" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',spark:'<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8z"/>',sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',moon:'<path d="M21 13A9 9 0 1 1 11 3a7 7 0 0 0 10 10z"/>',up:'<path d="M12 19V5M5 12l7-7 7 7"/>',plus:'<path d="M12 5v14M5 12h14"/>',chev:'<path d="M6 9l6 6 6-6"/>',arrow:'<path d="M7 17L17 7M8 7h9v9"/>',copy:'<rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/>',down:'<path d="M12 4v12M6 11l6 6 6-6M5 21h14"/>',out:'<path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3M10 8l-4 4 4 4M6 12h11"/>',check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',key:'<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M16 7l3 3"/>',alert:'<path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18v.01"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',zap:'<path d="M13 2L4 14h7l-1 8 9-12h-7z"/>',bot:'<rect x="4" y="8" width="16" height="12" rx="4"/><path d="M12 8V5M9 14v.01M15 14v.01"/><circle cx="12" cy="3.6" r="1.1"/><path d="M2 13v3M22 13v3"/>',gear:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>',trash:'<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>',pal:'<circle cx="12" cy="12" r="9"/><path d="M12 3v18"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/>',shield:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/>',info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.01"/>',code:'<path d="M8 8l-5 4 5 4M16 8l5 4-5 4M14 5l-4 14"/>'};
 const svg=(n,s=20)=>`<svg viewBox="0 0 24 24" width="${s}" height="${s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${P[n]}</svg>`;
 function paintTheme(){const d=document.documentElement.dataset.theme==='dark';const b=$('#tsd');if(b)b.innerHTML=svg(d?'sun':'moon',18);const g=$('#gm');if(g)g.innerHTML=svg('gear',19);const f=$('#gf');if(f)f.innerHTML=svg('gear',19);[g,f].forEach(x=>x&&(x.hidden=st.view==='me'))}
 function setTheme(t){const r=document.documentElement;if(r.dataset.theme===t)return;r.dataset.theme=t;localStorage.setItem('vagent_theme',t);const m=document.querySelector('meta[name=theme-color]');if(m)m.content=t==='dark'?'#07080D':'#EFF1F7';paintTheme();const b=$('#tsd');if(b){b.classList.remove('spin');void b.offsetWidth;b.classList.add('spin')}const sg=$('#seg');if(sg){sg.classList.toggle('l',t==='light');[...sg.querySelectorAll('button')].forEach(x=>x.classList.toggle('on',x.dataset.t===t))}}
@@ -584,8 +614,8 @@ async function ai(path,body){
 }
 const chatAI=(messages,max)=>ai('/ai/text',{messages,max_tokens:max||900}).then(d=>(d.text||'').trim());
 
-const SIDE=[['home','home','Главная'],['grp','Нейросети'],['chat','chat'],['image','image'],['ideas','bulb'],['templates','grid'],['hashtags','hash'],['grp','Ещё'],['tg','send','Telegram',1],['me','gear','Настройки']];
-const TABS=[['home','home','Главная'],['neuro','spark','Нейросети'],['tg','send','Telegram',1],['me','gear','Настройки']];
+const SIDE=[['home','home','Главная'],['grp','Нейросети'],['chat','chat'],['image','image'],['ideas','bulb'],['templates','grid'],['hashtags','hash'],['grp','Ещё'],['fmt','code','Форматирование'],['tg','send','Telegram',1],['me','gear','Настройки']];
+const TABS=[['home','home','Главная'],['neuro','spark','Нейросети'],['fmt','code','Формат'],['tg','send','Telegram',1],['me','gear','Настройки']];
 function go(v,mode){if(mode)st.mode=mode;st.view=v;drawNav();draw()}
 function drawNav(){
  const on=n=>st.view==='neuro'?n===st.mode:n===st.view;
@@ -611,7 +641,7 @@ function drawNav(){
 }
 function draw(){
  const m=$('#main');m.innerHTML='';m.classList.remove('view');void m.offsetWidth;m.classList.add('view');paintTheme();
- if(st.view==='home')home(m);else if(st.view==='neuro')neuro(m);else if(st.view==='tg')tg(m);else me(m);
+ if(st.view==='home')home(m);else if(st.view==='neuro')neuro(m);else if(st.view==='fmt')fmt(m);else if(st.view==='tg')tg(m);else me(m);
 }
 function home(m){
  const sc=el('div','scroll stg');const hr=new Date().getHours();
@@ -626,9 +656,126 @@ function home(m){
  const s=el('div','sec');s.innerHTML='<h3>Быстрый доступ</h3>';sc.append(s);
  const g=el('div','bento stg');g.style.setProperty('--b',3);
  Object.entries(MODES).forEach(([id,c],i)=>{const b=el('button','qc'+(i<2?' big':''));b.style.setProperty('--c',c.c);b.innerHTML=`<span class="ib">${svg(c.i,24)}</span><div><b>${c.t}</b><small>${c.s}</small></div><span class="go">${svg('arrow',18)}</span>`;b.onclick=()=>go('neuro',id);g.append(b)});
+ const fm=el('button','qc wide');fm.style.setProperty('--c','#38BDF8');fm.innerHTML=`<span class="ib">${svg('code',24)}</span><div><b>Форматирование</b><small>Текст из Telegram → код с тегами</small></div><span class="go">${svg('arrow',18)}</span>`;fm.onclick=()=>go('fmt');g.append(fm);
  const v=el('button','qc wide off');v.innerHTML=`<span class="ib">${svg('film',24)}</span><div><b>Видео</b><small>Пересказ и промпт — в приложении</small></div><span class="go">${svg('lock',18)}</span>`;v.onclick=()=>go('tg');g.append(v);
  [...sc.children].forEach((c,i)=>c.style.setProperty('--i',i));[...g.children].forEach((c,i)=>c.style.setProperty('--i',i));sc.append(g);m.append(sc);
 }
+
+/* ===== ФОРМАТИРОВАНИЕ: текст из Telegram → код (Telegram HTML) ===== */
+function tgFromNode(root){
+  const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const BLOCK=/^(DIV|P|LI|UL|OL|H[1-6]|TR)$/;
+  const wrap=(t,tag,a)=>t.trim()?`<${tag}${a||''}>${t}</${tag}>`:t;
+  function walk(n){
+    if(n.nodeType===3)return esc(n.nodeValue.replace(/\u00a0/g,' ').replace(/\u200b/g,''));
+    if(n.nodeType!==1)return '';
+    const tag=n.nodeName;
+    if(/^(SCRIPT|STYLE|META|HEAD|IFRAME|OBJECT)$/.test(tag))return '';
+    if(tag==='BR')return '\n';
+    let out=[...n.childNodes].map(walk).join('');
+    const s=n.style||{},fw=String(s.fontWeight||''),td=(s.textDecorationLine||s.textDecoration||'');
+    const bold=/^(B|STRONG)$/.test(tag)||fw==='bold'||+fw>=600;
+    const ital=/^(I|EM)$/.test(tag)||s.fontStyle==='italic';
+    const und=tag==='U'||/underline/.test(td);
+    const strk=/^(S|STRIKE|DEL)$/.test(tag)||/line-through/.test(td);
+    const mono=/^(CODE|TT)$/.test(tag)||/mono|consolas|courier/i.test(s.fontFamily||'');
+    const spo=tag==='TG-SPOILER'||(n.classList&&n.classList.contains('spoiler'))||(n.dataset&&n.dataset.entityType==='MessageEntitySpoiler');
+    if(tag==='PRE')out=wrap(out,'pre');
+    else if(mono)out=wrap(out,'code');
+    if(bold)out=wrap(out,'b');
+    if(ital)out=wrap(out,'i');
+    if(und)out=wrap(out,'u');
+    if(strk)out=wrap(out,'s');
+    if(spo)out=wrap(out,'tg-spoiler');
+    if(tag==='A'){
+      const hr=(n.getAttribute('href')||'').trim();
+      if(/^(https?:|tg:|mailto:)/i.test(hr))out=wrap(out,'a',` href="${hr.replace(/&/g,'&amp;').replace(/"/g,'&quot;')}"`);
+    }
+    if(tag==='BLOCKQUOTE')out=wrap(out.trim(),'blockquote',n.hasAttribute('expandable')?' expandable':'');
+    if((BLOCK.test(tag)||tag==='BLOCKQUOTE')&&out&&!out.endsWith('\n'))out+='\n';
+    return out;
+  }
+  return walk(root).replace(/\n+$/,'');
+}
+const tgFromHtml=h=>tgFromNode(new DOMParser().parseFromString(h,'text/html').body);
+const escTxt=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+function fmt(m){
+  const sc=el('div','scroll');
+  sc.innerHTML=`<div class="fmt">
+    <div class="card">
+      <div class="hd"><h3>Текст из Telegram</h3>
+        <span class="grow"></span>
+        <button class="btn g sm" id="fpst">${svg('copy',15)}<span>Вставить</span></button>
+        <button class="btn g sm" id="fclr">${svg('trash',15)}<span>Очистить</span></button>
+      </div>
+      <div class="ed" id="fed" contenteditable="true" spellcheck="false" autocapitalize="off" data-ph="Скопируй пост в Telegram и вставь сюда — оформление сохранится"></div>
+      <div class="hint">На телефоне: нажми «Вставить» или удержи палец в поле → «Вставить».</div>
+    </div>
+    <div class="card">
+      <div class="hd"><h3>Код</h3><small id="fcnt"></small>
+        <span class="grow"></span>
+        <button class="btn sm" id="fcp">${svg('code',15)}<span>Копировать код</span></button>
+      </div>
+      <pre class="out" id="fout"></pre>
+      <div class="hint">Telegram HTML — вставляй в бота с parse_mode=HTML.</div>
+    </div></div>`;
+  m.append(sc);
+  const ed=$('#fed'),out=$('#fout');
+  const upd=()=>{
+    if(!ed.textContent.trim()&&!ed.querySelector('img'))ed.innerHTML='';
+    const code=tgFromNode(ed);out.textContent=code;$('#fcnt').textContent=code?code.length+' симв.':'';
+  };
+  const ins=html=>{
+    ed.focus();
+    if(!document.execCommand('insertHTML',false,html))ed.insertAdjacentHTML('beforeend',html);
+    upd();
+  };
+  ed.addEventListener('paste',e=>{
+    e.preventDefault();
+    const cd=e.clipboardData,html=cd.getData('text/html'),txt=cd.getData('text/plain');
+    ins(html?tgFromHtml(html):escTxt(txt));
+  });
+  ed.addEventListener('input',upd);
+  ed.addEventListener('click',e=>{const sp=e.target.closest&&e.target.closest('tg-spoiler');if(sp)sp.classList.toggle('show')});
+  /* Кнопка «Вставить» — для телефона (читает буфер обмена) */
+  $('#fpst').onclick=async()=>{
+    const lab=$('#fpst span');
+    try{
+      let done=false;
+      if(navigator.clipboard&&navigator.clipboard.read){
+        const items=await navigator.clipboard.read();
+        for(const it of items){
+          if(it.types.includes('text/html')){
+            const h=await(await it.getType('text/html')).text();
+            ins(tgFromHtml(h));done=true;break;
+          }
+        }
+      }
+      if(!done){
+        const t=await navigator.clipboard.readText();
+        if(t){ins(escTxt(t));done=true}
+      }
+      if(!done)throw new Error('empty');
+    }catch(e){
+      ed.focus();lab.textContent='Удержи в поле → Вставить';
+      setTimeout(()=>lab.textContent='Вставить',2600);
+    }
+  };
+  $('#fclr').onclick=()=>{ed.innerHTML='';upd();ed.focus()};
+  $('#fcp').onclick=()=>{
+    const b=$('#fcp span'),code=out.textContent;if(!code)return;
+    const ok=()=>{b.textContent='Скопировано ✓';setTimeout(()=>b.textContent='Копировать код',1500)};
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(code).then(ok,()=>fallback())}else fallback();
+    function fallback(){
+      const r=document.createRange();r.selectNodeContents(out);const s=getSelection();s.removeAllRanges();s.addRange(r);
+      try{document.execCommand('copy');ok()}catch(e){}
+      s.removeAllRanges();
+    }
+  };
+  upd();
+}
+
 function tg(m){
  const sc=el('div','scroll');
  sc.innerHTML=`<div class="lockp"><div class="ib">${svg('lock',38)}</div><h3>Только в приложении</h3><p>Эти функции работают в приложении V-Agent и доступны по Premium-подписке.</p>
