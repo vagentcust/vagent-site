@@ -442,10 +442,6 @@ main{flex:1;min-height:0;position:relative;display:flex;flex-direction:column;wi
  .fmt .hd .grow{flex:1}
 }
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
-
-/* Telegram automation */
-.tgauto{display:grid;gap:12px}.tgauto .card{padding:18px}.tgauto .f{display:block}.tgstatus{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:8px 0 12px}.tgstatus .badge{font-size:12px}.tggrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.tggrid>*{min-width:0}.tghelp{font-size:12px;color:var(--mute);line-height:1.5;margin-top:8px}.tgcheck{display:flex;align-items:center;gap:9px;padding:11px 12px;background:var(--p2);border:1px solid var(--line);border-radius:13px;font-size:13px}.tgcheck input{accent-color:var(--ac);width:17px;height:17px}.tgactions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.tgpreview{white-space:pre-wrap;word-break:break-word;background:var(--p2);border:1px solid var(--line);padding:13px;border-radius:14px;font-size:13px}.tgauto h3{margin-bottom:6px}.tgauto .f:disabled{opacity:.55}@media(max-width:420px){.tggrid{grid-template-columns:1fr}}
-
 </style>
 </head>
 <body>
@@ -541,7 +537,6 @@ window.addEventListener('load', () => {
 
 const API='https://vagent-backend.novalaim11.workers.dev';
 const USER=localStorage.getItem('vagent_user');
-const SESSION=localStorage.getItem('vagent_session_token')||'';
 if(!USER)location.href='web.html';
 const $=s=>document.querySelector(s);
 const el=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e};
@@ -664,7 +659,7 @@ async function ai(path,body){
 const chatAI=(messages,max)=>ai('/ai/text',{messages,max_tokens:max||900}).then(d=>{const t=d.text;return (typeof t==='string'?t:t==null?'':JSON.stringify(t)).trim()});
 
 const SIDE=[['home','home','Главная'],['grp','Нейросети'],['chat','chat'],['image','image'],['ideas','bulb'],['templates','grid'],['hashtags','hash'],['grp','Ещё'],['an','chart','Анализ канала'],['tg','send','Telegram',1],['me','gear','Настройки']];
-const TABS=[['home','home','Главная'],['neuro','spark','Нейросети'],['an','chart','Анализ'],['tg','send','Telegram'],['me','gear','Настройки']];
+const TABS=[['home','home','Главная'],['neuro','spark','Нейросети'],['an','chart','Анализ'],['tg','send','Telegram',1],['me','gear','Настройки']];
 function go(v,mode){if(mode)st.mode=mode;st.view=v;drawNav();draw()}
 function drawNav(){
  const on=n=>st.view==='neuro'?n===st.mode:n===st.view;
@@ -980,7 +975,7 @@ function tgRender(){
  const cp=el('button','btn g sm');cp.innerHTML=svg('copy',15)+'<span>Копировать</span>';
  const cd=el('button','btn g sm');cd.innerHTML=svg('code',15)+'<span>Код</span>';
  const rg=el('button','btn sm');rg.innerHTML=svg('refresh',15)+'<span>Ещё вариант</span>';
- const pub=el('button','btn sm');pub.innerHTML=svg('send',15)+'<span>Опубликовать сейчас</span>';bs.append(cp,cd,rg,pub);r3.querySelector('h3').append(bs);
+ bs.append(cp,cd,rg);r3.querySelector('h3').append(bs);
  const sg2=el('div','seg'+(tgPrem?'':' l'));sg2.style.cssText='max-width:280px;margin-bottom:4px';
  sg2.innerHTML=`<i></i><button data-v="1" class="${tgPrem?'on':''}">✨ Премиум</button><button data-v="0" class="${tgPrem?'':'on'}">Обычные</button>`;
  r3.append(sg2);
@@ -999,7 +994,6 @@ function tgRender(){
   flash(cp,'Скопировано ✓','Копировать');
  };
  cd.onclick=()=>{if(!tgs.html)return;navigator.clipboard&&navigator.clipboard.writeText(tgs.html);flash(cd,'Скопировано ✓','Код')};
- pub.onclick=async()=>{if(!tgs.html)return;pub.disabled=true;try{const tmp=document.createElement('div');tmp.innerHTML=tgs.html;const d=await tgApi('/tg/publish',{text:tmp.textContent.trim()});flash(pub,'Опубликовано ✓','Опубликовать сейчас');addNotification('Пост опубликован в Telegram','success')}catch(e){flash(pub,'Ошибка: '+e.message,'Опубликовать сейчас')}finally{pub.disabled=false}};
  rg.onclick=async()=>{
   rg.disabled=true;holder.style.opacity='.5';
   try{
@@ -1009,6 +1003,9 @@ function tgRender(){
   }catch(e){const er=r3.querySelector('.st.er')||r3.appendChild(el('div','st er'));er.textContent=e.message}
   holder.style.opacity='1';rg.disabled=false;
  };
+ const pub=el('button','btn sm');pub.innerHTML=svg('send',15)+'<span>Опубликовать в Telegram</span>';
+ const pubStatus=el('div','st');pub.onclick=()=>tgPublish(pub,pubStatus);
+ const pubRow=el('div','row');pubRow.append(pub);r3.append(pubRow,pubStatus);
  box.append(r3);
  [...box.children].forEach((c,i)=>c.style.setProperty('--i',i));
  box.classList.add('stg');o.append(box);
@@ -1063,47 +1060,73 @@ async function tgAnalyze(){
  btn.disabled=false;tgRender();
 }
 function locked(m){
- const sc=el('div','scroll');const p=el('div','lockp');
- p.innerHTML=`<div class="ib">${svg('lock',38)}</div><h3>Telegram Автопостинг</h3><p>Подключи своего бота и настрой автоматическую публикацию оригинальных постов по тематике канала.</p><div class="feat"><div><span class="ib">${svg('clock',17)}</span>Публикация по расписанию</div><div><span class="ib">${svg('spark',17)}</span>Темы и тексты генерирует ИИ</div><div><span class="ib">${svg('image',17)}</span>Реалистичные изображения или фото из Wikimedia Commons</div></div><button class="btn" id="open-tg">Настроить Telegram</button>`;
- p.querySelector('#open-tg').onclick=()=>go('tg');sc.append(p);m.append(sc);
+ const sc=el('div','scroll');
+ const p=el('div','lockp');
+ p.innerHTML=`<div class="ib">${svg('lock',38)}</div><h3>Telegram-автоматизация</h3><p>Автоведение канала доступно в приложении V-Agent по Premium-подписке.</p>
+ <div class="feat"><div><span class="ib">${svg('clock',17)}</span>Автопостинг в Telegram по расписанию</div><div><span class="ib">${svg('zap',17)}</span>Автосоздание постов для канала</div><div><span class="ib">${svg('film',17)}</span>Разбор видео: текст, пересказ и промпт</div></div>
+ <a class="btn" href="index.html#download">Скачать приложение</a>`;
+ sc.append(p);m.append(sc);
 }
-async function tgApi(path,body,method='POST'){
- if(!SESSION)throw new Error('Сессия не найдена. Выйди из аккаунта и войди снова после обновления страницы входа.');
- const r=await fetch(API+path,{method,headers:{'Content-Type':'application/json','Authorization':'Bearer '+SESSION},...(body?{body:JSON.stringify(body)}:{})});
- const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||'Ошибка Telegram API');return d;
-}
-async function tgRefreshStatus(){
- const s=$('#tg-connection-status');if(!s)return;
- try{const d=await tgApi('/tg/status',null,'GET');s.className='badge '+(d.connected?'ok':'');s.innerHTML='<i></i>'+(d.connected?'Подключён: '+(d.channel||'канал'):'Бот не подключён');
- const a=$('#tg-auto-status');if(a){const z=await tgApi('/tg/auto-status',null,'GET');a.className='badge '+(z.enabled?'ok':'');a.innerHTML='<i></i>'+(z.enabled?'Автопостинг включён':'Автопостинг выключен');if(z.times&&$('#tg-times'))$('#tg-times').value=z.times.join(', ');if(z.image_mode&&$('#tg-image-mode'))$('#tg-image-mode').value=z.image_mode;}
- }catch(e){s.className='badge';s.innerHTML='<i></i>'+(SESSION?'Не удалось проверить':'Нужен повторный вход');}
+function tgSession(){return localStorage.getItem('vagent_session_token')||''}
+async function tgRequest(path,method='GET',body=null){
+ const token=tgSession();
+ if(!token)throw new Error('Сессия не найдена. Выйди из аккаунта и войди снова после обновления web.html (сохранение session_token).');
+ const opt={method,headers:{'Authorization':'Bearer '+token}};
+ if(body!==null){opt.headers['Content-Type']='application/json';opt.body=JSON.stringify(body)}
+ const r=await fetch(API+path,opt);const d=await r.json().catch(()=>({}));
+ if(!r.ok)throw new Error(d.error||'Ошибка Telegram API');return d;
 }
 async function tgConnect(){
- const s=$('#tg-connect-msg'),token=$('#tg-bot-token').value.trim(),channel=$('#tg-channel').value.trim();
- s.className='st';s.textContent='Проверяю токен и права бота…';
- try{const d=await tgApi('/tg/connect',{bot_token:token,channel});s.className='st ok';s.textContent='Бот @'+(d.bot_username||'подключён')+' успешно подключён к '+d.channel;$('#tg-bot-token').value='';await tgRefreshStatus();addNotification('Telegram-бот подключён','success')}
+ const b=$('#tg-connect'),stx=$('#tg-connect-status');if(!b||!stx)return;
+ const bot=($('#tg-bot-token')?.value||'').trim(),channel=($('#tg-channel')?.value||'').trim();
+ stx.className='st';stx.textContent='Подключаю бота…';b.disabled=true;
+ try{const d=await tgRequest('/tg/connect','POST',{bot_token:bot,channel});stx.className='st ok';stx.textContent=d.message||'Бот подключён';$('#tg-bot-token').value='';await tgLoadStatus()}
+ catch(e){stx.className='st er';stx.textContent=e.message}
+ b.disabled=false;
+}
+async function tgLoadStatus(){
+ const s=$('#tg-connection-status');if(!s)return;
+ try{const d=await tgRequest('/tg/status');s.className='st '+(d.connected?'ok':'');s.textContent=d.connected?`Подключён: @${d.bot_username||'бот'} → ${d.channel}`:'Бот пока не подключён';}
  catch(e){s.className='st er';s.textContent=e.message}
 }
-async function tgAutoSave(){
- const s=$('#tg-auto-msg'),k=cf();if(!k){s.className='st er';s.textContent='Сначала добавь ключ Cloudflare в настройках V-Agent.';return}
- const times=$('#tg-times').value.split(',').map(x=>x.trim()).filter(Boolean);
- s.className='st';s.textContent='Сохраняю расписание…';
- try{const d=await tgApi('/tg/auto-save',{times,timezone:Intl.DateTimeFormat().resolvedOptions().timeZone||'UTC',image_mode:$('#tg-image-mode').value,topic:($('#tg-auto-topic').value||'').trim(),account_id:k.account,cf_token:k.token});s.className='st ok';s.textContent=d.message||'Автопостинг настроен';await tgRefreshStatus();addNotification('Настройки автопостинга сохранены','success')}
- catch(e){s.className='st er';s.textContent=e.message}
+async function tgDisconnect(){
+ if(!confirm('Отключить Telegram-бота от V-Agent?'))return;
+ const s=$('#tg-connection-status');try{await tgRequest('/tg/disconnect','POST',{});if(s){s.className='st';s.textContent='Бот отключён'};}
+ catch(e){if(s){s.className='st er';s.textContent=e.message}}
 }
-async function tgAutoStop(){const s=$('#tg-auto-msg');s.className='st';s.textContent='Отключаю…';try{await tgApi('/tg/auto-stop',{});s.className='st ok';s.textContent='Автопостинг остановлен';await tgRefreshStatus()}catch(e){s.className='st er';s.textContent=e.message}}
-async function tgDisconnect(){const s=$('#tg-connect-msg');if(!confirm('Отключить Telegram-бота?'))return;try{await tgApi('/tg/disconnect',{});s.className='st ok';s.textContent='Бот отключён';await tgRefreshStatus()}catch(e){s.className='st er';s.textContent=e.message}}
+async function tgPublish(button,status){
+ if(!tgs?.html){status.textContent='Сначала создай пост';status.className='st er';return}
+ const plain=(()=>{const d=document.createElement('div');d.innerHTML=tgs.html;return d.textContent.trim()})();
+ // Публикуем безопасный HTML-черновик; Telegram Premium владельца не требуется.
+ button.disabled=true;status.className='st';status.textContent='Отправляю пост в канал…';
+ try{const d=await tgRequest('/tg/publish','POST',{text:tgs.html,parse_mode:'HTML'});status.className='st ok';status.textContent=d.message||'Пост опубликован'}
+ catch(e){status.className='st er';status.textContent=e.message}
+ button.disabled=false;
+}
 function tg(m){
- const sc=el('div','scroll');const w=el('div','tgw tgauto');
- const a=el('div','card');a.innerHTML=`<h3><span class="ib">${svg('bot',17)}</span>Подключение Telegram-бота</h3><p>Создай бота через @BotFather, добавь его администратором в свой канал и разреши публикацию сообщений.</p><div class="tgstatus"><span class="badge" id="tg-connection-status"><i></i>Проверяю подключение…</span></div><input class="f" id="tg-bot-token" type="password" placeholder="Токен бота от @BotFather" autocomplete="off"><input class="f" id="tg-channel" placeholder="@username канала или t.me/ссылка" autocomplete="off"><div class="tgactions"><button class="btn" id="tg-connect">Подключить бота</button><button class="btn g" id="tg-disconnect">Отключить</button></div><div class="tghelp">Токен шифруется на сервере AES-GCM. Не отправляй его никому и не вставляй в публичные чаты.</div><div class="st" id="tg-connect-msg"></div>`;
- const b=el('div','card');b.innerHTML=`<h3><span class="ib">${svg('clock',17)}</span>Автоматические публикации</h3><p>V-Agent будет ориентироваться на тематику и стиль канала, создавать новые посты и публиковать их в выбранное время.</p><div class="tgstatus"><span class="badge" id="tg-auto-status"><i></i>Проверяю расписание…</span></div><label class="tghelp" for="tg-auto-topic">Дополнительное направление (необязательно)</label><input class="f" id="tg-auto-topic" placeholder="Например: только новости обновлений и полезные советы"><label class="tghelp" for="tg-times">Время публикаций по местному времени, через запятую</label><input class="f" id="tg-times" value="09:00, 18:00" placeholder="09:00, 18:00"><div class="tggrid"><div><label class="tghelp" for="tg-image-mode">Картинки к постам</label><select class="f" id="tg-image-mode"><option value="off">Без картинок</option><option value="ai">Создавать реалистичные ИИ-фото</option><option value="commons">Искать фото с открытой лицензией</option></select></div><div><label class="tghelp">Частота</label><div class="tgcheck">До 4 постов в день</div></div></div><div class="tghelp">ИИ создаёт оригинальный текст по свежей тематике канала. Для изображений можно выбрать Flux (генерация) или Wikimedia Commons (поиск фото с указанием источника в конце поста).</div><div class="tgactions"><button class="btn" id="tg-auto-save">Сохранить и включить</button><button class="btn g" id="tg-auto-stop">Остановить автопостинг</button></div><div class="st" id="tg-auto-msg"></div>`;
- const c=el('div','card');c.innerHTML=`<h3><span class="ib">${svg('chart',17)}</span>Анализ и пробный пост</h3><p>Сначала проверь тематику канала и посмотри пример публикации перед включением расписания.</p><input class="f" id="tgl" placeholder="t.me/название_канала или @название" autocomplete="off" autocapitalize="off" spellcheck="false"><input class="f" id="tgt" placeholder="Тема поста (необязательно)" autocomplete="off"><div class="tgactions"><button class="btn g" id="tga">${svg('search',16)}<span>Анализировать канал</span></button></div><div class="st" id="tgs"></div><div id="tgo"></div>`;
- w.append(a,b,c);sc.append(w);m.append(sc);
- $('#tg-connect').onclick=tgConnect;$('#tg-disconnect').onclick=tgDisconnect;$('#tg-auto-save').onclick=tgAutoSave;$('#tg-auto-stop').onclick=tgAutoStop;$('#tga').onclick=tgAnalyze;$('#tgl').onkeydown=e=>{if(e.key==='Enter')tgAnalyze()};
- if(tgs)$('#tgl').value='t.me/'+tgs.name;
- tgRefreshStatus();
+ const sc=el('div','scroll');
+ const w=el('div','tgw');
+ const a=el('div','card tga');
+ a.innerHTML=`<h3><span class="ib">${svg('chart',17)}</span>Анализ канала</h3><p>Вставь ссылку на публичный Telegram-канал. Я определю его тип и направление, найду факты и свежие новости по теме и напишу новый оригинальный пост в стиле канала.</p>
+ <input class="f" id="tgl" placeholder="t.me/название_канала или @название" autocomplete="off" autocapitalize="off" spellcheck="false">
+ <input class="f" id="tgt" placeholder="Тема нового поста (необязательно)" autocomplete="off">
+ <div class="row"><button class="btn" id="tga">${svg('search',16)}<span>Анализировать</span></button></div><div class="st" id="tgs"></div>`;
+ const out=el('div');out.id='tgo';
+ const lk=el('div','card');lk.id='tg-connect-card';
+ lk.innerHTML=`<h3><span class="ib">${svg('bot',17)}</span>Подключение Telegram-бота</h3>
+ <p>Создай бота через @BotFather, добавь его администратором канала с правом публикации, затем введи токен и адрес канала.</p>
+ <input class="f" id="tg-bot-token" type="password" placeholder="Токен бота от @BotFather" autocomplete="off" spellcheck="false">
+ <input class="f" id="tg-channel" placeholder="@канал или https://t.me/канал" autocomplete="off" autocapitalize="off">
+ <div class="row"><button class="btn" id="tg-connect">${svg('link',16)}<span>Подключить бота</span></button><button class="btn g" id="tg-disconnect">Отключить</button></div>
+ <div class="st" id="tg-connect-status"></div><div class="st" id="tg-connection-status">Проверяю подключение…</div>
+ <div class="note">Premium владельца не передаётся боту. Бот публикует через Bot API; обычные сообщения и HTML-оформление работают без Premium.</div>`;
+ w.append(a,lk,out);sc.append(w);m.append(sc);
+ sc.querySelector('#tga').onclick=tgAnalyze;
+ sc.querySelector('#tgl').onkeydown=e=>{if(e.key==='Enter')tgAnalyze()};
+ sc.querySelector('#tg-connect').onclick=tgConnect;sc.querySelector('#tg-disconnect').onclick=tgDisconnect;
+ tgLoadStatus();
+ if(tgs){sc.querySelector('#tgl').value='t.me/'+tgs.name;tgRender()}
 }
-
 function neuro(m){
  const c=MODES[st.mode];st.chats[st.mode]||(st.chats[st.mode]=[]);
  m.style.setProperty('--c',c.c);
@@ -1235,7 +1258,7 @@ async function chPass(){
  const s=$('#ps'),o=$('#op').value,n=$('#np').value;if(!o||n.length<4){s.className='st er';s.textContent='Заполни поля (новый пароль от 4 символов)';return}
  try{const r=await fetch(API+'/change-password',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:USER,old_password:o,new_password:n})});const d=await r.json();s.className='st '+(r.ok?'ok':'er');s.textContent=r.ok?'Пароль изменён ✓':(d.error||'Ошибка');if(r.ok)addNotification('Пароль успешно изменен!', 'success');else addNotification('Ошибка смены пароля: '+(d.error||''), 'error')}catch(e){s.className='st er';s.textContent='Нет связи с сервером'}
 }
-function logout(){localStorage.removeItem('vagent_user');localStorage.removeItem('vagent_session_token');location.href='web.html'}
+function logout(){localStorage.removeItem('vagent_user');location.href='web.html'}
 
 /* === PWA УСТАНОВКА === */
 let dp;
