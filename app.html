@@ -445,15 +445,11 @@ main{flex:1;min-height:0;position:relative;display:flex;flex-direction:column;wi
 
 /* Telegram automation controls */
 .tg-days{display:none!important}.tg-label{display:block;color:var(--mute);font-size:13px;margin:12px 0 6px}.tgw>.card{margin-bottom:14px}
-.tg-cal{margin:12px 0 18px;padding:13px;border:1px solid var(--line);border-radius:16px;background:var(--p1)}.tg-cal-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}.tg-cal-month{font-weight:600;font-size:14px;text-transform:capitalize}.tg-cal-nav{width:34px;height:34px;border-radius:10px;border:1px solid var(--line);background:var(--p2);color:var(--ink);font-size:19px;cursor:pointer}.tg-cal-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}.tg-cal-week{padding:5px 0;text-align:center;color:var(--dim);font-size:11px}.tg-cal-day{min-width:0;aspect-ratio:1;border:1px solid transparent;border-radius:10px;background:var(--p2);color:var(--mute);font-size:13px;cursor:pointer}.tg-cal-day:hover{border-color:var(--line2);color:var(--ink)}.tg-cal-day.selected{background:rgba(125,130,255,.2);border-color:#8187ff;color:var(--ink);font-weight:600}.tg-cal-day.today{box-shadow:inset 0 0 0 1px var(--ac)}.tg-cal-day.empty{visibility:hidden;pointer-events:none}.tg-cal-hint{margin-top:10px;color:var(--mute);font-size:11px;line-height:1.45}
+.tg-cal{margin:12px 0 18px;padding:13px;border:1px solid var(--line);border-radius:18px;background:var(--p1)}.tg-cal-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}.tg-cal-month{font-weight:600;font-size:14px;text-transform:capitalize}.tg-cal-nav{width:36px;height:36px;border-radius:12px;border:1px solid var(--line);background:var(--p2);color:var(--ink);font-size:20px;cursor:pointer;transition:transform .2s,background .2s}.tg-cal-nav:active{transform:scale(.88)}.tg-cal-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}.tg-cal-week{padding:5px 0;text-align:center;color:var(--dim);font-size:11px;border-radius:9px;cursor:pointer;transition:background .2s,color .2s}.tg-cal-week.active{color:var(--ink);background:color-mix(in srgb,var(--ac) 18%,var(--p2));font-weight:700}.tg-cal-week:active{transform:scale(.9)}.tg-cal-day{min-width:0;aspect-ratio:1;border:1px solid transparent;border-radius:11px;background:var(--p2);color:var(--mute);font-size:13px;cursor:pointer;transition:transform .18s,background .2s,border-color .2s;animation:tgDayIn .28s both;animation-delay:calc(var(--n,0)*8ms)}.tg-cal-day:active{transform:scale(.86)}.tg-cal-day.selected{background:color-mix(in srgb,var(--ac) 22%,var(--p2));border-color:var(--ac);color:var(--ink);font-weight:700}.tg-cal-day.override-off{opacity:.35;text-decoration:line-through}.tg-cal-day.override-on{box-shadow:inset 0 0 0 1px var(--ac)}.tg-cal-day.today{outline:1px solid var(--vio)}.tg-cal-day.empty{visibility:hidden;pointer-events:none}@keyframes tgDayIn{from{opacity:0;transform:translateY(4px) scale(.96)}to{opacity:1;transform:none}}.tg-cal-hint{margin-top:10px;color:var(--mute);font-size:11px;line-height:1.45}
 .tg-time-list{display:flex;flex-wrap:wrap;gap:8px;min-height:38px;margin:8px 0 12px}
 .tg-time-item{min-width:76px;padding:9px 13px;border:1px solid var(--line2);border-radius:12px;background:var(--p2);color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums;transition:background .15s,border-color .15s}
 .tg-time-item.armed{border-color:var(--err);background:color-mix(in srgb,var(--err) 14%,var(--p2));color:var(--err)}
-.tg-time-picker{display:flex;align-items:end;gap:10px;padding:12px;border:1px solid var(--line);border-radius:15px;background:var(--p1)}
-.tg-wheel-field{display:flex;flex-direction:column;gap:5px;min-width:0;flex:1}.tg-wheel-field span{font-size:11px;color:var(--mute)}
-.tg-wheel-field .f{margin:0;text-align:center;font-size:18px;font-weight:600;font-variant-numeric:tabular-nums}
-.tg-time-colon{font-size:22px;font-weight:600;padding-bottom:9px}.tg-time-picker .btn{white-space:nowrap;min-height:44px}
-@media(max-width:390px){.tg-time-picker{gap:6px;padding:9px}.tg-time-picker .btn{padding:8px 9px;font-size:12px}}
+.tg-time-picker{display:flex;align-items:center;gap:10px;padding:13px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(145deg,var(--p1),var(--p2));overflow:hidden}.tg-wheel-field{display:flex;flex-direction:column;gap:6px;min-width:0;flex:1;text-align:center}.tg-wheel-field>span{font-size:11px;color:var(--mute);letter-spacing:.04em;text-transform:uppercase}.tg-wheel{height:148px;position:relative;overflow-y:auto;overscroll-behavior:contain;scroll-snap-type:y mandatory;scrollbar-width:none;mask-image:linear-gradient(to bottom,transparent,#000 22%,#000 78%,transparent);-webkit-mask-image:linear-gradient(to bottom,transparent,#000 22%,#000 78%,transparent)}.tg-wheel::-webkit-scrollbar{display:none}.tg-wheel:before{content:"";position:sticky;display:block;top:54px;height:40px;margin-bottom:-40px;border-radius:11px;background:color-mix(in srgb,var(--ac) 13%,transparent);border:1px solid color-mix(in srgb,var(--ac) 40%,transparent);pointer-events:none;z-index:1}.tg-wheel-item{height:40px;display:grid;place-items:center;scroll-snap-align:center;color:var(--dim);font-size:17px;font-weight:500;font-variant-numeric:tabular-nums;transition:color .18s,transform .18s}.tg-wheel-item.active{color:var(--ink);font-size:22px;font-weight:800;transform:scale(1.05)}.tg-wheel-spacer{height:54px}.tg-time-colon{font-size:24px;font-weight:800;color:var(--ink);margin-top:10px}.tg-time-picker .btn{white-space:nowrap;min-height:44px;align-self:center}.tg-time-picker .btn:active{transform:scale(.95)}@media(max-width:390px){.tg-time-picker{gap:6px;padding:9px}.tg-time-picker .btn{padding:8px 9px;font-size:12px}}
 
 </style>
 </head>
@@ -671,9 +667,9 @@ async function ai(path,body){
 }
 const chatAI=(messages,max)=>ai('/ai/text',{messages,max_tokens:max||900}).then(d=>{const t=d.text;return (typeof t==='string'?t:t==null?'':JSON.stringify(t)).trim()});
 
-const SIDE=[['home','home','Главная'],['grp','Нейросети'],['chat','chat'],['image','image'],['ideas','bulb'],['templates','grid'],['hashtags','hash'],['grp','Ещё'],['an','chart','Анализ канала'],['tg','send','Telegram'],['me','gear','Настройки']];
+const SIDE=[['home','home','Главная'],['premium','crown','Premium'],['grp','Нейросети'],['chat','chat'],['image','image'],['ideas','bulb'],['templates','grid'],['hashtags','hash'],['grp','Ещё'],['an','chart','Анализ канала'],['tg','send','Telegram'],['me','gear','Настройки']];
 const TABS=[['neuro','spark','Нейросети'],['an','chart','Анализ'],['home','home','Главная'],['tg','send','Telegram'],['me','gear','Настройки']];
-function go(v,mode){if(mode)st.mode=mode;st.view=v;drawNav();draw()}
+function go(v,mode){if(mode)st.mode=mode;st.view=v;drawNav();draw();if(v==='tg'||v==='premium')premiumRefresh().then(()=>{if(st.view===v){drawNav();draw()}})}
 function drawNav(){
  const on=n=>st.view==='neuro'?n===st.mode:n===st.view;
  const sd=$('#side');sd.innerHTML='';
@@ -698,7 +694,7 @@ function drawNav(){
 }
 function draw(){
  const m=$('#main');m.innerHTML='';m.classList.remove('view');void m.offsetWidth;m.classList.add('view');paintTheme();
- if(st.view==='home')home(m);else if(st.view==='neuro')neuro(m);else if(st.view==='an')tgAnalysis(m);else if(st.view==='tg')tg(m);else me(m);
+ if(st.view==='home')home(m);else if(st.view==='premium')premiumPage(m);else if(st.view==='neuro')neuro(m);else if(st.view==='an')tgAnalysis(m);else if(st.view==='tg'){if(premiumState.loading||!premiumState.active)locked(m);else tg(m)}else me(m);
 }
 function home(m){
  const sc=el('div','scroll stg');const hr=new Date().getHours();
@@ -708,6 +704,7 @@ function home(m){
  const hero=el('div','hero');
  hero.innerHTML=`<span class="pl">${svg('send',170)}</span><h2>Автоматизируй свой Telegram-канал</h2><p>Анализ канала, посты в его стиле и автопостинг — прямо здесь и в приложении V-Agent.</p><div class="row"><a class="btn w" href="index.html#download">Скачать приложение</a><button class="btn g" id="hl">Анализ канала</button></div>`;
  hero.querySelector('#hl').onclick=()=>go('an');sc.append(hero);
+ const prem=el('button','qc wide');prem.innerHTML=`<span class="ib">${svg('crown',24)}</span><div><b>V-Agent Premium</b><small>Статус подписки, активация ключа и доступ к Telegram</small></div><span class="go">${svg('arrow',18)}</span>`;prem.onclick=()=>go('premium');sc.append(prem);
 
  const s=el('div','sec');s.innerHTML='<h3>Быстрый доступ</h3>';sc.append(s);
  const g=el('div','bento stg');g.style.setProperty('--b',3);
@@ -1075,11 +1072,31 @@ async function tgAnalyze(){
 function locked(m){
  const sc=el('div','scroll');
  const p=el('div','lockp');
- p.innerHTML=`<div class="ib">${svg('lock',38)}</div><h3>Telegram-автоматизация</h3><p>Автоведение канала доступно в приложении V-Agent по Premium-подписке.</p>
+ p.innerHTML=`<div class="ib">${svg('lock',38)}</div><h3>Telegram-автоматизация</h3><p>Для подключения бота и автопостинга нужна активная V-Agent Premium-подписка.</p>
  <div class="feat"><div><span class="ib">${svg('clock',17)}</span>Автопостинг в Telegram по расписанию</div><div><span class="ib">${svg('zap',17)}</span>Автосоздание постов для канала</div><div><span class="ib">${svg('film',17)}</span>Разбор видео: текст, пересказ и промпт</div></div>
- <a class="btn" href="index.html#download">Скачать приложение</a>`;
- sc.append(p);m.append(sc);
+ <button class="btn" id="open-premium">${svg('crown',16)}<span>Открыть Premium</span></button>`;
+ p.querySelector("#open-premium").onclick=()=>go("premium");sc.append(p);m.append(sc);
 }
+let premiumState={active:false,expires_at:0,loading:true,error:''};
+async function premiumApi(path,method='GET',body=null){
+ const token=localStorage.getItem('vagent_session_token')||'';
+ if(!token)throw new Error('Сессия не найдена. Выйди из аккаунта и войди снова.');
+ const opt={method,headers:{'Authorization':'Bearer '+token}};
+ if(body!==null){opt.headers['Content-Type']='application/json';opt.body=JSON.stringify(body)}
+ const r=await fetch(API+path,opt),d=await r.json().catch(()=>({}));
+ if(!r.ok)throw new Error(d.error||'Ошибка проверки Premium');return d;
+}
+async function premiumRefresh(){
+ premiumState.loading=true;
+ try{const d=await premiumApi('/premium/status');premiumState={active:!!d.active,expires_at:Number(d.expires_at)||0,loading:false,error:''}}
+ catch(e){premiumState={active:false,expires_at:0,loading:false,error:e.message}}
+ return premiumState;
+}
+function premiumDate(){return premiumState.expires_at?new Date(premiumState.expires_at).toLocaleString('ru-RU',{dateStyle:'long',timeStyle:'short'}):'—'}
+function premiumMarkup(){return `<div class="card" style="margin:14px 0"><h3><span class="ib">${svg('crown',18)}</span>V-Agent Premium</h3><p>${premiumState.loading?'Проверяю подписку…':premiumState.active?'Подписка активна до '+premiumDate():'Подписка не активна. Введи ключ активации.'}</p><div class="row"><span class="badge ${premiumState.active?'ok':''}"><i></i>${premiumState.loading?'Проверка':premiumState.active?'Активна':'Не активна'}</span></div>${premiumState.error?`<div class="st er">${premiumState.error}</div>`:''}<input class="f" id="premium-key" placeholder="Ключ V-Agent Premium" autocomplete="off" autocapitalize="characters" spellcheck="false"><div class="row"><button class="btn" id="premium-activate" onclick="redeemPremium()">${svg('key',16)}<span>Активировать ключ</span></button><button class="btn g" onclick="refreshPremiumUI()">Обновить статус</button></div><div class="st" id="premium-status-msg"></div></div>`}
+function premiumPage(m){const sc=el('div','scroll stg');sc.style.cssText='max-width:680px;width:100%;margin:0 auto';const hero=el('div','lockp');hero.innerHTML=`<div class="ib">${svg('crown',38)}</div><h3>V-Agent Premium</h3><p>Открой доступ к Telegram-автоматизации и другим Premium-возможностям. Подписка привязывается к твоему аккаунту.</p>`;sc.append(hero);const card=el('div');card.innerHTML=premiumMarkup();sc.append(card);m.append(sc)}
+async function refreshPremiumUI(){await premiumRefresh();draw()}
+async function redeemPremium(){const b=$('#premium-activate'),msg=$('#premium-status-msg'),key=($('#premium-key')?.value||'').trim().toUpperCase();if(!key){msg.className='st er';msg.textContent='Введи ключ активации';return}b.disabled=true;msg.className='st';msg.textContent='Проверяю ключ…';try{const d=await premiumApi('/premium/redeem','POST',{key});await premiumRefresh();msg.className='st ok';msg.textContent=d.message||'Premium активирован';if($('#premium-key'))$('#premium-key').value='';drawNav();draw()}catch(e){msg.className='st er';msg.textContent=e.message}finally{if($('#premium-activate'))$('#premium-activate').disabled=false}}
 function tgSession(){return localStorage.getItem('vagent_session_token')||''}
 async function tgRequest(path,method='GET',body=null){
  const token=tgSession();
@@ -1133,17 +1150,17 @@ function tg(m){
  <p>Выбери дни недели и добавь до 5 времён публикации.</p>
  <div class="tg-cal" id="tg-calendar"></div><div class="tg-days" id="tg-days">${[['Пн',1],['Вт',2],['Ср',3],['Чт',4],['Пт',5],['Сб',6],['Вс',0]].map(([n,d])=>`<label><input type="checkbox" value="${d}" checked><span>${n}</span></label>`).join('')}</div>
  <label class="tg-label">Время публикаций</label><div class="tg-time-list" id="tg-time-list"></div>
- <div class="tg-time-picker" id="tg-time-picker"><div class="tg-wheel-field"><span>Часы</span><select class="f" id="tg-hour" aria-label="Часы">${Array.from({length:24},(_,i)=>`<option value="${String(i).padStart(2,'0')}">${String(i).padStart(2,'0')}</option>`).join('')}</select></div><span class="tg-time-colon">:</span><div class="tg-wheel-field"><span>Минуты</span><select class="f" id="tg-minute" aria-label="Минуты">${Array.from({length:60},(_,i)=>`<option value="${String(i).padStart(2,'0')}">${String(i).padStart(2,'0')}</option>`).join('')}</select></div><button class="btn sm" id="tg-add-time" type="button">${svg('plus',15)} Добавить время</button></div>
+ <div class="tg-time-picker" id="tg-time-picker"><div class="tg-wheel-field"><span>Часы</span><div class="tg-wheel" id="tg-hour-wheel" role="listbox" aria-label="Часы"></div></div><span class="tg-time-colon">:</span><div class="tg-wheel-field"><span>Минуты</span><div class="tg-wheel" id="tg-minute-wheel" role="listbox" aria-label="Минуты"></div></div><button class="btn sm" id="tg-add-time" type="button">${svg('plus',15)} Добавить</button></div>
  <div class="note">Чтобы удалить время, нажми на его пункт два раза подряд.</div>
  <div class="row"><button class="btn g" id="tg-detect">${svg('spark',16)}<span>Автоопределение</span></button></div><div class="st" id="tg-detect-status"></div>
  <label class="tg-label" for="tg-topic">Тема публикаций</label><input class="f" id="tg-topic" placeholder="Например: технологии, новости, советы">
  <label class="tg-label" for="tg-image-mode">Изображения</label><select class="f" id="tg-image-mode"><option value="off">Без изображений</option><option value="ai">Генерировать ИИ</option><option value="commons">Искать Wikimedia Commons</option></select>
- <div class="row"><button class="btn" id="tg-save">${svg('check',16)}<span>Сохранить и включить</span></button><button class="btn g" id="tg-stop">Остановить</button></div><div class="st" id="tg-plan-status"></div><div class="note" id="tg-plan-info">Расписание ещё не загружено.</div><div class="note">Для запуска расписания на сервере нужен Cron Trigger Cloudflare с интервалом 1 минута (* * * * *).</div>`;
+ <div class="row"><button class="btn" id="tg-save">${svg('check',16)}<span>Сохранить и включить</span></button><button class="btn g" id="tg-stop">Остановить</button></div><div class="row"><button class="btn g" id="tg-check">${svg('shield-check',16)}<span>Проверить автопостинг</span></button></div><div class="st" id="tg-plan-status"></div><div class="note" id="tg-plan-info">Расписание ещё не загружено.</div><div class="note">Для запуска расписания на сервере нужен Cron Trigger Cloudflare с интервалом 1 минута (* * * * *).</div>`;
  w.append(a,plan);sc.append(w);m.append(sc);
  sc.querySelector('#tg-connect').onclick=tgConnect;sc.querySelector('#tg-disconnect').onclick=tgDisconnect;
  const tokenInput=sc.querySelector('#tg-bot-token'),tokenToggle=sc.querySelector('#tg-token-toggle');
  tokenToggle.onclick=()=>{const show=tokenInput.type==='password';tokenInput.type=show?'text':'password';tokenToggle.textContent=show?'Скрыть':'Показать';tokenToggle.setAttribute('aria-label',show?'Скрыть токен':'Показать токен');tokenToggle.setAttribute('aria-pressed',String(show));tokenInput.focus()};
- sc.querySelector('#tg-detect').onclick=tgAutoDetect;sc.querySelector('#tg-save').onclick=tgAutoSave;sc.querySelector('#tg-stop').onclick=tgAutoStop;
+ sc.querySelector('#tg-detect').onclick=tgAutoDetect;sc.querySelector('#tg-save').onclick=tgAutoSave;sc.querySelector('#tg-stop').onclick=tgAutoStop;sc.querySelector('#tg-check').onclick=tgAutoCheck;
  tgCalendarInit(sc);
  tgTimePickerInit(sc,['09:00','14:00','19:00']);
  tgLoadStatus();tgLoadSchedule();
@@ -1153,23 +1170,25 @@ function tgAnalysis(m){
  card.innerHTML=`<h3><span class="ib">${svg('chart',17)}</span>Анализ Telegram-канала</h3><p>Вставь ссылку на публичный канал, чтобы изучить его тематику, стиль и подготовить оригинальный пост.</p><input class="f" id="tgl" placeholder="t.me/название_канала или @название" autocomplete="off" autocapitalize="off" spellcheck="false"><input class="f" id="tgt" placeholder="Тема нового поста (необязательно)"><div class="row"><button class="btn" id="tga">${svg('search',16)}<span>Анализировать</span></button></div><div class="st" id="tgs"></div>`;
  const out=el('div');out.id='tgo';sc.append(card,out);m.append(sc);card.querySelector('#tga').onclick=tgAnalyze;card.querySelector('#tgl').onkeydown=e=>{if(e.key==='Enter')tgAnalyze()};if(tgs){card.querySelector('#tgl').value='t.me/'+tgs.name;tgRender()}
 }
+let tgDateOverrides={};
+function tgDateKey(date){return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`}
+function tgDateIsSelected(date){const key=tgDateKey(date);if(Object.prototype.hasOwnProperty.call(tgDateOverrides,key))return !!tgDateOverrides[key];return tgSelectedDays().includes(date.getDay())}
 function tgCalendarInit(root){
  const host=root.querySelector('#tg-calendar');if(!host)return;
  let month=new Date();month=new Date(month.getFullYear(),month.getMonth(),1);
  const render=()=>{
-  const year=month.getFullYear(),mon=month.getMonth(),first=new Date(year,mon,1),last=new Date(year,mon+1,0);
-  const selected=tgSelectedDays(),today=new Date();
-  const title=month.toLocaleDateString('ru-RU',{month:'long',year:'numeric'});
-  const cells=[];
-  for(let i=0;i<(first.getDay()+6)%7;i++)cells.push('<button class="tg-cal-day empty" tabindex="-1" aria-hidden="true"></button>');
+  const year=month.getFullYear(),mon=month.getMonth(),first=new Date(year,mon,1),last=new Date(year,mon+1,0),today=new Date();
+  const title=month.toLocaleDateString('ru-RU',{month:'long',year:'numeric'}),cells=[];
+  for(let i=0;i<(first.getDay()+6)%7;i++)cells.push('<div class="tg-cal-day empty" aria-hidden="true"></div>');
   for(let day=1;day<=last.getDate();day++){
-   const date=new Date(year,mon,day),dow=date.getDay(),on=selected.includes(dow),isToday=date.toDateString()===today.toDateString();
-   cells.push(`<button type="button" class="tg-cal-day${on?' selected':''}${isToday?' today':''}" data-day="${dow}" aria-pressed="${on}" title="${['воскресенье','понедельник','вторник','среда','четверг','пятница','суббота'][dow]} — повтор каждую неделю">${day}</button>`);
+   const date=new Date(year,mon,day),dow=date.getDay(),key=tgDateKey(date),on=tgDateIsSelected(date),override=Object.prototype.hasOwnProperty.call(tgDateOverrides,key),isToday=date.toDateString()===today.toDateString();
+   cells.push(`<button type="button" class="tg-cal-day${on?' selected':''}${override?(on?' override-on':' override-off'):''}${isToday?' today':''}" data-date="${key}" style="--n:${day}" aria-pressed="${on}" title="${override?'Индивидуальный выбор даты':'Нажми, чтобы изменить только эту дату'}">${day}</button>`);
   }
-  host.innerHTML=`<div class="tg-cal-head"><button type="button" class="tg-cal-nav" id="tg-cal-prev" aria-label="Предыдущий месяц">‹</button><div class="tg-cal-month">${title}</div><button type="button" class="tg-cal-nav" id="tg-cal-next" aria-label="Следующий месяц">›</button></div><div class="tg-cal-grid">${['Пн','Вт','Ср','Чт','Пт','Сб','Вс'].map(x=>`<div class="tg-cal-week">${x}</div>`).join('')}${cells.join('')}</div><div class="tg-cal-hint">Нажми на дату, чтобы включить или выключить этот день недели. Выбор повторяется каждую неделю.</div>`;
-  host.querySelector('#tg-cal-prev').onclick=()=>{month=new Date(year,mon-1,1);render()};
-  host.querySelector('#tg-cal-next').onclick=()=>{month=new Date(year,mon+1,1);render()};
-  host.querySelectorAll('[data-day]').forEach(btn=>btn.onclick=()=>{const input=root.querySelector(`#tg-days input[value="${btn.dataset.day}"]`);if(input)input.checked=!input.checked;render()});
+  const weekdays=[['Пн',1],['Вт',2],['Ср',3],['Чт',4],['Пт',5],['Сб',6],['Вс',0]];
+  host.innerHTML=`<div class="tg-cal-head"><button type="button" class="tg-cal-nav" id="tg-cal-prev" aria-label="Предыдущий месяц">‹</button><div class="tg-cal-month">${title}</div><button type="button" class="tg-cal-nav" id="tg-cal-next" aria-label="Следующий месяц">›</button></div><div class="tg-cal-grid">${weekdays.map(([x,d])=>`<button type="button" class="tg-cal-week${tgSelectedDays().includes(d)?' active':''}" data-weekday="${d}" title="Включить или выключить все ${x.toLowerCase()}и">${x}</button>`).join('')}${cells.join('')}</div><div class="tg-cal-hint">Нажми на название дня недели, чтобы включить или выключить все такие дни. Нажми на число — чтобы изменить только эту дату.</div>`;
+  host.querySelector('#tg-cal-prev').onclick=()=>{month=new Date(year,mon-1,1);render()};host.querySelector('#tg-cal-next').onclick=()=>{month=new Date(year,mon+1,1);render()};
+  host.querySelectorAll('[data-weekday]').forEach(btn=>btn.onclick=()=>{const d=Number(btn.dataset.weekday),days=tgSelectedDays();if(days.includes(d))days.splice(days.indexOf(d),1);else days.push(d);document.querySelectorAll('#tg-days input').forEach(x=>x.checked=days.includes(Number(x.value)));Object.keys(tgDateOverrides).forEach(key=>{const [y,m,dd]=key.split('-').map(Number);if(new Date(y,m-1,dd).getDay()===d)delete tgDateOverrides[key]});render()});
+  host.querySelectorAll('[data-date]').forEach(btn=>btn.onclick=()=>{const key=btn.dataset.date,date=new Date(`${key}T12:00:00`);tgDateOverrides[key]=!tgDateIsSelected(date);if(tgDateOverrides[key]===tgSelectedDays().includes(date.getDay()))delete tgDateOverrides[key];render()});
  };
  host._render=render;render();
 }
@@ -1183,16 +1202,26 @@ function tgRenderTimes(root=document){
  if(!tgTimes.length){host.innerHTML='<span class="note">Время ещё не добавлено.</span>';return}
  tgTimes.forEach(time=>{const b=document.createElement('button');b.type='button';b.className='tg-time-item'+(tgArmedTime===time?' armed':'');b.textContent=time===tgArmedTime?time+' · ещё раз для удаления':time;b.setAttribute('aria-label',tgArmedTime===time?`Нажми ещё раз, чтобы удалить ${time}`:`Выбрать ${time} для удаления`);b.onclick=()=>{if(tgArmedTime===time){tgTimes=tgTimes.filter(x=>x!==time);tgArmedTime='';if(tgArmTimer)clearTimeout(tgArmTimer);tgRenderTimes(root);return}tgArmedTime=time;if(tgArmTimer)clearTimeout(tgArmTimer);tgArmTimer=setTimeout(()=>{tgArmedTime='';tgRenderTimes(root)},3500);tgRenderTimes(root)};host.append(b)});
 }
+function tgWheelBuild(host,count,selected){
+ host.innerHTML='<div class="tg-wheel-spacer"></div>'+Array.from({length:count},(_,i)=>`<div class="tg-wheel-item${i===selected?' active':''}" data-value="${i}">${String(i).padStart(2,'0')}</div>`).join('')+'<div class="tg-wheel-spacer"></div>';
+ host.scrollTop=selected*40;
+ let settle;
+ host.onscroll=()=>{const idx=Math.max(0,Math.min(count-1,Math.round(host.scrollTop/40)));host.querySelectorAll('.tg-wheel-item').forEach((el,i)=>el.classList.toggle('active',i===idx));clearTimeout(settle);settle=setTimeout(()=>{host.scrollTo({top:idx*40,behavior:'smooth'});host.dataset.value=String(idx).padStart(2,'0')},90)};
+ host.dataset.value=String(selected).padStart(2,'0');
+ host.querySelectorAll('.tg-wheel-item').forEach(el=>el.onclick=()=>{const idx=Number(el.dataset.value);host.scrollTo({top:idx*40,behavior:'smooth'});host.dataset.value=String(idx).padStart(2,'0')});
+}
 function tgTimePickerInit(root,initial=[]){
  tgTimes=[...new Set(initial)].sort();tgArmedTime='';const add=root.querySelector('#tg-add-time');if(!add)return;tgRenderTimes(root);
- add.onclick=()=>{const time=`${root.querySelector('#tg-hour').value}:${root.querySelector('#tg-minute').value}`,status=root.querySelector('#tg-plan-status');if(tgTimes.length>=5){status.className='st er';status.textContent='Можно добавить максимум 5 времён.';return}if(tgTimes.includes(time)){status.className='st er';status.textContent='Это время уже добавлено.';return}tgTimes.push(time);tgTimes.sort();tgArmedTime='';tgRenderTimes(root);status.className='st';status.textContent=''};
+ const hour=root.querySelector('#tg-hour-wheel'),minute=root.querySelector('#tg-minute-wheel');tgWheelBuild(hour,24,9);tgWheelBuild(minute,60,0);
+ add.onclick=()=>{const time=`${hour.dataset.value||'09'}:${minute.dataset.value||'00'}`,status=root.querySelector('#tg-plan-status');if(tgTimes.length>=5){status.className='st er';status.textContent='Можно добавить максимум 5 времён.';return}if(tgTimes.includes(time)){status.className='st er';status.textContent='Это время уже добавлено.';return}tgTimes.push(time);tgTimes.sort();tgArmedTime='';tgRenderTimes(root);status.className='st';status.textContent='Время добавлено.'};
 }
 function tgParseTimes(){if(!tgTimes.length)throw new Error('Добавь хотя бы одно время публикации');if(tgTimes.length>5)throw new Error('Можно добавить не более 5 времён');return [...tgTimes].sort()}
 function tgTimezone(){try{return Intl.DateTimeFormat().resolvedOptions().timeZone||'UTC'}catch(e){return 'UTC'}}
 async function tgAutoDetect(){const b=$('#tg-detect'),s=$('#tg-detect-status');b.disabled=true;s.className='st';s.textContent='Анализирую историю канала…';try{const d=await tgRequest('/tg/auto-detect','POST',{timezone:tgTimezone()});tgTimes=[...new Set((d.times||[]).slice(0,5))].sort();tgArmedTime='';tgRenderTimes();tgSetDays(d.days||[]);s.className='st ok';s.textContent=`${d.message}. Среднее: ${d.average_per_day} пост./день. Учтено публикаций: ${d.sample_posts||0}. Добавлено времён: ${tgTimes.length} (максимум 5).`}catch(e){s.className='st er';s.textContent=e.message}finally{b.disabled=false}}
-async function tgAutoSave(){const b=$('#tg-save'),s=$('#tg-plan-status');try{const k=cf();if(!k)throw new Error('Сначала добавь ключ Cloudflare в настройках V-Agent');const times=tgParseTimes(),days=tgSelectedDays();if(!days.length)throw new Error('Выбери хотя бы один день недели');if(!tgSession())throw new Error('Войди в аккаунт заново, чтобы обновить сессию');b.disabled=true;s.className='st';s.textContent='Сохраняю расписание…';const d=await tgRequest('/tg/auto-save','POST',{times,days,timezone:tgTimezone(),topic:$('#tg-topic').value.trim(),image_mode:$('#tg-image-mode').value,account_id:k.account,cf_token:k.token});s.className='st ok';s.textContent=d.message;tgLoadSchedule()}catch(e){s.className='st er';s.textContent=e.message}finally{b.disabled=false}}
+async function tgAutoSave(){const b=$('#tg-save'),s=$('#tg-plan-status');try{const k=cf();if(!k)throw new Error('Сначала добавь ключ Cloudflare в настройках V-Agent');const times=tgParseTimes(),days=tgSelectedDays();if(!days.length)throw new Error('Выбери хотя бы один день недели');if(!tgSession())throw new Error('Войди в аккаунт заново, чтобы обновить сессию');b.disabled=true;s.className='st';s.textContent='Сохраняю расписание…';const d=await tgRequest('/tg/auto-save','POST',{times,days,date_overrides:tgDateOverrides,timezone:tgTimezone(),topic:$('#tg-topic').value.trim(),image_mode:$('#tg-image-mode').value,account_id:k.account,cf_token:k.token});s.className='st ok';s.textContent=d.message;tgLoadSchedule()}catch(e){s.className='st er';s.textContent=e.message}finally{b.disabled=false}}
+async function tgAutoCheck(){const b=$('#tg-check'),s=$('#tg-plan-status');b.disabled=true;s.className='st';s.textContent='Проверяю бота, канал и Cloudflare AI…';try{const d=await tgRequest('/tg/auto-check','POST',{});s.className='st ok';s.textContent=d.message}catch(e){s.className='st er';s.textContent=e.message}finally{b.disabled=false}}
 async function tgAutoStop(){const s=$('#tg-plan-status');try{const d=await tgRequest('/tg/auto-stop','POST',{});s.className='st ok';s.textContent=d.message;tgLoadSchedule()}catch(e){s.className='st er';s.textContent=e.message}}
-async function tgLoadSchedule(){const info=$('#tg-plan-info');if(!info)return;try{const d=await tgRequest('/tg/auto-status');if(!d.enabled){info.textContent='Автопостинг выключен.';return}tgTimes=[...new Set((d.times||[]).slice(0,5))].sort();tgArmedTime='';tgRenderTimes();tgSetDays(d.days||[0,1,2,3,4,5,6]);$('#tg-topic').value=d.topic||'';$('#tg-image-mode').value=d.image_mode||'off';info.textContent=`Автопостинг включён · ${tgTimes.length} времён · дни: ${(d.days||[0,1,2,3,4,5,6]).map(x=>['Вс','Пн','Вт','Ср','Чт','Пт','Сб'][x]).join(', ')} · ${d.timezone}`;const status=$('#tg-plan-status');if(d.last_error){status.className='st er';status.textContent='Последняя ошибка автопостинга: '+d.last_error}else if(d.last_success){status.className='st ok';status.textContent='Последняя публикация: '+new Date(d.last_success).toLocaleString('ru-RU')}}catch(e){info.textContent=e.message}}
+async function tgLoadSchedule(){const info=$('#tg-plan-info');if(!info)return;try{const d=await tgRequest('/tg/auto-status');if(!d.enabled){info.textContent='Автопостинг выключен.';return}tgTimes=[...new Set((d.times||[]).slice(0,5))].sort();tgArmedTime='';tgRenderTimes();tgSetDays(d.days||[0,1,2,3,4,5,6]);tgDateOverrides=d.date_overrides&&typeof d.date_overrides==='object'?d.date_overrides:{};document.querySelector('#tg-calendar')?._render?.();$('#tg-topic').value=d.topic||'';$('#tg-image-mode').value=d.image_mode||'off';info.textContent=`Автопостинг включён · ${tgTimes.length} времён · дни: ${(d.days||[0,1,2,3,4,5,6]).map(x=>['Вс','Пн','Вт','Ср','Чт','Пт','Сб'][x]).join(', ')} · ${d.timezone}`;const status=$('#tg-plan-status');if(d.last_error){status.className='st er';status.textContent='Последняя ошибка автопостинга: '+d.last_error}else if(d.last_success){status.className='st ok';status.textContent='Последняя публикация: '+new Date(d.last_success).toLocaleString('ru-RU')}else if(d.last_attempt){status.className='st';status.textContent='Последняя попытка автопостинга: '+new Date(d.last_attempt).toLocaleString('ru-RU')}}catch(e){info.textContent=e.message}}
 
 function neuro(m){
  const c=MODES[st.mode];st.chats[st.mode]||(st.chats[st.mode]=[]);
@@ -1301,6 +1330,7 @@ function me(m){
  <div class="row"><button class="btn" onclick="saveKey()">Сохранить и проверить</button>${k?'<button class="btn g" onclick="delKey()">Удалить</button>':''}</div><div class="st" id="ks"></div>`;
  sc.append(grp('Нейросети',[acc('key','Ключ Cloudflare',k?'Подключён — ИИ работает':'Добавь ключ, чтобы ИИ заработал',`<span class="badge ${k?'ok':''}"><i></i>${k?'Подключён':'Не добавлен'}</span>`,keyBody,!k)]));
  const pwBody=`<input class="f" id="op" type="password" placeholder="Старый пароль" autocomplete="current-password"><input class="f" id="np" type="password" placeholder="Новый пароль (от 6 символов, буква + цифра + знак)" autocomplete="new-password"><div class="row"><button class="btn" onclick="chPass()">Сменить пароль</button></div><div class="st" id="ps"></div>`;
+ sc.append(grp('Подписка',[acc('crown','V-Agent Premium',premiumState.active?'Активна до '+premiumDate():'Подписка не активна',`<span class="badge ${premiumState.active?'ok':''}"><i></i>${premiumState.active?'Активна':'Не активна'}</span>`,premiumMarkup(),false)]));
  sc.append(grp('Безопасность',[acc('shield','Сменить пароль','Введи старый и новый пароль','',pwBody,false)]));
  const total=Object.values(st.chats).reduce((n,a)=>n+(a?a.length:0),0);
  const [rc,bc]=row('trash','Очистить историю чатов',total?total+' сообщ. в этом браузере':'История пуста','','danger');
@@ -1387,6 +1417,7 @@ addEventListener('resize', () => {
 });
 
 drawNav();draw();
+premiumRefresh().then(()=>{if(st.view==='tg'||st.view==='premium'||st.view==='me'){drawNav();draw()}});
 </script>
 </body>
 </html>
