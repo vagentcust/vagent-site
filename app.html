@@ -662,7 +662,7 @@ async function ai(path,body){
 const chatAI=(messages,max)=>ai('/ai/text',{messages,max_tokens:max||900}).then(d=>{const t=d.text;return (typeof t==='string'?t:t==null?'':JSON.stringify(t)).trim()});
 
 const SIDE=[['home','home','Главная'],['grp','Нейросети'],['chat','chat'],['image','image'],['ideas','bulb'],['templates','grid'],['hashtags','hash'],['grp','Ещё'],['an','chart','Анализ канала'],['tg','send','Telegram'],['me','gear','Настройки']];
-const TABS=[['home','home','Главная'],['neuro','spark','Нейросети'],['an','chart','Анализ'],['tg','send','Telegram'],['me','gear','Настройки']];
+const TABS=[['neuro','spark','Нейросети'],['an','chart','Анализ'],['home','home','Главная'],['tg','send','Telegram'],['me','gear','Настройки']];
 function go(v,mode){if(mode)st.mode=mode;st.view=v;drawNav();draw()}
 function drawNav(){
  const on=n=>st.view==='neuro'?n===st.mode:n===st.view;
@@ -688,7 +688,7 @@ function drawNav(){
 }
 function draw(){
  const m=$('#main');m.innerHTML='';m.classList.remove('view');void m.offsetWidth;m.classList.add('view');paintTheme();
- if(st.view==='home')home(m);else if(st.view==='neuro')neuro(m);else if(st.view==='an')tg(m);else if(st.view==='tg')tg(m);else me(m);
+ if(st.view==='home')home(m);else if(st.view==='neuro')neuro(m);else if(st.view==='an')tgAnalysis(m);else if(st.view==='tg')tg(m);else me(m);
 }
 function home(m){
  const sc=el('div','scroll stg');const hr=new Date().getHours();
@@ -1127,18 +1127,40 @@ function tg(m){
  <label class="tg-label" for="tg-topic">Тема публикаций</label><input class="f" id="tg-topic" placeholder="Например: технологии, новости, советы">
  <label class="tg-label" for="tg-image-mode">Изображения</label><select class="f" id="tg-image-mode"><option value="off">Без изображений</option><option value="ai">Генерировать ИИ</option><option value="commons">Искать Wikimedia Commons</option></select>
  <div class="row"><button class="btn" id="tg-save">${svg('check',16)}<span>Сохранить и включить</span></button><button class="btn g" id="tg-stop">Остановить</button></div><div class="st" id="tg-plan-status"></div><div class="note" id="tg-plan-info">Расписание ещё не загружено.</div>`;
- const analyze=el('div','card');
- analyze.innerHTML=`<h3><span class="ib">${svg('chart',17)}</span>Анализ канала и создание поста</h3><p>Можно отдельно проанализировать публичный канал и подготовить черновик.</p>
- <input class="f" id="tgl" placeholder="t.me/название_канала или @название" autocomplete="off" autocapitalize="off" spellcheck="false"><input class="f" id="tgt" placeholder="Тема нового поста (необязательно)">
- <div class="row"><button class="btn" id="tga">${svg('search',16)}<span>Анализировать</span></button></div><div class="st" id="tgs"></div>`;
- const out=el('div');out.id='tgo';w.append(a,plan,analyze,out);sc.append(w);m.append(sc);
+ const create=el('div','card');
+ create.innerHTML=`<h3><span class="ib">${svg('spark',17)}</span>Создание контента</h3><p>Создай отдельный пост по своей теме. Результат появится ниже, его можно скопировать или опубликовать в подключённый канал.</p>
+ <input class="f" id="tg-content-topic" placeholder="Тема публикации, например: полезные советы по технологиям" autocomplete="off">
+ <textarea class="f" id="tg-content-extra" rows="3" placeholder="Дополнительные пожелания (необязательно)"></textarea>
+ <div class="row"><button class="btn" id="tg-content-create">${svg('spark',16)}<span>Создать контент</span></button><button class="btn g" id="tg-content-copy" disabled>Копировать</button><button class="btn g" id="tg-content-publish" disabled>Опубликовать</button></div>
+ <div class="st" id="tg-content-status">Пока ничего не создано.</div><div id="tg-content-result" class="txt" style="white-space:pre-wrap;overflow-wrap:anywhere"></div>`;
+ w.append(a,plan,create);sc.append(w);m.append(sc);
  sc.querySelector('#tg-connect').onclick=tgConnect;sc.querySelector('#tg-disconnect').onclick=tgDisconnect;
  const tokenInput=sc.querySelector('#tg-bot-token'),tokenToggle=sc.querySelector('#tg-token-toggle');
  tokenToggle.onclick=()=>{const show=tokenInput.type==='password';tokenInput.type=show?'text':'password';tokenToggle.textContent=show?'Скрыть':'Показать';tokenToggle.setAttribute('aria-label',show?'Скрыть токен':'Показать токен');tokenToggle.setAttribute('aria-pressed',String(show));tokenInput.focus()};
  sc.querySelector('#tg-detect').onclick=tgAutoDetect;sc.querySelector('#tg-save').onclick=tgAutoSave;sc.querySelector('#tg-stop').onclick=tgAutoStop;
- sc.querySelector('#tga').onclick=tgAnalyze;sc.querySelector('#tgl').onkeydown=e=>{if(e.key==='Enter')tgAnalyze()};
+ tgSetupContentCreator(sc);
  tgLoadStatus();tgLoadSchedule();
- if(tgs){sc.querySelector('#tgl').value='t.me/'+tgs.name;tgRender()}
+}
+function tgSetupContentCreator(root){
+ const btn=root.querySelector('#tg-content-create'),status=root.querySelector('#tg-content-status'),result=root.querySelector('#tg-content-result'),copy=root.querySelector('#tg-content-copy'),publish=root.querySelector('#tg-content-publish');
+ let generated='';
+ btn.onclick=async()=>{
+  const topic=root.querySelector('#tg-content-topic').value.trim(),extra=root.querySelector('#tg-content-extra').value.trim();
+  if(!topic){status.className='st er';status.textContent='Сначала укажи тему публикации.';return}
+  btn.disabled=true;status.className='st';status.textContent='Создаю публикацию…';result.textContent='';generated='';copy.disabled=true;publish.disabled=true;
+  try{
+   generated=await chatAI([{role:'system',content:'Ты редактор Telegram-канала. Создавай оригинальные, полезные и готовые к публикации посты на русском языке. Не добавляй вымышленные факты. Верни только текст публикации.'},{role:'user',content:`Тема: ${topic}\nПожелания: ${extra||'На своё усмотрение'}`}],1100);
+   if(!generated)throw new Error('ИИ вернул пустой результат');
+   result.textContent=generated;status.className='st ok';status.textContent='Контент создан ✓ Результат отображается ниже. Можно скопировать или опубликовать.';copy.disabled=false;publish.disabled=false;
+  }catch(e){status.className='st er';status.textContent=e.message||'Не удалось создать контент'}finally{btn.disabled=false}
+ };
+ copy.onclick=async()=>{if(!generated)return;try{await navigator.clipboard.writeText(generated);status.className='st ok';status.textContent='Текст скопирован ✓'}catch(e){status.className='st er';status.textContent='Не удалось скопировать текст'}};
+ publish.onclick=async()=>{if(!generated)return;publish.disabled=true;status.className='st';status.textContent='Отправляю публикацию…';try{const d=await tgRequest('/tg/publish','POST',{text:generated});status.className='st ok';status.textContent=d.message||'Публикация отправлена в Telegram ✓'}catch(e){status.className='st er';status.textContent=e.message}finally{publish.disabled=false}};
+}
+function tgAnalysis(m){
+ const sc=el('div','scroll'),card=el('div','card');
+ card.innerHTML=`<h3><span class="ib">${svg('chart',17)}</span>Анализ Telegram-канала</h3><p>Вставь ссылку на публичный канал, чтобы изучить его тематику, стиль и подготовить оригинальный пост.</p><input class="f" id="tgl" placeholder="t.me/название_канала или @название" autocomplete="off" autocapitalize="off" spellcheck="false"><input class="f" id="tgt" placeholder="Тема нового поста (необязательно)"><div class="row"><button class="btn" id="tga">${svg('search',16)}<span>Анализировать</span></button></div><div class="st" id="tgs"></div>`;
+ const out=el('div');out.id='tgo';sc.append(card,out);m.append(sc);card.querySelector('#tga').onclick=tgAnalyze;card.querySelector('#tgl').onkeydown=e=>{if(e.key==='Enter')tgAnalyze()};if(tgs){card.querySelector('#tgl').value='t.me/'+tgs.name;tgRender()}
 }
 function tgSelectedDays(){return [...document.querySelectorAll('#tg-days input:checked')].map(x=>Number(x.value))}
 function tgSetDays(days){document.querySelectorAll('#tg-days input').forEach(x=>x.checked=days.includes(Number(x.value)))}
