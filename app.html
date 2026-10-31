@@ -1003,9 +1003,6 @@ function tgRender(){
   }catch(e){const er=r3.querySelector('.st.er')||r3.appendChild(el('div','st er'));er.textContent=e.message}
   holder.style.opacity='1';rg.disabled=false;
  };
- const pub=el('button','btn sm');pub.innerHTML=svg('send',15)+'<span>Опубликовать в Telegram</span>';
- const pubStatus=el('div','st');pub.onclick=()=>tgPublish(pub,pubStatus);
- const pubRow=el('div','row');pubRow.append(pub);r3.append(pubRow,pubStatus);
  box.append(r3);
  [...box.children].forEach((c,i)=>c.style.setProperty('--i',i));
  box.classList.add('stg');o.append(box);
@@ -1067,42 +1064,6 @@ function locked(m){
  <a class="btn" href="index.html#download">Скачать приложение</a>`;
  sc.append(p);m.append(sc);
 }
-function tgSession(){return localStorage.getItem('vagent_session_token')||''}
-async function tgRequest(path,method='GET',body=null){
- const token=tgSession();
- if(!token)throw new Error('Сессия не найдена. Выйди из аккаунта и войди снова после обновления web.html (сохранение session_token).');
- const opt={method,headers:{'Authorization':'Bearer '+token}};
- if(body!==null){opt.headers['Content-Type']='application/json';opt.body=JSON.stringify(body)}
- const r=await fetch(API+path,opt);const d=await r.json().catch(()=>({}));
- if(!r.ok)throw new Error(d.error||'Ошибка Telegram API');return d;
-}
-async function tgConnect(){
- const b=$('#tg-connect'),stx=$('#tg-connect-status');if(!b||!stx)return;
- const bot=($('#tg-bot-token')?.value||'').trim(),channel=($('#tg-channel')?.value||'').trim();
- stx.className='st';stx.textContent='Подключаю бота…';b.disabled=true;
- try{const d=await tgRequest('/tg/connect','POST',{bot_token:bot,channel});stx.className='st ok';stx.textContent=d.message||'Бот подключён';$('#tg-bot-token').value='';await tgLoadStatus()}
- catch(e){stx.className='st er';stx.textContent=e.message}
- b.disabled=false;
-}
-async function tgLoadStatus(){
- const s=$('#tg-connection-status');if(!s)return;
- try{const d=await tgRequest('/tg/status');s.className='st '+(d.connected?'ok':'');s.textContent=d.connected?`Подключён: @${d.bot_username||'бот'} → ${d.channel}`:'Бот пока не подключён';}
- catch(e){s.className='st er';s.textContent=e.message}
-}
-async function tgDisconnect(){
- if(!confirm('Отключить Telegram-бота от V-Agent?'))return;
- const s=$('#tg-connection-status');try{await tgRequest('/tg/disconnect','POST',{});if(s){s.className='st';s.textContent='Бот отключён'};}
- catch(e){if(s){s.className='st er';s.textContent=e.message}}
-}
-async function tgPublish(button,status){
- if(!tgs?.html){status.textContent='Сначала создай пост';status.className='st er';return}
- const plain=(()=>{const d=document.createElement('div');d.innerHTML=tgs.html;return d.textContent.trim()})();
- // Публикуем безопасный HTML-черновик; Telegram Premium владельца не требуется.
- button.disabled=true;status.className='st';status.textContent='Отправляю пост в канал…';
- try{const d=await tgRequest('/tg/publish','POST',{text:tgs.html,parse_mode:'HTML'});status.className='st ok';status.textContent=d.message||'Пост опубликован'}
- catch(e){status.className='st er';status.textContent=e.message}
- button.disabled=false;
-}
 function tg(m){
  const sc=el('div','scroll');
  const w=el('div','tgw');
@@ -1112,19 +1073,13 @@ function tg(m){
  <input class="f" id="tgt" placeholder="Тема нового поста (необязательно)" autocomplete="off">
  <div class="row"><button class="btn" id="tga">${svg('search',16)}<span>Анализировать</span></button></div><div class="st" id="tgs"></div>`;
  const out=el('div');out.id='tgo';
- const lk=el('div','card');lk.id='tg-connect-card';
- lk.innerHTML=`<h3><span class="ib">${svg('bot',17)}</span>Подключение Telegram-бота</h3>
- <p>Создай бота через @BotFather, добавь его администратором канала с правом публикации, затем введи токен и адрес канала.</p>
- <input class="f" id="tg-bot-token" type="password" placeholder="Токен бота от @BotFather" autocomplete="off" spellcheck="false">
- <input class="f" id="tg-channel" placeholder="@канал или https://t.me/канал" autocomplete="off" autocapitalize="off">
- <div class="row"><button class="btn" id="tg-connect">${svg('link',16)}<span>Подключить бота</span></button><button class="btn g" id="tg-disconnect">Отключить</button></div>
- <div class="st" id="tg-connect-status"></div><div class="st" id="tg-connection-status">Проверяю подключение…</div>
- <div class="note">Premium владельца не передаётся боту. Бот публикует через Bot API; обычные сообщения и HTML-оформление работают без Premium.</div>`;
- w.append(a,lk,out);sc.append(w);m.append(sc);
+ const lk=el('div','card');
+ lk.innerHTML=`<h3><span class="ib">${svg('lock',17)}</span>Больше — в приложении</h3><p>Автоведение канала доступно в приложении V-Agent по Premium-подписке.</p>
+ <div class="feat" style="margin-bottom:14px"><div><span class="ib">${svg('clock',17)}</span>Автопостинг в Telegram по расписанию</div><div><span class="ib">${svg('zap',17)}</span>Автосоздание постов для канала</div><div><span class="ib">${svg('film',17)}</span>Разбор видео: текст, пересказ и промпт</div></div>
+ <a class="btn g" href="index.html#download">Скачать приложение</a>`;
+ w.append(a,out);sc.append(w);m.append(sc);
  sc.querySelector('#tga').onclick=tgAnalyze;
  sc.querySelector('#tgl').onkeydown=e=>{if(e.key==='Enter')tgAnalyze()};
- sc.querySelector('#tg-connect').onclick=tgConnect;sc.querySelector('#tg-disconnect').onclick=tgDisconnect;
- tgLoadStatus();
  if(tgs){sc.querySelector('#tgl').value='t.me/'+tgs.name;tgRender()}
 }
 function neuro(m){
@@ -1233,7 +1188,7 @@ function me(m){
  <input class="f" id="tk" type="password" placeholder="API токен (cfut_…)" value="${k?'••••••••':''}" autocomplete="off"><input class="f" id="ac" placeholder="Account ID (32 символа или вся ссылка)" value="${k?k.account:''}" autocomplete="off">
  <div class="row"><button class="btn" onclick="saveKey()">Сохранить и проверить</button>${k?'<button class="btn g" onclick="delKey()">Удалить</button>':''}</div><div class="st" id="ks"></div>`;
  sc.append(grp('Нейросети',[acc('key','Ключ Cloudflare',k?'Подключён — ИИ работает':'Добавь ключ, чтобы ИИ заработал',`<span class="badge ${k?'ok':''}"><i></i>${k?'Подключён':'Не добавлен'}</span>`,keyBody,!k)]));
- const pwBody=`<input class="f" id="op" type="password" placeholder="Старый пароль" autocomplete="current-password"><input class="f" id="np" type="password" placeholder="Новый пароль (от 4 символов)" autocomplete="new-password"><div class="row"><button class="btn" onclick="chPass()">Сменить пароль</button></div><div class="st" id="ps"></div>`;
+ const pwBody=`<input class="f" id="op" type="password" placeholder="Старый пароль" autocomplete="current-password"><input class="f" id="np" type="password" placeholder="Новый пароль (от 6 символов, буква + цифра + знак)" autocomplete="new-password"><div class="row"><button class="btn" onclick="chPass()">Сменить пароль</button></div><div class="st" id="ps"></div>`;
  sc.append(grp('Безопасность',[acc('shield','Сменить пароль','Введи старый и новый пароль','',pwBody,false)]));
  const total=Object.values(st.chats).reduce((n,a)=>n+(a?a.length:0),0);
  const [rc,bc]=row('trash','Очистить историю чатов',total?total+' сообщ. в этом браузере':'История пуста','','danger');
@@ -1255,7 +1210,7 @@ async function saveKey(){
 }
 function delKey(){localStorage.removeItem(CKEY);draw()}
 async function chPass(){
- const s=$('#ps'),o=$('#op').value,n=$('#np').value;if(!o||n.length<4){s.className='st er';s.textContent='Заполни поля (новый пароль от 4 символов)';return}
+ const s=$('#ps'),o=$('#op').value,n=$('#np').value;if(!o||! /^(?=.*[A-Za-z])(?=.*[0-9])(?=.*[^A-Za-z0-9\\s])[\\x21-\\x7E]{6,256}$/.test(n)){s.className='st er';s.textContent='Новый пароль: минимум 6 символов, английская буква, цифра и спецзнак, без пробелов';return}
  try{const r=await fetch(API+'/change-password',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:USER,old_password:o,new_password:n})});const d=await r.json();s.className='st '+(r.ok?'ok':'er');s.textContent=r.ok?'Пароль изменён ✓':(d.error||'Ошибка');if(r.ok)addNotification('Пароль успешно изменен!', 'success');else addNotification('Ошибка смены пароля: '+(d.error||''), 'error')}catch(e){s.className='st er';s.textContent='Нет связи с сервером'}
 }
 function logout(){localStorage.removeItem('vagent_user');location.href='web.html'}
