@@ -8,7 +8,7 @@
 </style></head>
 <body><div class="glow"></div>
 <nav class="nav"><a href="index.html"><img src="logo_text.png" alt="V-AGENT"></a><div class="navlinks"><button onclick="openModal('privacy')">Безопасность</button><button onclick="openModal('rules')">Правила</button></div></nav>
-<main class="card"><img class="logo" src="logo_text.png" alt="V-AGENT"><div class="field"><input id="username" type="text" placeholder="Логин" autocomplete="username" maxlength="40"></div><div class="field"><input id="password" type="password" placeholder="Пароль" autocomplete="current-password"></div><div class="field" id="confirm-group" hidden><input id="confirm-password" type="password" placeholder="Подтверди пароль" autocomplete="new-password"></div><button id="submit-btn" class="btn primary">Войти</button><button id="switch-btn" class="btn link">Нет аккаунта? Зарегистрироваться</button></main>
+<main class="card"><img class="logo" src="logo_text.png" alt="V-AGENT"><div class="field"><input id="username" type="text" placeholder="Логин (английские буквы и цифры)" autocomplete="username" maxlength="40" pattern="[A-Za-z0-9]{3,40}" autocapitalize="off" spellcheck="false"></div><div class="field"><input id="password" type="password" placeholder="Пароль" autocomplete="current-password" maxlength="256"></div><div class="field" id="confirm-group" hidden><input id="confirm-password" type="password" placeholder="Подтверди пароль" autocomplete="new-password"></div><button id="submit-btn" class="btn primary">Войти</button><button id="switch-btn" class="btn link">Нет аккаунта? Зарегистрироваться</button></main>
 <div class="notice" id="notice" role="status"></div><div class="modal" id="modal" onclick="if(event.target===this)closeModal()"><div class="modalbox"><button onclick="closeModal()">×</button><h2 id="modal-title"></h2><div id="modal-text"></div></div></div>
 <script>
 const API='https://vagent-backend.novalaim11.workers.dev';
@@ -20,8 +20,9 @@ $('switch-btn').addEventListener('click',()=>{isLoginMode=!isLoginMode;$('submit
 $('submit-btn').addEventListener('click',async()=>{
  const user=$('username').value.trim(),pass=$('password').value,confirmPass=$('confirm-password').value;
  if(!user||!pass){notify('Заполни логин и пароль');return}
+ if(!/^[A-Za-z0-9]{3,40}$/.test(user)){notify('Логин: 3–40 символов, только английские буквы и цифры');return}
+ if(!isLoginMode&&!/^(?=.*[A-Za-z])(?=.*[0-9])(?=.*[^A-Za-z0-9\s])[\x21-\x7E]{6,256}$/.test(pass)){notify('Пароль: минимум 6 символов, английская буква, цифра и спецзнак (!@#$ и т. п.), без пробелов');return}
  if(!isLoginMode&&(pass!==confirmPass)){notify('Пароли не совпадают');return}
- if(!isLoginMode&&(pass.length<8)){notify('Для нового аккаунта пароль должен быть не короче 8 символов');return}
  const btn=$('submit-btn');btn.disabled=true;btn.textContent='Загрузка…';
  try{
   if(!isLoginMode){const rr=await fetch(API+'/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:user,password:pass})});const rd=await rr.json().catch(()=>({}));if(!rr.ok)throw new Error(rd.error||'Ошибка регистрации')}
