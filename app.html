@@ -1110,7 +1110,10 @@ function tg(m){
  const sc=el('div','scroll');const w=el('div','tgw');
  const a=el('div','card tga');
  a.innerHTML=`<h3><span class="ib">${svg('bot',17)}</span>Telegram-автоматизация</h3><p>Подключи бота, выбери дни и время публикаций. Расписание выполняется на сервере, даже когда сайт закрыт.</p>
- <input class="f" id="tg-bot-token" type="password" placeholder="Токен бота от @BotFather" autocomplete="off" spellcheck="false">
+ <div class="tg-token-row" style="display:flex;gap:8px;align-items:stretch">
+ <input class="f" id="tg-bot-token" type="password" placeholder="Токен бота от @BotFather" autocomplete="new-password" autocapitalize="off" autocorrect="off" spellcheck="false" inputmode="text" style="flex:1;min-width:0">
+ <button class="btn g" type="button" id="tg-token-toggle" aria-label="Показать токен" aria-pressed="false" style="white-space:nowrap;padding-left:14px;padding-right:14px">Показать</button>
+ </div>
  <input class="f" id="tg-channel" placeholder="@канал или https://t.me/канал" autocomplete="off" autocapitalize="off">
  <div class="row"><button class="btn" id="tg-connect">${svg('link',16)}<span>Подключить бота</span></button><button class="btn g" id="tg-disconnect">Отключить</button></div>
  <div class="st" id="tg-connect-status"></div><div class="st" id="tg-connection-status">Проверяю подключение…</div>
@@ -1130,6 +1133,8 @@ function tg(m){
  <div class="row"><button class="btn" id="tga">${svg('search',16)}<span>Анализировать</span></button></div><div class="st" id="tgs"></div>`;
  const out=el('div');out.id='tgo';w.append(a,plan,analyze,out);sc.append(w);m.append(sc);
  sc.querySelector('#tg-connect').onclick=tgConnect;sc.querySelector('#tg-disconnect').onclick=tgDisconnect;
+ const tokenInput=sc.querySelector('#tg-bot-token'),tokenToggle=sc.querySelector('#tg-token-toggle');
+ tokenToggle.onclick=()=>{const show=tokenInput.type==='password';tokenInput.type=show?'text':'password';tokenToggle.textContent=show?'Скрыть':'Показать';tokenToggle.setAttribute('aria-label',show?'Скрыть токен':'Показать токен');tokenToggle.setAttribute('aria-pressed',String(show));tokenInput.focus()};
  sc.querySelector('#tg-detect').onclick=tgAutoDetect;sc.querySelector('#tg-save').onclick=tgAutoSave;sc.querySelector('#tg-stop').onclick=tgAutoStop;
  sc.querySelector('#tga').onclick=tgAnalyze;sc.querySelector('#tgl').onkeydown=e=>{if(e.key==='Enter')tgAnalyze()};
  tgLoadStatus();tgLoadSchedule();
