@@ -564,11 +564,11 @@ const MODES={
 const STY={photo:['Реализм','photorealistic photograph, DSLR, 85mm lens, natural lighting, sharp focus, high detail'],anime:['Аниме','anime artwork, Studio Ghibli style, soft cel shading, vibrant pastel colors'],'3d':['3D','3D render, octane render, cinematic lighting, highly detailed'],cyberpunk:['Киберпанк','cyberpunk style, neon lights, rainy night city, purple and cyan glow'],fantasy:['Фэнтези','epic fantasy art, magical atmosphere, dramatic lighting, concept art'],sketch:['Скетч','pencil sketch, graphite illustration, cross-hatching, monochrome'],minimal:['Минимализм','minimalist flat vector illustration, clean lines, solid colors, poster style']};
 const TPL=[['instruction','Инструкция','Заголовок с эмодзи «Как сделать…»; короткое вступление; 3-7 шагов с эмодзи; один важный совет; вопрос читателю'],['review','Обзор','Цепляющий заголовок; вступление; плюсы (✅); минусы (❌); итог-рекомендация; вопрос «А вы пробовали?»'],['facts','10 фактов','Заголовок «10 фактов о…»; вступление; ровно 10 фактов с эмодзи; самый удивительный факт отдельно; вопрос'],['case','Кейс','Заголовок с результатом; Было; Что сделали (3-4 шага); Стало; вывод; вопрос'],['mistakes','Ошибки','Заголовок «5 ошибок в…»; почему важно; список ошибок с объяснением; как правильно; вопрос'],['top','ТОП-N','Заголовок «ТОП-5…»; критерии; нумерованный список с описанием; победитель; вопрос']];
 const SYS='Ты — полезный ассистент. Отвечай кратко и по делу, на русском языке. Помогаешь писать тексты, отвечать на вопросы, объяснять сложное простыми словами. Не используй Markdown-разметку.';
-const LKEY='vagent_c_'+USER, CKEY='vagent_cf_'+USER;
+const LKEY='vagent_c_'+USER;
 let st={view:'home',mode:'chat',style:'photo',tpl:'instruction',busy:false,chats:{}};
 try{st.chats=JSON.parse(localStorage.getItem(LKEY)||'{}')}catch(e){}
 const save=()=>{try{localStorage.setItem(LKEY,JSON.stringify(st.chats))}catch(e){for(const k in st.chats)st.chats[k].forEach(m=>delete m.img);try{localStorage.setItem(LKEY,JSON.stringify(st.chats))}catch(_){}}};
-const cf=()=>{try{return JSON.parse(localStorage.getItem(CKEY)||'null')}catch(e){return null}};
+const cf=()=>true;
 const isDesk=()=>innerWidth>=900;
 $('#avm').textContent=USER[0].toUpperCase();
 $('#ava').textContent=USER[0].toUpperCase();
@@ -661,14 +661,13 @@ $('#pm-ic1').outerHTML=svg('gear',16);
 $('#pm-ic2').outerHTML=svg('out',16);
 
 async function ai(path,body){
- const k=cf();if(!k)throw new Error('Добавь ключ Cloudflare в разделе «Профиль»');
- let r;try{r=await fetch(API+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...body,token:k.token,account_id:k.account})})}catch(e){throw new Error('Нет связи с сервером')}
+ let r;try{r=await fetch(API+path,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+(localStorage.getItem('vagent_session_token')||'')},body:JSON.stringify(body)})}catch(e){throw new Error('Нет связи с сервером')}
  const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||'Ошибка ИИ');return d;
 }
 const chatAI=(messages,max)=>ai('/ai/text',{messages,max_tokens:max||900}).then(d=>{const t=d.text;return (typeof t==='string'?t:t==null?'':JSON.stringify(t)).trim()});
 
-const SIDE=[['home','home','Главная'],['premium','crown','Premium'],['grp','Нейросети'],['chat','chat'],['image','image'],['ideas','bulb'],['templates','grid'],['hashtags','hash'],['grp','Ещё'],['an','chart','Анализ канала'],['tg','send','Автоведение'],['me','gear','Настройки']];
-const TABS=[['neuro','spark','Нейросети'],['an','chart','Анализ'],['home','home','Главная'],['tg','send','Автоведение'],['me','gear','Настройки']];
+const SIDE=[['home','home','Главная'],['premium','crown','Premium'],['grp','Нейросети'],['chat','chat'],['image','image'],['ideas','bulb'],['templates','grid'],['hashtags','hash'],['grp','Ещё'],['an','chart','Анализ канала'],['tg','send','Telegram'],['me','gear','Настройки']];
+const TABS=[['neuro','spark','Нейросети'],['an','chart','Анализ'],['home','home','Главная'],['tg','send','Telegram'],['me','gear','Настройки']];
 function go(v,mode){if(mode)st.mode=mode;st.view=v;drawNav();draw();if(v==='tg'||v==='premium')premiumRefresh().then(()=>{if(st.view===v){drawNav();draw()}})}
 function drawNav(){
  const on=n=>st.view==='neuro'?n===st.mode:n===st.view;
@@ -915,9 +914,8 @@ async function tgClassify(){
 async function webFacts(queries){
  const qs=[...new Set(queries.map(x=>x.trim()).filter(Boolean))].slice(0,3);
  if(!qs.length)return{items:[],err:''};
- const k=cf();
  try{
-  const r=await fetch(API+'/search',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({queries:qs,token:k.token,account_id:k.account})});
+  const r=await fetch(API+'/search',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+(localStorage.getItem('vagent_session_token')||'')},body:JSON.stringify({queries:qs})});
   if(r.status===404)return{items:[],err:'Веб-поиск недоступен: задеплой новый entry.js (wrangler deploy).'};
   const d=await r.json().catch(()=>({}));
   if(!r.ok)return{items:[],err:d.error||'Веб-поиск не сработал'};
@@ -1026,8 +1024,6 @@ async function tgAnalyze(){
  const ch=tgChannel($('#tgl').value);
  s.className='st';s.textContent='';
  if(!ch){s.className='st er';s.textContent='Не похоже на ссылку. Пример: t.me/durov';return}
- const k=cf();
- if(!k){s.className='st er';s.textContent='Сначала добавь ключ Cloudflare в настройках — он нужен для ИИ.';return}
  const topic=($('#tgt').value||'').trim();
  btn.disabled=true;o.innerHTML='';
  const sl=el('div','steps tgn');
@@ -1038,7 +1034,7 @@ async function tgAnalyze(){
  try{
   mark(0,'run');
   let r;
-  try{r=await fetch(API+'/tg/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({channel:ch,topic:'',style_only:true,token:k.token,account_id:k.account})})}
+  try{r=await fetch(API+'/tg/analyze',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+tgSession()},body:JSON.stringify({channel:ch,topic:'',style_only:true})})}
   catch(e){throw new Error('Нет связи с сервером')}
   const d=await r.json().catch(()=>({}));
   if(!r.ok)throw new Error(d.error||'Не удалось прочитать канал');
@@ -1136,7 +1132,7 @@ async function tgPublish(button,status){
 function tg(m){
  const sc=el('div','scroll');const w=el('div','tgw');
  const a=el('div','card tga');
- a.innerHTML=`<h3><span class="ib">${svg('bot',17)}</span>Автоведение соцсетей</h3><p>Подключи Telegram сейчас. Архитектура раздела подготовлена для ВКонтакте и MAX. Расписание выполняется на сервере.</p>
+ a.innerHTML=`<h3><span class="ib">${svg('bot',17)}</span>Telegram-автоматизация</h3><p>Подключи бота, выбери дни и время публикаций. Расписание выполняется на сервере, даже когда сайт закрыт.</p>
  <div class="tg-token-row" style="display:flex;gap:8px;align-items:stretch">
  <input class="f" id="tg-bot-token" type="password" placeholder="Токен бота от @BotFather" autocomplete="new-password" autocapitalize="off" autocorrect="off" spellcheck="false" inputmode="text" style="flex:1;min-width:0">
  <button class="btn g" type="button" id="tg-token-toggle" aria-label="Показать токен" aria-pressed="false" style="white-space:nowrap;padding-left:14px;padding-right:14px">Показать</button>
@@ -1147,25 +1143,20 @@ function tg(m){
  <div class="note">Бот должен быть администратором канала с правом публикации сообщений.</div>`;
  const plan=el('div','card');plan.id='tg-plan';
  plan.innerHTML=`<h3><span class="ib">${svg('clock',17)}</span>Расписание автопостинга</h3>
- <p>Выбери дни недели и добавь до 5 времён публикации.</p>
+ <p>Выбери дни недели и добавь до 5 времён публикации с шагом 5 минут.</p>
  <div class="tg-cal" id="tg-calendar"></div><div class="tg-days" id="tg-days">${[['Пн',1],['Вт',2],['Ср',3],['Чт',4],['Пт',5],['Сб',6],['Вс',0]].map(([n,d])=>`<label><input type="checkbox" value="${d}" checked><span>${n}</span></label>`).join('')}</div>
  <label class="tg-label">Время публикаций</label><div class="tg-time-list" id="tg-time-list"></div>
  <div class="tg-time-picker" id="tg-time-picker"><div class="tg-wheel-field"><span>Часы</span><div class="tg-wheel" id="tg-hour-wheel" role="listbox" aria-label="Часы"></div></div><span class="tg-time-colon">:</span><div class="tg-wheel-field"><span>Минуты</span><div class="tg-wheel" id="tg-minute-wheel" role="listbox" aria-label="Минуты"></div></div><button class="btn sm" id="tg-add-time" type="button">${svg('plus',15)} Добавить</button></div>
  <div class="note">Чтобы удалить время, нажми на его пункт два раза подряд.</div>
  <div class="row"><button class="btn g" id="tg-detect">${svg('spark',16)}<span>Автоопределение</span></button></div><div class="st" id="tg-detect-status"></div>
- <label class="tg-label" for="tg-topic">Тема публикаций</label><input class="f" id="tg-topic" placeholder="Например: динозавры, технологии, наука">
- <label class="tg-label" for="tg-length">Длина поста</label><select class="f" id="tg-length"><option value="short">Короткий</option><option value="standard" selected>Стандартный</option><option value="long">Длинный</option></select>
- <label class="tg-label" for="tg-style">Стиль текста</label><select class="f" id="tg-style"><option value="expert">Экспертный и понятный</option><option value="news">Новостной и нейтральный</option><option value="friendly">Дружелюбный</option><option value="science">Научно-популярный</option><option value="story">Познавательный рассказ</option><option value="intrigue">Интригующий, без кликбейта</option><option value="official">Сдержанный официальный</option></select>
- <label class="tg-label" for="tg-image-mode">Изображения</label><select class="f" id="tg-image-mode"><option value="off">Не добавлять фото</option><option value="ai">Генерировать тематическое фото</option><option value="commons">Искать тематическое фото</option><option value="auto">По решению помощника</option></select>
- <label class="tg-label" for="tg-news-mode">Источники</label><select class="f" id="tg-news-mode"><option value="topic">Новые оригинальные материалы по теме</option><option value="news">Свежие новости по теме + проверка релевантности</option></select>
- <div class="note">Новости ищутся отдельно от Википедии. Если свежая подходящая новость не найдена или её нельзя проверить, ИИ не должен выдавать выдумку за новость.</div>
- <label class="tg-label">Ссылки под постом (необязательно, до 2)</label>
- <input class="f" id="tg-link1-text" placeholder="Текст первой ссылки, например: Наш сайт">
- <input class="f" id="tg-link1-url" placeholder="https://example.com" inputmode="url">
- <input class="f" id="tg-link2-text" placeholder="Текст второй ссылки (необязательно)">
- <input class="f" id="tg-link2-url" placeholder="https://example.com" inputmode="url">
- <label class="tg-label" for="tg-extra-prompt">Дополнительные строгие инструкции</label><textarea class="f" id="tg-extra-prompt" rows="4" placeholder="Например: объясняй сложные термины простыми словами; не повторяй темы последних публикаций."></textarea>
- <div class="row"><button class="btn" id="tg-save">${svg('check',16)}<span>Сохранить и включить</span></button><button class="btn g" id="tg-stop">Остановить</button></div><div class="row"><button class="btn g" id="tg-check">${svg('shield-check',16)}<span>Проверить автопостинг</span></button></div><div class="st" id="tg-plan-status"></div><div class="note" id="tg-plan-info">Расписание ещё не загружено.</div><div class="note">Для запуска нужен Cron Trigger Cloudflare: */5 * * * * (раз в 5 минут). Время публикаций выбирается с шагом 5 минут.</div>`;
+ <label class="tg-label" for="tg-topic">Тема публикаций</label><input class="f" id="tg-topic" placeholder="Например: технологии, новости, советы">
+ <label class="tg-label" for="tg-post-length">Длина поста</label><select class="f" id="tg-post-length"><option value="short">Короткий</option><option value="standard" selected>Стандартный</option><option value="long">Длинный</option></select>
+ <label class="tg-label" for="tg-post-style">Стиль публикаций</label><select class="f" id="tg-post-style"><option value="friendly">Дружелюбный</option><option value="expert">Экспертный</option><option value="news">Новостной</option><option value="popular_science">Научно-популярный</option><option value="intriguing">Интригующий</option></select>
+ <label class="tg-days"><input type="checkbox" id="tg-emoji-mode"><span>Тематические эмодзи только в начале заголовка</span></label>
+ <label class="tg-label" for="tg-link1-label">Ссылка внизу поста (необязательно)</label><input class="f" id="tg-link1-label" placeholder="Текст ссылки"><input class="f" id="tg-link1-url" placeholder="https://…">
+ <label class="tg-label" for="tg-link2-label">Вторая ссылка (необязательно)</label><input class="f" id="tg-link2-label" placeholder="Текст ссылки"><input class="f" id="tg-link2-url" placeholder="https://…">
+ <label class="tg-label" for="tg-image-mode">Изображения</label><select class="f" id="tg-image-mode"><option value="off">Без изображений</option><option value="ai">Генерировать ИИ</option><option value="commons">Искать Wikimedia Commons</option></select>
+ <div class="row"><button class="btn" id="tg-save">${svg('check',16)}<span>Сохранить и включить</span></button><button class="btn g" id="tg-stop">Остановить</button></div><div class="row"><button class="btn g" id="tg-check">${svg('shield-check',16)}<span>Проверить автопостинг</span></button></div><div class="st" id="tg-plan-status"></div><div class="note" id="tg-plan-info">Расписание ещё не загружено.</div><div class="note">Для запуска расписания на сервере нужен Cron Trigger Cloudflare с интервалом 5 минут (*/5 * * * *).</div>`;
  w.append(a,plan);sc.append(w);m.append(sc);
  sc.querySelector('#tg-connect').onclick=tgConnect;sc.querySelector('#tg-disconnect').onclick=tgDisconnect;
  const tokenInput=sc.querySelector('#tg-bot-token'),tokenToggle=sc.querySelector('#tg-token-toggle');
@@ -1212,26 +1203,26 @@ function tgRenderTimes(root=document){
  if(!tgTimes.length){host.innerHTML='<span class="note">Время ещё не добавлено.</span>';return}
  tgTimes.forEach(time=>{const b=document.createElement('button');b.type='button';b.className='tg-time-item'+(tgArmedTime===time?' armed':'');b.textContent=time===tgArmedTime?time+' · ещё раз для удаления':time;b.setAttribute('aria-label',tgArmedTime===time?`Нажми ещё раз, чтобы удалить ${time}`:`Выбрать ${time} для удаления`);b.onclick=()=>{if(tgArmedTime===time){tgTimes=tgTimes.filter(x=>x!==time);tgArmedTime='';if(tgArmTimer)clearTimeout(tgArmTimer);tgRenderTimes(root);return}tgArmedTime=time;if(tgArmTimer)clearTimeout(tgArmTimer);tgArmTimer=setTimeout(()=>{tgArmedTime='';tgRenderTimes(root)},3500);tgRenderTimes(root)};host.append(b)});
 }
-function tgWheelBuild(host,count,selected){
- host.innerHTML='<div class="tg-wheel-spacer"></div>'+Array.from({length:count},(_,i)=>`<div class="tg-wheel-item${i===selected?' active':''}" data-value="${i}">${String(i).padStart(2,'0')}</div>`).join('')+'<div class="tg-wheel-spacer"></div>';
+function tgWheelBuild(host,count,selected,step=1){
+ host.innerHTML='<div class="tg-wheel-spacer"></div>'+Array.from({length:count},(_,i)=>`<div class="tg-wheel-item${i===selected?' active':''}" data-value="${i}">${String(i*step).padStart(2,'0')}</div>`).join('')+'<div class="tg-wheel-spacer"></div>';
  host.scrollTop=selected*40;
  let settle;
- host.onscroll=()=>{const idx=Math.max(0,Math.min(count-1,Math.round(host.scrollTop/40)));host.querySelectorAll('.tg-wheel-item').forEach((el,i)=>el.classList.toggle('active',i===idx));clearTimeout(settle);settle=setTimeout(()=>{host.scrollTo({top:idx*40,behavior:'smooth'});host.dataset.value=String(idx).padStart(2,'0')},90)};
+ host.onscroll=()=>{const idx=Math.max(0,Math.min(count-1,Math.round(host.scrollTop/40)));host.querySelectorAll('.tg-wheel-item').forEach((el,i)=>el.classList.toggle('active',i===idx));clearTimeout(settle);settle=setTimeout(()=>{host.scrollTo({top:idx*40,behavior:'smooth'});host.dataset.value=String(idx*step).padStart(2,'0')},90)};
  host.dataset.value=String(selected).padStart(2,'0');
- host.querySelectorAll('.tg-wheel-item').forEach(el=>el.onclick=()=>{const idx=Number(el.dataset.value);host.scrollTo({top:idx*40,behavior:'smooth'});host.dataset.value=String(idx).padStart(2,'0')});
+ host.querySelectorAll('.tg-wheel-item').forEach(el=>el.onclick=()=>{const idx=Number(el.dataset.value);host.scrollTo({top:idx*40,behavior:'smooth'});host.dataset.value=String(idx*step).padStart(2,'0')});
 }
 function tgTimePickerInit(root,initial=[]){
  tgTimes=[...new Set(initial)].sort();tgArmedTime='';const add=root.querySelector('#tg-add-time');if(!add)return;tgRenderTimes(root);
- const hour=root.querySelector('#tg-hour-wheel'),minute=root.querySelector('#tg-minute-wheel');tgWheelBuild(hour,24,9);tgWheelBuild(minute,12,0);
- add.onclick=()=>{const time=`${hour.dataset.value||'09'}:${String(Number(minute.dataset.value||'00')*5).padStart(2,'0')}`,status=root.querySelector('#tg-plan-status');if(tgTimes.length>=5){status.className='st er';status.textContent='Можно добавить максимум 5 времён.';return}if(tgTimes.includes(time)){status.className='st er';status.textContent='Это время уже добавлено.';return}tgTimes.push(time);tgTimes.sort();tgArmedTime='';tgRenderTimes(root);status.className='st';status.textContent='Время добавлено.'};
+ const hour=root.querySelector('#tg-hour-wheel'),minute=root.querySelector('#tg-minute-wheel');tgWheelBuild(hour,24,9);tgWheelBuild(minute,12,0,5);
+ add.onclick=()=>{const time=`${hour.dataset.value||'09'}:${minute.dataset.value||'00'}`,status=root.querySelector('#tg-plan-status');if(tgTimes.length>=5){status.className='st er';status.textContent='Можно добавить максимум 5 времён.';return}if(tgTimes.includes(time)){status.className='st er';status.textContent='Это время уже добавлено.';return}tgTimes.push(time);tgTimes.sort();tgArmedTime='';tgRenderTimes(root);status.className='st';status.textContent='Время добавлено.'};
 }
 function tgParseTimes(){if(!tgTimes.length)throw new Error('Добавь хотя бы одно время публикации');if(tgTimes.length>5)throw new Error('Можно добавить не более 5 времён');return [...tgTimes].sort()}
 function tgTimezone(){try{return Intl.DateTimeFormat().resolvedOptions().timeZone||'UTC'}catch(e){return 'UTC'}}
 async function tgAutoDetect(){const b=$('#tg-detect'),s=$('#tg-detect-status');b.disabled=true;s.className='st';s.textContent='Анализирую историю канала…';try{const d=await tgRequest('/tg/auto-detect','POST',{timezone:tgTimezone()});tgTimes=[...new Set((d.times||[]).slice(0,5))].sort();tgArmedTime='';tgRenderTimes();tgSetDays(d.days||[]);s.className='st ok';s.textContent=`${d.message}. Среднее: ${d.average_per_day} пост./день. Учтено публикаций: ${d.sample_posts||0}. Добавлено времён: ${tgTimes.length} (максимум 5).`}catch(e){s.className='st er';s.textContent=e.message}finally{b.disabled=false}}
-async function tgAutoSave(){const b=$('#tg-save'),s=$('#tg-plan-status');try{const k=cf();if(!k)throw new Error('Сначала добавь ключ Cloudflare в настройках V-Agent');const times=tgParseTimes(),days=tgSelectedDays();if(!days.length)throw new Error('Выбери хотя бы один день недели');if(!tgSession())throw new Error('Войди в аккаунт заново, чтобы обновить сессию');b.disabled=true;s.className='st';s.textContent='Сохраняю расписание…';const d=await tgRequest('/tg/auto-save','POST',{times,days,date_overrides:tgDateOverrides,timezone:tgTimezone(),topic:$('#tg-topic').value.trim(),image_mode:$('#tg-image-mode').value,length:$('#tg-length').value,style:$('#tg-style').value,news_mode:$('#tg-news-mode').value,extra_prompt:$('#tg-extra-prompt').value.trim(),links:[{text:$('#tg-link1-text').value.trim(),url:$('#tg-link1-url').value.trim()},{text:$('#tg-link2-text').value.trim(),url:$('#tg-link2-url').value.trim()}].filter(x=>x.text&&x.url),account_id:k.account,cf_token:k.token});s.className='st ok';s.textContent=d.message;tgLoadSchedule()}catch(e){s.className='st er';s.textContent=e.message}finally{b.disabled=false}}
+async function tgAutoSave(){const b=$('#tg-save'),s=$('#tg-plan-status');try{const times=tgParseTimes(),days=tgSelectedDays();if(!days.length)throw new Error('Выбери хотя бы один день недели');if(!tgSession())throw new Error('Войди в аккаунт заново, чтобы обновить сессию');b.disabled=true;s.className='st';s.textContent='Сохраняю расписание…';const d=await tgRequest('/tg/auto-save','POST',{times,days,date_overrides:tgDateOverrides,timezone:tgTimezone(),topic:$('#tg-topic').value.trim(),image_mode:$('#tg-image-mode').value,post_length:$('#tg-post-length').value,post_style:$('#tg-post-style').value,emoji_mode:$('#tg-emoji-mode').checked,links:[{label:$('#tg-link1-label').value,url:$('#tg-link1-url').value},{label:$('#tg-link2-label').value,url:$('#tg-link2-url').value}]});s.className='st ok';s.textContent=d.message;tgLoadSchedule()}catch(e){s.className='st er';s.textContent=e.message}finally{b.disabled=false}}
 async function tgAutoCheck(){const b=$('#tg-check'),s=$('#tg-plan-status');b.disabled=true;s.className='st';s.textContent='Проверяю бота, канал и Cloudflare AI…';try{const d=await tgRequest('/tg/auto-check','POST',{});s.className='st ok';s.textContent=d.message}catch(e){s.className='st er';s.textContent=e.message}finally{b.disabled=false}}
 async function tgAutoStop(){const s=$('#tg-plan-status');try{const d=await tgRequest('/tg/auto-stop','POST',{});s.className='st ok';s.textContent=d.message;tgLoadSchedule()}catch(e){s.className='st er';s.textContent=e.message}}
-async function tgLoadSchedule(){const info=$('#tg-plan-info');if(!info)return;try{const d=await tgRequest('/tg/auto-status');if(!d.enabled){info.textContent='Автопостинг выключен.';return}tgTimes=[...new Set((d.times||[]).slice(0,5))].sort();tgArmedTime='';tgRenderTimes();tgSetDays(d.days||[0,1,2,3,4,5,6]);tgDateOverrides=d.date_overrides&&typeof d.date_overrides==='object'?d.date_overrides:{};document.querySelector('#tg-calendar')?._render?.();$('#tg-topic').value=d.topic||'';$('#tg-image-mode').value=d.image_mode||'off';$('#tg-length').value=d.length||'standard';$('#tg-style').value=d.style||'expert';$('#tg-news-mode').value=d.news_mode||'topic';$('#tg-extra-prompt').value=d.extra_prompt||'';(d.links||[]).forEach((x,i)=>{const n=i+1;if($('#tg-link'+n+'-text'))$('#tg-link'+n+'-text').value=x.text||'';if($('#tg-link'+n+'-url'))$('#tg-link'+n+'-url').value=x.url||''});info.textContent=`Автопостинг включён · ${tgTimes.length} времён · дни: ${(d.days||[0,1,2,3,4,5,6]).map(x=>['Вс','Пн','Вт','Ср','Чт','Пт','Сб'][x]).join(', ')} · ${d.timezone}`;const status=$('#tg-plan-status');if(d.last_error){status.className='st er';status.textContent='Последняя ошибка автопостинга: '+d.last_error}else if(d.last_success){status.className='st ok';status.textContent='Последняя публикация: '+new Date(d.last_success).toLocaleString('ru-RU')}else if(d.last_attempt){status.className='st';status.textContent='Последняя попытка автопостинга: '+new Date(d.last_attempt).toLocaleString('ru-RU')}}catch(e){info.textContent=e.message}}
+async function tgLoadSchedule(){const info=$('#tg-plan-info');if(!info)return;try{const d=await tgRequest('/tg/auto-status');if(!d.enabled){info.textContent='Автопостинг выключен.';return}tgTimes=[...new Set((d.times||[]).slice(0,5))].sort();tgArmedTime='';tgRenderTimes();tgSetDays(d.days||[0,1,2,3,4,5,6]);tgDateOverrides=d.date_overrides&&typeof d.date_overrides==='object'?d.date_overrides:{};document.querySelector('#tg-calendar')?._render?.();$('#tg-topic').value=d.topic||'';$('#tg-image-mode').value=d.image_mode||'off';$('#tg-post-length').value=d.post_length||'standard';$('#tg-post-style').value=d.post_style||'friendly';$('#tg-emoji-mode').checked=d.emoji_mode===true;const links=d.links||[];$('#tg-link1-label').value=links[0]?.label||'';$('#tg-link1-url').value=links[0]?.url||'';$('#tg-link2-label').value=links[1]?.label||'';$('#tg-link2-url').value=links[1]?.url||'';info.textContent=`Автопостинг включён · ${tgTimes.length} времён · дни: ${(d.days||[0,1,2,3,4,5,6]).map(x=>['Вс','Пн','Вт','Ср','Чт','Пт','Сб'][x]).join(', ')} · ${d.timezone}`;const status=$('#tg-plan-status');if(d.last_error){status.className='st er';status.textContent='Последняя ошибка автопостинга: '+d.last_error}else if(d.last_success){status.className='st ok';status.textContent='Последняя публикация: '+new Date(d.last_success).toLocaleString('ru-RU')}else if(d.last_attempt){status.className='st';status.textContent='Последняя попытка автопостинга: '+new Date(d.last_attempt).toLocaleString('ru-RU')}}catch(e){info.textContent=e.message}}
 
 function neuro(m){
  const c=MODES[st.mode];st.chats[st.mode]||(st.chats[st.mode]=[]);
@@ -1240,7 +1231,7 @@ function neuro(m){
  const nw=el('button','btn g sm');nw.innerHTML=svg('plus',16)+'<span>Новый чат</span>';nw.style.marginLeft='auto';nw.onclick=()=>{if(st.busy)return;st.chats[st.mode]=[];save();draw()};
  hd.append(pill,nw);m.append(hd);
  const box=el('div','box');box.id='box';m.append(box);
- if(!cf()){const w=el('button','warn');w.innerHTML=svg('alert',18)+'<span>Добавь ключ Cloudflare в разделе «Профиль», чтобы ИИ заработал</span>';w.onclick=()=>go('me');m.append(w)}
+
  if(st.mode==='image'||st.mode==='templates'){
   const o=el('div','opts');
   (st.mode==='image'?Object.entries(STY).map(([k,v])=>[k,v[0]]):TPL.map(t=>[t[0],t[1]])).forEach(([k,t])=>{const cur=st.mode==='image'?st.style:st.tpl;const b=el('button','op'+(k===cur?' on':''),t);b.onclick=()=>{st[st.mode==='image'?'style':'tpl']=k;[...o.children].forEach(x=>x.classList.remove('on'));b.classList.add('on')};o.append(b)});m.append(o);
@@ -1316,29 +1307,7 @@ function me(m){
  const seg=`<div class="seg ${dark?'':'l'}" id="seg"><i></i><button data-t="dark" class="${dark?'on':''}" onclick="setTheme('dark')">${svg('moon',14)}Тёмная</button><button data-t="light" class="${dark?'':'on'}" onclick="setTheme('light')">${svg('sun',14)}Светлая</button></div>`;
  const [rt]=row('pal','Тема','Оформление приложения',seg);
  sc.append(grp('Внешний вид',[rt]));
- const cloudInstructions = `
-    <div class="cloud-steps">
-        <b>Как получить ключ (бесплатно):</b>
-        <ol>
-            <li>
-                <a href="https://dash.cloudflare.com/profile/api-tokens" target="_blank">Перейди на страницу API Tokens</a>
-                (или вручную: My Profile → API Tokens) и нажми <b>Create Token</b>.
-                Создай токен с правами <b>Workers AI (Read)</b>.
-                Скопируй токен (начинается на cfut_...).
-            </li>
-            <li>
-                <a href="https://dash.cloudflare.com/?to=/:account/workers-and-pages" target="_blank">Перейди в раздел Workers & Pages</a>.
-                Там в блоке <b>Account Details</b> найди и скопируй свой <b>Account ID</b> (32 символа).
-                (Или нажми CMD/CTRL+K и введи "Copy account ID").
-            </li>
-            <li>Вставь оба ключа в поля ниже и нажми «Сохранить и проверить».</li>
-        </ol>
-    </div>`;
- const keyBody=`<p style="color:var(--mute);font-size:13px;margin:4px 0 8px">Нужен для работы ИИ (текст и картинки). Хранится только в этом браузере.</p>
- ${cloudInstructions}
- <input class="f" id="tk" type="password" placeholder="API токен (cfut_…)" value="${k?'••••••••':''}" autocomplete="off"><input class="f" id="ac" placeholder="Account ID (32 символа или вся ссылка)" value="${k?k.account:''}" autocomplete="off">
- <div class="row"><button class="btn" onclick="saveKey()">Сохранить и проверить</button>${k?'<button class="btn g" onclick="delKey()">Удалить</button>':''}</div><div class="st" id="ks"></div>`;
- sc.append(grp('Нейросети',[acc('key','Ключ Cloudflare',k?'Подключён — ИИ работает':'Добавь ключ, чтобы ИИ заработал',`<span class="badge ${k?'ok':''}"><i></i>${k?'Подключён':'Не добавлен'}</span>`,keyBody,!k)]));
+ sc.append(grp('Нейросети',[acc('shield-check','Cloudflare AI','Подключён сервером V-Agent','<span class="badge ok"><i></i>Серверная настройка</span>','<p style="color:var(--mute);font-size:13px;margin:4px 0 8px">Cloudflare API Token хранится только в секретах Worker. Вводить или сохранять ключ в браузере не нужно.</p>',false)]));
  const pwBody=`<input class="f" id="op" type="password" placeholder="Старый пароль" autocomplete="current-password"><input class="f" id="np" type="password" placeholder="Новый пароль (от 6 символов, буква + цифра + знак)" autocomplete="new-password"><div class="row"><button class="btn" onclick="chPass()">Сменить пароль</button></div><div class="st" id="ps"></div>`;
  sc.append(grp('Подписка',[acc('crown','V-Agent Premium',premiumState.active?'Активна до '+premiumDate():'Подписка не активна',`<span class="badge ${premiumState.active?'ok':''}"><i></i>${premiumState.active?'Активна':'Не активна'}</span>`,premiumMarkup(),false)]));
  sc.append(grp('Безопасность',[acc('shield','Сменить пароль','Введи старый и новый пароль','',pwBody,false)]));
@@ -1353,14 +1322,6 @@ function me(m){
  [...sc.children].forEach((c,i)=>c.style.setProperty('--i',i));
  m.append(sc);$('#ava2').textContent=USER[0].toUpperCase();$('#nm2').textContent=USER;
 }
-async function saveKey(){
- const s=$('#ks');let tk=$('#tk').value.trim();const old=cf();if(tk.startsWith('•')&&old)tk=old.token;
- const a=($('#ac').value.match(/[a-f0-9]{32}/i)||[''])[0];
- if(tk.length<20||!a){s.className='st er';s.textContent='Проверь токен и Account ID';return}
- localStorage.setItem(CKEY,JSON.stringify({token:tk,account:a}));s.className='st';s.textContent='Проверяю…';
- try{await chatAI([{role:'user',content:'Ответь одним словом: привет'}],20);s.className='st ok';s.textContent='Ключ работает ✓';addNotification('Ключ Cloudflare успешно сохранен!', 'success')}catch(e){s.className='st er';s.textContent=e.message;addNotification('Ошибка ключа Cloudflare: ' + e.message, 'error')}
-}
-function delKey(){localStorage.removeItem(CKEY);draw()}
 async function chPass(){
  const s=$('#ps'),o=$('#op').value,n=$('#np').value;if(!o||n.length<6||!/[A-Za-z]/.test(n)||!/[0-9]/.test(n)||!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>/?`~]/.test(n)){s.className='st er';s.textContent='Новый пароль: минимум 6 символов, английская буква, цифра и специальный знак';return}
  try{const r=await fetch(API+'/change-password',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:USER,old_password:o,new_password:n})});const d=await r.json();s.className='st '+(r.ok?'ok':'er');s.textContent=r.ok?'Пароль изменён ✓':(d.error||'Ошибка');if(r.ok)addNotification('Пароль успешно изменен!', 'success');else addNotification('Ошибка смены пароля: '+(d.error||''), 'error')}catch(e){s.className='st er';s.textContent='Нет связи с сервером'}
