@@ -545,6 +545,32 @@ main{flex:1;min-height:0;position:relative;display:flex;flex-direction:column;wi
 #main .scroll > .home-premium small{display:block;white-space:normal!important;line-height:1.45;margin-top:5px!important}
 #main .scroll > .home-premium .go{position:static!important;margin-left:auto;flex:none}
 @media(max-width:560px){#main .scroll > .home-premium{min-height:100px!important;padding:18px!important;gap:14px!important;margin:18px 0 22px!important}#main .scroll > .home-premium .ib{width:48px!important;height:48px!important;flex-basis:48px!important}}
+
+/* V-AGENT UI refinement 2026-11 */
+.tgw .tg-cal-grid{grid-template-columns:repeat(7,minmax(0,1fr))!important;gap:6px!important;align-items:stretch}
+.tgw .tg-cal-day{width:100%!important;min-width:0!important;height:auto!important;aspect-ratio:1/1!important;max-height:50px!important;border-radius:12px!important;display:grid!important;place-items:center!important;padding:0!important}
+.tgw .tg-cal-week{min-width:0!important;height:32px!important;padding:0!important;display:grid!important;place-items:center!important}
+.tgw .tg-cal{padding:12px!important}
+.tgw .tg-cal-head{margin-bottom:10px!important}
+.tgw select.f,.tgw select,.tgw option{color:#f5f6ff!important;background-color:#171a26!important}
+.tgw select.f{color-scheme:dark}
+.tgw input,.tgw textarea{color:#f5f6ff!important}
+.tgw input::placeholder,.tgw textarea::placeholder{color:#9096aa!important}
+.tg-settings-toggle{width:100%;display:flex;align-items:center;gap:12px;text-align:left;padding:14px 16px;border:1px solid var(--line2);border-radius:18px;background:var(--p1);color:#f5f6ff;cursor:pointer;margin-bottom:8px}
+.tg-settings-toggle .tg-settings-meta{display:flex;flex-direction:column;gap:3px;flex:1}
+.tg-settings-toggle small{color:var(--mute);font-size:12px}
+.tg-settings-panel{display:none;gap:12px;margin-bottom:12px}
+.tg-settings-panel.open{display:grid;animation:tgDayIn .18s ease-out}
+.tg-connected-summary{display:none;align-items:center;gap:12px;padding:14px;border:1px solid rgba(75,211,158,.4);border-radius:18px;background:rgba(75,211,158,.07);color:#f5f6ff;margin-bottom:10px}
+.tg-connected-summary.visible{display:flex}
+.tg-connected-summary .tg-connected-text{flex:1;min-width:0}
+.tg-connected-summary small{display:block;color:var(--mute);margin-top:3px;overflow-wrap:anywhere}
+.tg-connected-summary button{flex-shrink:0}
+.tg-settings-panel .tga,.tg-settings-panel #tg-plan{margin:0}
+.tgw #tg-save{width:100%;justify-content:center;min-height:48px}
+.tgw #tg-stop,.tgw #tg-check{min-height:44px}
+.premium-hero h3,.premium-hero .premium-title{text-align:center!important;width:100%;display:block;margin-inline:auto!important}
+@media(max-width:520px){.tg-connected-summary{flex-wrap:wrap}.tg-connected-summary button{flex:1}.tgw .tg-cal-day{max-height:44px!important}.tg-settings-toggle{padding:12px}}
 </style>
 </head>
 <body>
@@ -1273,7 +1299,19 @@ function tg(m){
  <label class="tg-label" for="tg-link2-label">Вторая ссылка (необязательно)</label><input class="f" id="tg-link2-label" placeholder="Текст ссылки"><input class="f" id="tg-link2-url" placeholder="https://…">
  <label class="tg-label" for="tg-image-mode">Изображения</label><select class="f" id="tg-image-mode"><option value="commons" selected>Искать фото в интернете с открытой лицензией</option><option value="off">Без изображений</option></select>
  <div class="row"><button class="btn" id="tg-save">${svg('check',16)}<span>Сохранить и включить</span></button><button class="btn g" id="tg-stop">Остановить</button></div><div class="row"><button class="btn g" id="tg-check">${svg('shield-check',16)}<span>Проверить автопостинг</span></button></div><div class="st" id="tg-plan-status"></div><div class="note" id="tg-plan-info">Расписание ещё не загружено.</div><div class="note">Длина: короткий — до 100, стандартный — до 300, длинный — до 500 символов. Новости ищутся по теме, включая события последнего часа. Фото подбираются из Wikimedia Commons только при наличии подходящей открытой лицензии; авторство и тип лицензии указываются в подписи.</div><div class="note">Для запуска расписания на сервере нужен Cron Trigger Cloudflare с интервалом 5 минут (*/5 * * * *).</div>`;
- w.append(a,plan);sc.append(w);m.append(sc);
+ w.append(a,plan);
+ // Group the bot and scheduling controls behind one Settings panel.
+ const settingsPanel=el('div','tg-settings-panel');settingsPanel.append(a,plan);
+ const settingsToggle=el('button','tg-settings-toggle');settingsToggle.type='button';settingsToggle.innerHTML=`<span class="ib">${svg('settings',17)}</span><span class="tg-settings-meta"><b>Настройки Telegram</b><small>Подключение, календарь и расписание</small></span><span class="tg-settings-chevron">⌄</span>`;
+ const connectedSummary=el('div','tg-connected-summary');connectedSummary.innerHTML=`<span class="ib" style="color:#54dca5;font-size:22px">✓</span><span class="tg-connected-text"><b>Telegram-бот подключён</b><small class="tg-connected-detail">Подключение активно</small></span><button class="btn g tg-summary-edit" type="button">Изменить</button><button class="btn g tg-summary-delete" type="button">Удалить</button>`;
+ w.insertBefore(settingsToggle,a);w.insertBefore(connectedSummary,a);w.append(settingsPanel);
+ const openSettings=(open)=>{settingsPanel.classList.toggle('open',open);settingsToggle.setAttribute('aria-expanded',String(open));settingsToggle.querySelector('.tg-settings-chevron').textContent=open?'⌃':'⌄'};
+ settingsToggle.onclick=()=>openSettings(!settingsPanel.classList.contains('open'));
+ connectedSummary.querySelector('.tg-summary-edit').onclick=()=>{openSettings(true);settingsPanel.scrollIntoView({behavior:'smooth',block:'start'})};
+ connectedSummary.querySelector('.tg-summary-delete').onclick=()=>{if(confirm('Удалить подключение Telegram-бота?'))tgDisconnect()};
+ const connectionObserver=new MutationObserver(()=>{const msg=(sc.querySelector('#tg-connection-status')?.textContent||'').trim();const good=/Подключ[её]н/i.test(msg)&&!/не подключ/i.test(msg);connectedSummary.classList.toggle('visible',good);if(good){connectedSummary.querySelector('.tg-connected-detail').textContent=msg;openSettings(false)}});
+ connectionObserver.observe(sc,{subtree:true,childList:true,characterData:true});
+ sc.append(w);m.append(sc);
  sc.querySelector('#tg-connect').onclick=tgConnect;sc.querySelector('#tg-disconnect').onclick=tgDisconnect;
  sc.querySelector('#vk-connect').onclick=vkConnect;sc.querySelector('#vk-disconnect').onclick=vkDisconnect;sc.querySelector('#vk-publish').onclick=vkPublish;
  const tokenInput=sc.querySelector('#tg-bot-token'),tokenToggle=sc.querySelector('#tg-token-toggle');
