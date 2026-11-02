@@ -479,6 +479,55 @@ main{flex:1;min-height:0;position:relative;display:flex;flex-direction:column;wi
 @media(max-width:560px){.premium-key-head{display:block}.premium-key-head p{margin-top:5px}.premium-key-inline{align-items:stretch}.premium-key-inline .btn{padding-left:10px;padding-right:10px}.tg-cal-day{height:38px}.tg-time-picker{gap:7px;padding:9px}.tg-wheel{height:96px}.tg-wheel-spacer{height:28px}}
 
 .vk-instructions{padding:14px;border:1px solid var(--line);border-radius:16px;background:var(--p2);margin:12px 0}.vk-instructions ol{padding-left:20px;margin:8px 0}.vk-instructions li{margin:6px 0;color:var(--mute);font-size:13px}.vk-instructions b{color:var(--ink)}.vk-panel{display:none}.vk-panel.is-visible{display:block!important;width:100%;max-width:100%;box-sizing:border-box;animation:premiumIn .25s both}.vk-panel .f{margin:7px 0}.vk-actions{display:flex;gap:8px;flex-wrap:wrap}.vk-help{font-size:12px;color:var(--mute);margin-top:8px}
+
+/* VAGENT_TELEGRAM_UI_REFRESH_V1 */
+.tgw{gap:14px}
+.tga,.tgw>#tg-plan{border-radius:22px;border:1px solid var(--line2);box-shadow:0 10px 30px -24px #000}
+.tga>h3,.tgw>#tg-plan>h3{letter-spacing:-.02em}
+.tga{padding:18px}
+.tgw>#tg-plan{padding:18px;transition:border-color .18s,box-shadow .18s}
+.tg-cal{padding:12px!important;border:1px solid var(--line)!important;border-radius:18px!important;background:var(--p2)!important}
+.tg-cal-head{display:grid!important;grid-template-columns:40px 1fr 40px!important;align-items:center!important;gap:8px!important;margin-bottom:12px!important}
+.tg-cal-month{font-weight:600!important;text-align:center!important;text-transform:capitalize!important;letter-spacing:-.02em}
+.tg-cal-nav{width:38px!important;height:38px!important;border-radius:13px!important;border:1px solid var(--line)!important;background:var(--p1)!important;color:var(--ink)!important;font-size:24px!important;transition:transform .15s,background .15s!important}
+.tg-cal-nav:active{transform:scale(.93)}
+.tg-cal-grid{gap:5px!important}
+.tg-cal-week{height:32px!important;border:0!important;background:transparent!important;color:var(--mute)!important;border-radius:10px!important;font-size:12px!important;font-weight:600!important;transition:background .15s,color .15s!important}
+.tg-cal-week.active{color:var(--ac)!important;background:color-mix(in srgb,var(--ac) 12%,transparent)!important}
+.tg-cal-day{min-width:0!important;aspect-ratio:1!important;height:auto!important;max-height:48px!important;border:1px solid transparent!important;border-radius:13px!important;background:var(--p1)!important;color:var(--ink)!important;font-weight:500!important;transition:transform .13s,border-color .13s,background .13s!important}
+.tg-cal-day:not(.empty):hover{border-color:var(--line2)!important;transform:translateY(-1px)}
+.tg-cal-day.today{box-shadow:inset 0 0 0 1px var(--ac)!important}
+.tg-cal-day.selected{background:linear-gradient(145deg,var(--ac),var(--ac2))!important;color:#fff!important;font-weight:700!important;box-shadow:0 4px 12px -6px var(--ac2)!important}
+.tg-cal-day.override-off{background:var(--p3)!important;color:var(--mute)!important;box-shadow:inset 0 0 0 1px var(--line2)!important;text-decoration:line-through}
+.tg-cal-hint{font-size:11px!important;line-height:1.45!important;color:var(--mute)!important;margin-top:12px!important}
+.tg-days{gap:6px!important}
+.tg-days label span{border-radius:12px!important;transition:background .15s,color .15s,transform .12s!important}
+.tg-time-item{border-radius:12px!important;transition:transform .14s,border-color .14s!important}
+.tg-settings-toggle{width:100%;display:flex;align-items:center;gap:12px;text-align:left;padding:14px;border:1px solid var(--line2);border-radius:18px;background:var(--p1);color:var(--ink);transition:background .16s,border-color .16s}
+.tg-settings-toggle:hover{background:var(--hov);border-color:var(--ac)}
+.tg-settings-toggle .ib{background:color-mix(in srgb,#229ED9 14%,var(--p3));color:#229ED9}
+.tg-settings-toggle .t{display:flex;flex-direction:column;gap:3px;flex:1;min-width:0}
+.tg-settings-toggle .t b{font-size:14px}
+.tg-settings-toggle .t small{font-size:12px;color:var(--mute)}
+.tg-settings-toggle .chevron{transition:transform .2s ease;color:var(--mute)}
+.tg-settings-toggle[aria-expanded=true] .chevron{transform:rotate(180deg)}
+.tg-connect-compact{padding:14px;border:1px solid var(--line);border-radius:17px;background:var(--p2);margin-bottom:10px}
+.tg-connect-compact .row{margin-top:10px}
+.tg-setup-body{display:grid;gap:12px;overflow:hidden;animation:tgIn .2s ease both}
+.tg-setup-body[hidden]{display:none}
+.tg-setup-actions{position:sticky;bottom:0;z-index:3;padding:12px 0 max(8px,env(safe-area-inset-bottom));background:linear-gradient(0deg,var(--bg) 78%,transparent);display:grid;gap:8px}
+.tg-setup-actions .btn{width:100%;min-height:46px}
+.tg-secondary-back{width:100%;border:1px solid var(--line);background:var(--p2);color:var(--mute);border-radius:13px;padding:10px;font-weight:600}
+.tg-connected-tile{display:flex;align-items:center;gap:12px;padding:14px;border:1px solid color-mix(in srgb,var(--ok) 38%,var(--line));border-radius:18px;background:color-mix(in srgb,var(--ok) 6%,var(--p1))}
+.tg-connected-tile .tg-connection-icon{width:42px;height:42px;flex:none;border-radius:14px;display:grid;place-items:center;color:var(--ok);background:color-mix(in srgb,var(--ok) 14%,transparent);font-size:21px}
+.tg-connected-tile .tg-connected-copy{flex:1;min-width:0}
+.tg-connected-tile b{display:block;font-size:13px}
+.tg-connected-tile small{display:block;color:var(--mute);font-size:11px;overflow-wrap:anywhere}
+.tg-connected-actions{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}
+.tg-connected-actions button{padding:7px 10px!important;font-size:12px!important}
+@keyframes tgIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+@media(prefers-reduced-motion:reduce){.tg-setup-body,.tg-settings-toggle,.tg-cal-day,.tg-cal-nav{animation:none!important;transition:none!important}}
+
 </style>
 <style id="quota-brand-time">.usage-counter span{padding:6px 9px;border-radius:9px;background:var(--p2);white-space:nowrap}.usage-counter b{color:var(--ink)}.platform-sticker{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:9px;font-weight:800}.tg-sticker{background:#229ED9;color:white}.vk-sticker{background:#0077FF;color:white;font-size:12px}.max-sticker{background:#665CF6;color:white}.tg-time-manual{display:flex;gap:8px;align-items:center;margin-top:10px}.tg-time-manual input{max-width:140px}</style><style id="tg-calendar-time-emoji-repair">
 #tg-calendar{display:block!important;visibility:visible!important;opacity:1!important}
@@ -1230,6 +1279,55 @@ function tg(m){
  const tokenInput=sc.querySelector('#tg-bot-token'),tokenToggle=sc.querySelector('#tg-token-toggle');
  tokenToggle.onclick=()=>{const show=tokenInput.type==='password';tokenInput.type=show?'text':'password';tokenToggle.textContent=show?'Скрыть':'Показать';tokenToggle.setAttribute('aria-label',show?'Скрыть токен':'Показать токен');tokenToggle.setAttribute('aria-pressed',String(show));tokenInput.focus()};
  sc.querySelector('#tg-detect').onclick=tgAutoDetect;sc.querySelector('#tg-save').onclick=tgAutoSave;sc.querySelector('#tg-stop').onclick=tgAutoStop;sc.querySelector('#tg-check').onclick=tgAutoCheck;
+
+/* VAGENT_TELEGRAM_UI_REFRESH_V1 */
+(function telegramSettingsLayout(){
+ const parent=a.parentElement;
+ if(!parent)return;
+ const root=document.createElement('div');root.className='tg-layout';
+ const toggler=document.createElement('button');
+ toggler.type='button';toggler.className='tg-settings-toggle';
+ toggler.setAttribute('aria-expanded','true');
+ toggler.innerHTML='<span class="ib">⚙</span><span class="t"><b>Настройки Telegram</b><small>Подключение, календарь и расписание</small></span><span class="chevron">⌃</span>';
+ const tile=document.createElement('div');tile.className='tg-connected-tile';tile.hidden=true;
+ tile.innerHTML='<span class="tg-connection-icon">✓</span><span class="tg-connected-copy"><b>Telegram-бот подключён</b><small id="tg-compact-status">Автоматизация готова</small></span><span class="tg-connected-actions"><button type="button" class="btn g sm" id="tg-edit-settings">Изменить</button><button type="button" class="btn g sm" id="tg-remove-bot">Удалить</button></span>';
+ const details=document.createElement('div');details.className='tg-setup-body';
+ const back=document.createElement('button');back.type='button';back.className='tg-secondary-back';back.textContent='Оставить ведение';
+ const save=plan.querySelector('#tg-save');
+ const saveRow=save?.closest('.row');
+ if(saveRow){saveRow.insertBefore(back,save);const actions=document.createElement('div');actions.className='tg-setup-actions';actions.append(save);plan.append(actions)}
+ // Replace the connection and schedule cards in-place, keeping every control and existing listener target.
+ parent.insertBefore(root,a);
+ root.append(toggler,tile,details);
+ details.append(a,plan);
+ function expand(open){
+   details.hidden=!open;toggler.setAttribute('aria-expanded',String(open));
+   toggler.querySelector('.chevron').textContent=open?'⌃':'⌄';
+   toggler.hidden=open;
+   tile.hidden=open;
+ }
+ function update(){
+   const s=a.querySelector('#tg-connection-status');
+   const msg=(s?.textContent||'').trim();
+   const connected=/^Подключён:/i.test(msg);
+   const compact=tile.querySelector('#tg-compact-status');
+   if(compact)compact.textContent=msg||'Подключение Telegram';
+   if(connected&&!details.hidden){toggler.hidden=true;tile.hidden=true}
+   else if(connected&&details.hidden){toggler.hidden=true;tile.hidden=false}
+   else if(details.hidden){toggler.hidden=false;tile.hidden=true}
+ }
+ toggler.onclick=()=>expand(true);
+ back.onclick=()=>{expand(false);update()};
+ tile.querySelector('#tg-edit-settings').onclick=()=>expand(true);
+ tile.querySelector('#tg-remove-bot').onclick=()=>{tgDisconnect();setTimeout(update,250)};
+ const s=a.querySelector('#tg-connection-status');
+ if(s)new MutationObserver(update).observe(s,{childList:true,subtree:true,characterData:true});
+ const originalLoad=tgLoadStatus;
+ tgLoadStatus=async function(){await originalLoad();update()};
+ // Start expanded on first visit. After successful setup, status can be folded to a compact tile.
+ expand(true);update();
+})();
+
  tgCalendarInit(sc);
  tgEmojiPickerInit(sc,[]);
  tgTimePickerInit(sc,['09:00','14:00','19:00']);
