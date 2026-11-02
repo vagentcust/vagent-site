@@ -529,7 +529,7 @@ main{flex:1;min-height:0;position:relative;display:flex;flex-direction:column;wi
 @media(prefers-reduced-motion:reduce){.tg-setup-body,.tg-settings-toggle,.tg-cal-day,.tg-cal-nav{animation:none!important;transition:none!important}}
 
 </style>
-<style id="quota-brand-time">.usage-counter span{padding:6px 9px;border-radius:9px;background:var(--p2);white-space:nowrap}.usage-counter b{color:var(--ink)}.platform-sticker{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:9px;font-weight:800}.tg-sticker{background:#229ED9;color:white}.vk-sticker{background:#0077FF;color:white;font-size:12px}.max-sticker{background:#665CF6;color:white}.tg-time-manual{display:flex;gap:8px;align-items:center;margin-top:10px}.tg-time-manual input{max-width:140px}</style><style id="tg-calendar-time-emoji-repair">
+<style id="quota-brand-time">.usage-counter span{padding:6px 9px;border-radius:9px;background:var(--p2);white-space:nowrap}.usage-counter.usage-inline{display:flex!important;align-items:center;gap:4px!important;flex:none;padding:0!important;margin:0!important;border:0!important;background:transparent;max-width:min(42vw,270px);overflow-x:auto;font-size:11px!important}.usage-inline span{padding:5px 7px!important}.usage-inline span:not(:first-child){display:none}.usage-inline b{color:var(--ink)}.usage-counter b{color:var(--ink)}.platform-sticker{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:9px;font-weight:800}.tg-sticker{background:#229ED9;color:white}.vk-sticker{background:#0077FF;color:white;font-size:12px}.max-sticker{background:#665CF6;color:white}.tg-time-manual{display:flex;gap:8px;align-items:center;margin-top:10px}.tg-time-manual input{max-width:140px}</style><style id="tg-calendar-time-emoji-repair">
 #tg-calendar{display:block!important;visibility:visible!important;opacity:1!important}
 .tg-time-manual{display:flex;align-items:center;gap:9px;margin:10px 0 14px}
 .tg-time-manual input{flex:1;min-width:0;min-height:46px;color:var(--ink);color-scheme:dark}
@@ -1318,53 +1318,7 @@ function tg(m){
  tokenToggle.onclick=()=>{const show=tokenInput.type==='password';tokenInput.type=show?'text':'password';tokenToggle.textContent=show?'Скрыть':'Показать';tokenToggle.setAttribute('aria-label',show?'Скрыть токен':'Показать токен');tokenToggle.setAttribute('aria-pressed',String(show));tokenInput.focus()};
  sc.querySelector('#tg-detect').onclick=tgAutoDetect;sc.querySelector('#tg-save').onclick=tgAutoSave;sc.querySelector('#tg-stop').onclick=tgAutoStop;sc.querySelector('#tg-check').onclick=tgAutoCheck;
 
-/* VAGENT_TELEGRAM_UI_REFRESH_V1 */
-(function telegramSettingsLayout(){
- const parent=a.parentElement;
- if(!parent)return;
- const root=document.createElement('div');root.className='tg-layout';
- const toggler=document.createElement('button');
- toggler.type='button';toggler.className='tg-settings-toggle';
- toggler.setAttribute('aria-expanded','true');
- toggler.innerHTML='<span class="ib">⚙</span><span class="t"><b>Настройки Telegram</b><small>Подключение, календарь и расписание</small></span><span class="chevron">⌃</span>';
- const tile=document.createElement('div');tile.className='tg-connected-tile';tile.hidden=true;
- tile.innerHTML='<span class="tg-connection-icon">✓</span><span class="tg-connected-copy"><b>Telegram-бот подключён</b><small id="tg-compact-status">Автоматизация готова</small></span><span class="tg-connected-actions"><button type="button" class="btn g sm" id="tg-edit-settings">Изменить</button><button type="button" class="btn g sm" id="tg-remove-bot">Удалить</button></span>';
- const details=document.createElement('div');details.className='tg-setup-body';
- const back=document.createElement('button');back.type='button';back.className='tg-secondary-back';back.textContent='Оставить ведение';
- const save=plan.querySelector('#tg-save');
- const saveRow=save?.closest('.row');
- if(saveRow){saveRow.insertBefore(back,save);const actions=document.createElement('div');actions.className='tg-setup-actions';actions.append(save);plan.append(actions)}
- // Replace the connection and schedule cards in-place, keeping every control and existing listener target.
- parent.insertBefore(root,a);
- root.append(toggler,tile,details);
- details.append(a,plan);
- function expand(open){
-   details.hidden=!open;toggler.setAttribute('aria-expanded',String(open));
-   toggler.querySelector('.chevron').textContent=open?'⌃':'⌄';
-   toggler.hidden=open;
-   tile.hidden=open;
- }
- function update(){
-   const s=a.querySelector('#tg-connection-status');
-   const msg=(s?.textContent||'').trim();
-   const connected=/^Подключён:/i.test(msg);
-   const compact=tile.querySelector('#tg-compact-status');
-   if(compact)compact.textContent=msg||'Подключение Telegram';
-   if(connected&&!details.hidden){toggler.hidden=true;tile.hidden=true}
-   else if(connected&&details.hidden){toggler.hidden=true;tile.hidden=false}
-   else if(details.hidden){toggler.hidden=false;tile.hidden=true}
- }
- toggler.onclick=()=>expand(true);
- back.onclick=()=>{expand(false);update()};
- tile.querySelector('#tg-edit-settings').onclick=()=>expand(true);
- tile.querySelector('#tg-remove-bot').onclick=()=>{tgDisconnect();setTimeout(update,250)};
- const s=a.querySelector('#tg-connection-status');
- if(s)new MutationObserver(update).observe(s,{childList:true,subtree:true,characterData:true});
- const originalLoad=tgLoadStatus;
- tgLoadStatus=async function(){await originalLoad();update()};
- // Start expanded on first visit. After successful setup, status can be folded to a compact tile.
- expand(true);update();
-})();
+/* Removed duplicate Telegram DOM wrapper: it nested the settings panel twice and prevented the tab from opening. */
 
  tgCalendarInit(sc);
  tgEmojiPickerInit(sc,[]);
@@ -1451,7 +1405,7 @@ function neuro(m){
  const hd=el('div','mh');const pill=el('button','pill');pill.innerHTML=`<span class="ib">${svg(c.i,19)}</span><div><b>${c.t}</b><small>${c.s}</small></div><span class="cv">${svg('chev',16)}</span>`;pill.onclick=()=>{if(!isDesk())openSheet()};
  const nw=el('button','btn g sm');nw.innerHTML=svg('plus',16)+'<span>Новый чат</span>';nw.style.marginLeft='auto';nw.onclick=()=>{if(st.busy)return;st.chats[st.mode]=[];save();draw()};
  hd.append(pill,nw);m.append(hd);
- const usage=el('div','usage-counter');usage.id='usage-counter';usage.style.cssText='display:flex;gap:8px;flex-wrap:wrap;padding:8px 12px;margin:0 0 10px;border:1px solid var(--line);border-radius:14px;color:var(--mute);font-size:12px';renderUsageCounter(usage);m.append(usage);usageRefresh();const box=el('div','box');box.id='box';m.append(box);
+ const usage=el('div','usage-counter');usage.id='usage-counter';usage.style.cssText='display:flex;gap:8px;flex-wrap:wrap;padding:8px 12px;margin:0 0 10px;border:1px solid var(--line);border-radius:14px;color:var(--mute);font-size:12px';renderUsageCounter(usage);usageRefresh();const box=el('div','box');box.id='box';m.append(box);
 
  if(st.mode==='image'||st.mode==='templates'){
   const o=el('div','opts');
@@ -1461,7 +1415,7 @@ function neuro(m){
  const sb=el('button','send');sb.id='sb';sb.innerHTML=svg('up',20);sb.setAttribute('aria-label','Отправить');sb.onclick=send;
  ta.onkeydown=e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send()}};
  ta.oninput=()=>{ta.style.height='auto';ta.style.height=Math.min(ta.scrollHeight,140)+'px'};
- f.append(ta,sb);m.append(f);
+ usage.classList.add('usage-inline');f.append(ta,usage,sb);m.append(f);
  paint();
 }
 function paint(){
