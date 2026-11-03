@@ -616,7 +616,17 @@ main{flex:1;min-height:0;position:relative;display:flex;flex-direction:column;wi
 .premium-perks{padding:17px 18px;margin:14px 0;border:1px solid var(--line2);border-radius:20px;background:var(--p1);color:var(--ink)}.premium-perks h3{font-size:16px;margin:0 0 10px}.premium-perks ul{padding-left:20px;margin:0;display:grid;gap:8px}.premium-perks li{color:var(--ink);font-size:13px;line-height:1.45}.premium-perks li::marker{color:var(--ac)}
 .cf-brand-mark{display:inline-flex;align-items:center;gap:5px;color:#f48120;font-size:12px;font-weight:700;margin-right:7px}.cf-brand-mark b{color:var(--ink)}
 [data-theme=light] .side,[data-theme=light] .tabs{background:#0B0D13!important;color:#fff!important;border-color:#222531!important}[data-theme=light] .side .si,[data-theme=light] .tabs .tb{color:#b7bdce}[data-theme=light] .side .si.on,[data-theme=light] .tabs .tb.on{color:#fff}[data-theme=light] .side .usr{background:#141722;border-color:#282d3a;color:#fff}[data-theme=light] .side .usr small{color:#a5abc0}[data-theme=light] .side .ibtn{background:#141722;color:#fff;border-color:#282d3a}
-</style></head>
+</style>
+<style id="platform-icon-alignment-fix">
+/* Align messenger marks optically inside their colored tiles. */
+.platform-choice .platform-sticker{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;flex:0 0 28px;width:28px;height:28px;padding:0;line-height:0;transform:none!important;}
+.platform-choice .tg-sticker{transform:none!important;}
+.platform-choice .tg-sticker svg{width:19px;height:19px;display:block;transform:none!important;}
+.platform-choice .vk-sticker svg{width:20px;height:20px;display:block;transform:translate(0,0)!important;}
+.platform-choice .platform-sticker svg path{transform-origin:center;}
+.platform-choice strong{display:flex;align-items:center;justify-content:center;text-align:center;}
+</style>
+</head>
 <body>
 
 <!-- ЭКРАН ЗАГРУЗКИ -->
