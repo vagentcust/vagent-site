@@ -791,7 +791,12 @@ $('#pm-ic2').outerHTML=svg('out',16);
 
 let usageState={counts:{},limit:5,premium:false};
 async function usageRefresh(){try{const token=localStorage.getItem('vagent_session_token')||'';if(!token)return;const r=await fetch(API+'/usage',{headers:{'Authorization':'Bearer '+token}});if(r.ok){usageState=await r.json();const n=document.querySelector('#usage-counter');if(n)renderUsageCounter(n)}}catch(e){}}
-function renderUsageCounter(n){const labels={chat:'Чат',image:'Фото',ideas:'Идеи',templates:'Шаблоны',hashtags:'Хештеги'};n.innerHTML=usageState.premium?'<b>V-Agent Premium</b><span>Безлимитные запросы</span>':Object.entries(labels).map(([k,v])=>`<span><b>${v}</b> ${Math.max(0,5-(usageState.counts?.[k]||0))}/5</span>`).join('')}
+function renderUsageCounter(n){
+ const mode=st.mode||'chat', labels={chat:'Чат',image:'Картинки',ideas:'Идеи',templates:'Шаблоны',hashtags:'Хештеги'};
+ if(usageState.premium){n.innerHTML='';n.hidden=true;return}
+ n.hidden=false;const used=Number(usageState.counts?.[mode]||0),limit=Number(usageState.limit||5),left=Math.max(0,limit-used);
+ n.innerHTML=`<span class="quota-chip" title="Остаток запросов в разделе ${labels[mode]||mode}"><b>${left}/${limit}</b></span>`;
+}
 async function ai(path,body){
  let r;try{r=await fetch(API+path,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+(localStorage.getItem('vagent_session_token')||'')},body:JSON.stringify({...body,feature:body.feature||st.mode||'chat'})})}catch(e){throw new Error('Нет связи с сервером')}
  const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||'Ошибка ИИ');return d;
@@ -1413,7 +1418,7 @@ function neuro(m){
  const hd=el('div','mh');const pill=el('button','pill');pill.innerHTML=`<span class="ib">${svg(c.i,19)}</span><div><b>${c.t}</b><small>${c.s}</small></div><span class="cv">${svg('chev',16)}</span>`;pill.onclick=()=>{if(!isDesk())openSheet()};
  const nw=el('button','btn g sm');nw.innerHTML=svg('plus',16)+'<span>Новый чат</span>';nw.style.marginLeft='auto';nw.onclick=()=>{if(st.busy)return;st.chats[st.mode]=[];save();draw()};
  hd.append(pill,nw);m.append(hd);
- const usage=el('div','usage-counter');usage.id='usage-counter';usage.style.cssText='display:flex;gap:8px;flex-wrap:wrap;padding:8px 12px;margin:0 0 10px;border:1px solid var(--line);border-radius:14px;color:var(--mute);font-size:12px';renderUsageCounter(usage);usageRefresh();const box=el('div','box');box.id='box';m.append(box);
+ const usage=el('div','usage-counter');usage.id='usage-counter';usage.style.cssText='display:flex;align-items:center;justify-content:center;flex:none;padding:0 2px;margin:0;border:0;background:transparent;color:var(--mute);font-size:12px';renderUsageCounter(usage);usageRefresh();const box=el('div','box');box.id='box';m.append(box);
 
  if(st.mode==='image'||st.mode==='templates'){
   const o=el('div','opts');
@@ -1580,3 +1585,12 @@ premiumRefresh().then(()=>{if(st.view==='tg'||st.view==='premium'||st.view==='me
 </script>
 </body>
 </html>
+
+<style id="requested-premium-and-quota-fixes">
+.premium-offer .offer-icon{position:relative;display:grid;place-items:center;overflow:visible}
+.premium-offer .offer-icon>svg{opacity:.10;width:34px;height:34px}
+.premium-offer .offer-duration{inset:0!important;right:auto!important;bottom:auto!important;width:100%!important;height:100%!important;min-width:0!important;padding:0!important;border:0!important;border-radius:14px!important;background:transparent!important;color:#fff!important;display:grid!important;place-items:center!important;font:800 22px/1 system-ui,sans-serif!important;box-shadow:none!important;text-shadow:0 1px 5px #0004}
+.premium-offer .offer-duration.infinite{font-size:31px!important}
+.quota-chip{display:inline-flex;align-items:center;justify-content:center;min-width:43px;height:34px;padding:0 7px;border:1px solid var(--line2);border-radius:11px;background:var(--p2);color:var(--ink);font-size:12px;white-space:nowrap}
+.usage-counter[hidden]{display:none!important}
+</style>
