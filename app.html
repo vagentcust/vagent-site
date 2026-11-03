@@ -1312,12 +1312,11 @@ function tg(m){
  <label class="tg-label" for="tg-link2-label">Вторая ссылка (необязательно)</label><input class="f" id="tg-link2-label" placeholder="Текст ссылки"><input class="f" id="tg-link2-url" placeholder="https://…">
  <label class="tg-label" for="tg-image-mode">Изображения</label><select class="f" id="tg-image-mode"><option value="commons" selected>Искать фото в интернете с открытой лицензией</option><option value="off">Без изображений</option></select>
  <div class="row"><button class="btn" id="tg-save">${svg('check',16)}<span>Сохранить и включить</span></button><button class="btn g" id="tg-stop">Остановить</button></div><div class="row"><button class="btn g" id="tg-check">${svg('shield-check',16)}<span>Проверить автопостинг</span></button></div><div class="st" id="tg-plan-status"></div><div class="note" id="tg-plan-info">Расписание ещё не загружено.</div><div class="note">Длина: короткий — до 100, стандартный — до 300, длинный — до 500 символов. Новости ищутся по теме, включая события последнего часа. Фото подбираются из Wikimedia Commons только при наличии подходящей открытой лицензии; авторство и тип лицензии указываются в подписи.</div><div class="note">Для запуска расписания на сервере нужен Cron Trigger Cloudflare с интервалом 5 минут (*/5 * * * *).</div>`;
- w.append(a,plan);
- // Group the bot and scheduling controls behind one Settings panel.
+ // Keep Telegram connection and schedule inside one settings panel.
  const settingsPanel=el('div','tg-settings-panel');settingsPanel.append(a,plan);
  const settingsToggle=el('button','tg-settings-toggle');settingsToggle.type='button';settingsToggle.innerHTML=`<span class="ib">${svg('settings',17)}</span><span class="tg-settings-meta"><b>Настройки Telegram</b><small>Подключение, календарь и расписание</small></span><span class="tg-settings-chevron">⌄</span>`;
  const connectedSummary=el('div','tg-connected-summary');connectedSummary.innerHTML=`<span class="ib" style="color:#54dca5;font-size:22px">✓</span><span class="tg-connected-text"><b>Telegram-бот подключён</b><small class="tg-connected-detail">Подключение активно</small></span><button class="btn g tg-summary-edit" type="button">Изменить</button><button class="btn g tg-summary-delete" type="button">Удалить</button>`;
- w.insertBefore(settingsToggle,a);w.insertBefore(connectedSummary,a);w.append(settingsPanel);
+ w.append(settingsToggle,connectedSummary,settingsPanel);
  const openSettings=(open)=>{settingsPanel.classList.toggle('open',open);settingsToggle.setAttribute('aria-expanded',String(open));settingsToggle.querySelector('.tg-settings-chevron').textContent=open?'⌃':'⌄'};
  settingsToggle.onclick=()=>openSettings(!settingsPanel.classList.contains('open'));
  connectedSummary.querySelector('.tg-summary-edit').onclick=()=>{openSettings(true);settingsPanel.scrollIntoView({behavior:'smooth',block:'start'})};
@@ -1500,7 +1499,7 @@ function me(m){
  const seg=`<div class="seg ${dark?'':'l'}" id="seg"><i></i><button data-t="dark" class="${dark?'on':''}" onclick="setTheme('dark')">${svg('moon',14)}Тёмная</button><button data-t="light" class="${dark?'':'on'}" onclick="setTheme('light')">${svg('sun',14)}Светлая</button></div>`;
  const [rt]=row('pal','Тема','Оформление приложения',seg);
  sc.append(grp('Внешний вид',[rt]));
- sc.append(grp('Нейросети',[acc('shield-check','Cloudflare AI','Подключён сервером V-Agent','<span class="cf-brand-mark" aria-label="Cloudflare">☁ <b>Cloudflare</b></span><span class="badge ok"><i></i>Серверная настройка</span>','<p style="color:var(--mute);font-size:13px;margin:4px 0 8px">Cloudflare API Token хранится только в секретах Worker. Вводить или сохранять ключ в браузере не нужно.</p>',false)]));
+ sc.append(grp('Нейросети',[acc('shield-check','Cloudflare AI','Подключён сервером V-Agent','<span class="cf-brand-mark" aria-label="Cloudflare"><span class="cf-logo-tile"><svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#F38020" d="M35.5 20.2a12.5 12.5 0 0 0-23.7-2.8A9.3 9.3 0 0 0 11 35h25.1a7.4 7.4 0 0 0-.6-14.8Z"/><path fill="#FAAE40" d="M8.7 35h28.1a7.3 7.3 0 0 0-1.1-14.5 12.4 12.4 0 0 0-23.9-2.8A9.3 9.3 0 0 0 8.7 35Z"/></svg></span><b>Cloudflare</b></span><span class="badge ok"><i></i>Серверная настройка</span>','<p style="color:var(--mute);font-size:13px;margin:4px 0 8px">Cloudflare API Token хранится только в секретах Worker. Вводить или сохранять ключ в браузере не нужно.</p>',false)]));
  const pwBody=`<input class="f" id="op" type="password" placeholder="Старый пароль" autocomplete="current-password"><input class="f" id="np" type="password" placeholder="Новый пароль (от 6 символов, буква + цифра + знак)" autocomplete="new-password"><div class="row"><button class="btn" onclick="chPass()">Сменить пароль</button></div><div class="st" id="ps"></div>`;
  sc.append(grp('Подписка',[acc('crown','V-Agent Premium',premiumState.active?'Активна до '+premiumDate():'Подписка не активна',`<span class="badge ${premiumState.active?'ok':''}"><i></i>${premiumState.active?'Активна':'Не активна'}</span>`,premiumMarkup(),false)]));
  sc.append(grp('Безопасность',[acc('shield','Сменить пароль','Введи старый и новый пароль','',pwBody,false)]));
@@ -1593,4 +1592,6 @@ premiumRefresh().then(()=>{if(st.view==='tg'||st.view==='premium'||st.view==='me
 .premium-offer .offer-duration.infinite{font-size:31px!important}
 .quota-chip{display:inline-flex;align-items:center;justify-content:center;min-width:43px;height:34px;padding:0 7px;border:1px solid var(--line2);border-radius:11px;background:var(--p2);color:var(--ink);font-size:12px;white-space:nowrap}
 .usage-counter[hidden]{display:none!important}
+
+.cf-brand-mark{display:inline-flex;align-items:center;gap:9px;flex-shrink:0}.cf-logo-tile{width:34px;height:34px;border-radius:10px;background:#fff;border:1px solid rgba(0,0,0,.12);display:inline-flex;align-items:center;justify-content:center;overflow:hidden;box-sizing:border-box}.cf-logo-tile svg{width:27px;height:27px;display:block}.cf-brand-mark b{font-weight:650}
 </style>
