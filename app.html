@@ -577,41 +577,32 @@ main{flex:1;min-height:0;position:relative;display:flex;flex-direction:column;wi
 .premium-hero h3,.premium-hero .premium-title{text-align:center!important;width:100%;display:block;margin-inline:auto!important}
 @media(max-width:520px){.tg-connected-summary{flex-wrap:wrap}.tg-connected-summary button{flex:1}.tgw .tg-cal-day{max-height:44px!important}.tg-settings-toggle{padding:12px}}
 
-/* Unified settings accordion, platform stickers and motion */
-.tgw .platform-picker{gap:11px;margin:0 0 14px}
-.tgw .platform-choice{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-height:88px;padding:12px 8px;transform:translateY(0);transition:transform .22s cubic-bezier(.2,.8,.2,1),border-color .22s,background .22s,box-shadow .22s}
-.tgw .platform-choice:hover{transform:translateY(-4px);border-color:var(--ac);box-shadow:0 10px 24px #0003}
-.tgw .platform-choice:active{transform:translateY(-1px) scale(.98)}
-.tgw .platform-choice strong{display:flex!important;align-items:center!important;justify-content:center!important;gap:8px;line-height:1.2}
-.tgw .platform-sticker{width:30px!important;height:30px!important;flex:0 0 30px!important;display:grid!important;place-items:center!important;border-radius:10px!important;transform:none!important;overflow:hidden}
-.tgw .platform-sticker svg{display:block;width:19px;height:19px}
-.tgw .tg-sticker svg{width:20px;height:20px}
-.tgw .vk-sticker svg{width:22px;height:22px}
-.tgw .max-sticker svg{width:21px;height:21px}
-.tgw .tg-settings-toggle{margin:0 0 10px;min-height:66px;gap:12px;transition:transform .22s,border-color .22s,background .22s,box-shadow .22s}
-.tgw .tg-settings-toggle:hover{transform:translateY(-2px);box-shadow:0 10px 25px #0002}
-.tgw .tg-settings-sticker{width:40px;height:40px;flex:0 0 40px;border-radius:13px;display:grid;place-items:center;background:linear-gradient(145deg,color-mix(in srgb,var(--ac) 24%,var(--p2)),var(--p2));font-size:20px}
-.tgw .tg-settings-meta{display:flex;flex-direction:column;gap:3px;flex:1;min-width:0}
-.tgw .tg-settings-meta b{font-size:14px}
-.tgw .tg-settings-meta small{font-size:12px;color:var(--mute)}
-.tgw .tg-settings-chevron,.tgw .tg-summary-chevron{font-size:20px;color:var(--mute);transition:transform .22s}
-.tgw .tg-settings-panel{display:grid!important;grid-template-rows:0fr;gap:0;overflow:hidden;opacity:0;max-height:0;margin:0;transition:grid-template-rows .32s ease,opacity .22s ease,max-height .35s ease,margin .25s ease}
-.tgw .tg-settings-panel>*{min-height:0}
-.tgw .tg-settings-panel.open{grid-template-rows:1fr;gap:12px;opacity:1;max-height:6000px;margin:0 0 14px;overflow:visible;animation:none}
-.tgw .tg-connected-summary{width:100%;box-sizing:border-box;display:none;align-items:center;gap:12px;padding:13px 15px;margin:0 0 10px;border:1px solid rgba(75,211,158,.42);border-radius:17px;background:linear-gradient(110deg,rgba(75,211,158,.11),rgba(75,211,158,.045));color:#f5f6ff;text-align:left;cursor:pointer;transition:transform .2s,border-color .2s,box-shadow .2s}
-.tgw .tg-connected-summary.visible{display:flex}
-.tgw .tg-connected-summary:hover{transform:translateY(-2px);border-color:rgba(75,211,158,.7);box-shadow:0 9px 22px #0002}
-.tgw .tg-connected-mark{width:36px;height:36px;flex:0 0 36px;border-radius:12px;display:grid;place-items:center;background:rgba(75,211,158,.16);color:#54dca5;font-size:20px;font-weight:800}
-.tgw .tg-connected-text{flex:1;min-width:0}
-.tgw .tg-connected-text b{display:block;font-size:13px}
-.tgw .tg-connected-text small{display:block;color:var(--mute);font-size:11px;margin-top:3px;overflow-wrap:anywhere}
-.tgw .tg-connected-summary .tg-summary-chevron{margin-left:auto}
-.tgw .vk-panel{margin:0!important}
-.tgw .vk-panel.is-visible{animation:tgDayIn .28s ease both}
-.tgw #tg-save{width:auto;min-width:190px}
-.tgw #tg-stop{min-height:44px}
-@media(max-width:520px){.tgw .platform-choice{min-height:82px}.tgw .platform-choice strong{font-size:12px}.tgw .tg-settings-sticker{width:36px;height:36px;flex-basis:36px}}
-@media(prefers-reduced-motion:reduce){.tgw .platform-choice,.tgw .tg-settings-toggle,.tgw .tg-connected-summary,.tgw .tg-settings-panel{transition:none!important}}
+/* Stable settings accordion: collapsed content cannot intercept clicks or alter layout */
+.tgw .tg-settings-toggle{width:100%;display:flex;align-items:center;gap:12px;min-height:66px;margin:0 0 10px;padding:14px 16px;border:1px solid var(--line2);border-radius:18px;background:var(--p1);color:var(--ink);cursor:pointer;text-align:left;transition:transform .2s,border-color .2s,background .2s,box-shadow .2s}
+.tgw .tg-settings-toggle:hover{transform:translateY(-2px);border-color:var(--ac);background:var(--hov);box-shadow:0 10px 25px #0002}
+.tgw .tg-settings-sticker{width:40px;height:40px;flex:0 0 40px;border-radius:13px;display:grid;place-items:center;background:linear-gradient(145deg,color-mix(in srgb,var(--ac) 24%,var(--p2)),var(--p2));color:var(--ac)}
+.tgw .tg-settings-meta{display:flex;flex:1;min-width:0;flex-direction:column;gap:3px}
+.tgw .tg-settings-meta b{font-size:14px}.tgw .tg-settings-meta small{font-size:12px;color:var(--mute)}
+.tgw .tg-settings-chevron{font-size:20px;color:var(--mute);transition:transform .22s}
+.tgw .tg-settings-toggle[aria-expanded="true"] .tg-settings-chevron{transform:rotate(180deg)}
+.tgw .tg-settings-panel{display:block!important;max-height:0;opacity:0;visibility:hidden;overflow:hidden;pointer-events:none;margin:0;padding:0;transition:max-height .32s ease,opacity .2s ease,margin .25s ease,visibility 0s linear .32s}
+.tgw .tg-settings-panel.open{max-height:1800px;opacity:1;visibility:visible;pointer-events:auto;margin:0 0 14px;transition:max-height .38s ease,opacity .22s ease,margin .25s ease,visibility 0s}
+.tgw .tg-settings-inner{min-height:0;padding:1px}
+.tg-advanced-settings{padding:16px;border:1px solid var(--line2);border-radius:18px;background:var(--p1)}
+.tg-switch-row{display:flex;align-items:center;gap:12px;min-height:54px;padding:10px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.tg-switch-row>span:first-child{display:flex;flex:1;min-width:0;flex-direction:column;gap:3px}
+.tg-switch-row b{font-size:13px;color:var(--ink)}.tg-switch-row small{font-size:11px;color:var(--mute)}
+.tg-switch-input{position:absolute;opacity:0;width:1px;height:1px}
+.tg-switch-ui{width:42px;height:24px;flex:0 0 42px;position:relative;border-radius:99px;background:var(--dim);transition:background .2s,box-shadow .2s}
+.tg-switch-ui:after{content:"";position:absolute;left:3px;top:3px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 1px 4px #0003;transition:transform .2s}
+.tg-switch-input:checked+.tg-switch-ui{background:var(--ac);box-shadow:0 0 0 3px color-mix(in srgb,var(--ac) 14%,transparent)}
+.tg-switch-input:checked+.tg-switch-ui:after{transform:translateX(18px)}
+.tg-switch-input:focus-visible+.tg-switch-ui{outline:2px solid var(--ac);outline-offset:3px}
+.tg-extra-fields[hidden]{display:none!important}
+.tg-advanced-settings .tg-emoji-picker{margin:8px 0 12px}
+.tg-advanced-settings .tg-label{margin-top:12px}
+@media(max-width:520px){.tgw .tg-settings-toggle{padding:12px}.tgw .tg-settings-sticker{width:36px;height:36px;flex-basis:36px}}
+@media(prefers-reduced-motion:reduce){.tgw .tg-settings-toggle,.tgw .tg-settings-panel{transition:none!important}}
 </style>
 <style id="requested-ui-polish">
 .generated-preview{cursor:zoom-in;max-width:min(100%,520px);border-radius:14px;transition:transform .16s;outline-offset:3px}.generated-preview:hover{transform:scale(1.01)}
@@ -1354,23 +1345,24 @@ function tg(m){
  <label class="tg-switch-row"><span><b>Добавлять изображения</b><small>Подбирать фотографии с открытой лицензией</small></span><input class="tg-switch-input" type="checkbox" id="tg-images-enabled" checked><span class="tg-switch-ui"></span></label><select class="f" id="tg-image-mode" hidden><option value="commons" selected>Искать фото в интернете с открытой лицензией</option><option value="off">Без изображений</option></select>
  </div><div class="row"><button class="btn" id="tg-save">${svg('check',16)}<span>Сохранить и включить</span></button><button class="btn g" id="tg-stop">Остановить</button></div><div class="st" id="tg-plan-status"></div><div class="note" id="tg-plan-info">Расписание ещё не загружено.</div><div class="note">Текст не обрезается посреди мысли. Новости проверяются по публикациям за последние 24 часа. Фото подбираются из Wikimedia Commons только при наличии подходящей открытой лицензии; авторство и тип лицензии указываются в подписи.</div><div class="note">Для запуска расписания на сервере нужен Cron Trigger Cloudflare с интервалом 5 минут (*/5 * * * *).</div>`;
  // Подключение, календарь, время, тема, длина и сохранение всегда доступны снаружи.
- const settingsPanel=el('div','tg-settings-panel');settingsPanel.append(plan.querySelector('#tg-advanced-settings'));
- const settingsToggle=el('button','tg-settings-toggle');settingsToggle.type='button';settingsToggle.setAttribute('aria-expanded','false');settingsToggle.innerHTML=`<span class="tg-settings-sticker" aria-hidden="true">${svg('gear',20)}</span><span class="tg-settings-meta"><b>Настройки</b><small>Дополнительные функции автопостинга</small></span><span class="tg-settings-chevron">⌄</span>`;
+ const settingsPanel=el('div','tg-settings-panel');settingsPanel.id='tg-settings-panel';
+ const settingsInner=el('div','tg-settings-inner');settingsInner.append(plan.querySelector('#tg-advanced-settings'));settingsPanel.append(settingsInner);
+ const settingsToggle=el('button','tg-settings-toggle');settingsToggle.type='button';settingsToggle.setAttribute('aria-expanded','false');settingsToggle.setAttribute('aria-controls','tg-settings-panel');settingsToggle.innerHTML=`<span class="tg-settings-sticker" aria-hidden="true">${svg('gear',20)}</span><span class="tg-settings-meta"><b>Настройки</b><small>Дополнительные функции автопостинга</small></span><span class="tg-settings-chevron" aria-hidden="true">⌄</span>`;
  const connectedSummary=el('button','tg-connected-summary');connectedSummary.type='button';connectedSummary.setAttribute('aria-expanded','false');connectedSummary.innerHTML=`<span class="tg-connected-mark" aria-hidden="true">✓</span><span class="tg-connected-text"><b>Telegram подключён</b><small class="tg-connected-detail">Подключение активно</small></span><span class="tg-summary-chevron">⌄</span>`;
- w.append(a,connectedSummary,plan,settingsToggle,settingsPanel,vkPanel,platformNotice);
- const openSettings=(open)=>{settingsPanel.classList.toggle('open',open);settingsToggle.setAttribute('aria-expanded',String(open));settingsToggle.querySelector('.tg-settings-chevron').textContent=open?'⌃':'⌄'};
- settingsToggle.onclick=()=>openSettings(!settingsPanel.classList.contains('open'));
+ /* Settings is deliberately placed before the calendar/plan. Only advanced options live inside it. */
+ w.append(a,connectedSummary,settingsToggle,settingsPanel,plan,vkPanel,platformNotice);
+ const openSettings=(open)=>{settingsPanel.classList.toggle('open',open);settingsToggle.setAttribute('aria-expanded',String(open));};
+ settingsToggle.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();openSettings(settingsToggle.getAttribute('aria-expanded')!=='true')});
  const connectionStatus=sc.querySelector('#tg-connection-status');
  const syncConnectionState=()=>{
   const msg=(connectionStatus?.textContent||'').trim();
   const good=/Подключ[её]н/i.test(msg)&&!/не подключ/i.test(msg);
   connectedSummary.classList.toggle('visible',good);
   if(good)connectedSummary.querySelector('.tg-connected-detail').textContent=msg;
-  // Не меняем состояние панели автоматически при каждом DOM-событии:
-  // это предотвращает циклы обновления/перерисовки.
-  openSettings(false);
+  // Не сворачиваем настройки при обновлении статуса подключения.
  };
  sc.append(w);m.append(sc);
+ sc.querySelectorAll('button:not([type])').forEach(button=>button.type='button');
  sc.querySelector('#tg-connect').onclick=async()=>{await tgConnect();syncConnectionState()};sc.querySelector('#tg-disconnect').onclick=async()=>{await tgDisconnect();syncConnectionState()};
  sc.querySelector('#vk-connect').onclick=vkConnect;sc.querySelector('#vk-disconnect').onclick=vkDisconnect;sc.querySelector('#vk-publish').onclick=vkPublish;
  const tokenInput=sc.querySelector('#tg-bot-token'),tokenToggle=sc.querySelector('#tg-token-toggle');
