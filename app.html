@@ -1353,7 +1353,7 @@ function tg(m){
  automationNav.innerHTML=`<button type="button" class="tg-automation-tab active" data-view="plan">${svg('calendar',16)}<span>Автоведение</span></button><button type="button" class="tg-automation-tab" data-view="logs">${svg('activity',16)}<span>Журнал публикаций</span><span class="tg-logs-count" id="tg-logs-count">Логи</span></button>`;
  const automationGrid=el('div','tg-automation-grid');automationGrid.id='tg-automation-content';
  const logsCard=el('section','card tg-logs-card');logsCard.id='tg-publication-logs';
- logsCard.innerHTML=`<div class="tg-logs-head"><div><h3>${svg('activity',18)} Журнал публикаций</h3><p>Отчёты о публикациях, пропусках и причинах ошибок.</p></div><button type="button" class="btn g sm" id="tg-logs-refresh">${svg('refresh',15)} Обновить</button></div><div class="tg-logs-list" id="tg-logs-list"><div class="tg-logs-empty">Загружаю журнал…</div></div>`;
+ logsCard.innerHTML=`<div class="tg-logs-head"><div><h3>${svg('activity',18)} Журнал публикаций</h3><p>Последние 10 событий: публикации, пропуски и ошибки.</p></div><button type="button" class="btn g sm" id="tg-logs-refresh">${svg('refresh',15)} Обновить</button></div><div class="tg-logs-list" id="tg-logs-list"><div class="tg-logs-empty">Загружаю журнал…</div></div>`;
  automationGrid.append(plan,logsCard);
  logsCard.hidden=true;
  /* Журнал открывается отдельной вкладкой рядом с меню автопостинга, а не внутри его карточки. */
