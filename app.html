@@ -805,7 +805,8 @@ const chatAI=(messages,max)=>ai('/ai/text',{feature:st.mode==='image'?'chat':(st
 
 const SIDE=[['home','home','Главная'],['premium','crown','Premium'],['grp','Нейросети'],['chat','chat'],['image','image'],['ideas','bulb'],['templates','grid'],['hashtags','hash'],['grp','Ещё'],['an','chart','Анализ канала'],['tg','send','Автоведение'],['me','gear','Настройки']];
 const TABS=[['neuro','spark','Нейросети'],['an','chart','Анализ'],['home','home','Главная'],['tg','send','Автоведение'],['me','gear','Настройки']];
-function go(v,mode){if(mode)st.mode=mode;st.view=v;drawNav();draw();if(v==='tg'||v==='premium')premiumRefresh().then(()=>{if(st.view===v){drawNav();draw()}})}
+let premiumNavRequest=0;
+function go(v,mode){if(mode)st.mode=mode;st.view=v;drawNav();draw();if(v==='tg'||v==='premium'){const request=++premiumNavRequest;premiumRefresh().then(()=>{if(request===premiumNavRequest&&st.view===v){drawNav();draw()}})}}
 function drawNav(){
  const on=n=>st.view==='neuro'?n===st.mode:n===st.view;
  const sd=$('#side');sd.innerHTML='';
@@ -1322,23 +1323,17 @@ function tg(m){
  connectedSummary.querySelector('.tg-summary-edit').onclick=()=>{openSettings(true);settingsPanel.scrollIntoView({behavior:'smooth',block:'start'})};
  connectedSummary.querySelector('.tg-summary-delete').onclick=()=>{if(confirm('Удалить подключение Telegram-бота?'))tgDisconnect()};
  const connectionStatus=sc.querySelector('#tg-connection-status');
- const applyConnectionState=()=>{
+ const syncConnectionState=()=>{
   const msg=(connectionStatus?.textContent||'').trim();
   const good=/Подключ[её]н/i.test(msg)&&!/не подключ/i.test(msg);
   connectedSummary.classList.toggle('visible',good);
-  if(good){
-   connectedSummary.querySelector('.tg-connected-detail').textContent=msg;
-   openSettings(false);
-   connectionObserver.disconnect();
-  }
+  if(good)connectedSummary.querySelector('.tg-connected-detail').textContent=msg;
+  // Не меняем состояние панели автоматически при каждом DOM-событии:
+  // это предотвращает циклы обновления/перерисовки.
+  openSettings(!good);
  };
- // Observe only the status label. Watching the entire panel caused our own
- // class/text updates to retrigger the observer indefinitely.
- const connectionObserver=new MutationObserver(applyConnectionState);
- if(connectionStatus)connectionObserver.observe(connectionStatus,{subtree:true,childList:true,characterData:true});
- applyConnectionState();
  sc.append(w);m.append(sc);
- sc.querySelector('#tg-connect').onclick=tgConnect;sc.querySelector('#tg-disconnect').onclick=tgDisconnect;
+ sc.querySelector('#tg-connect').onclick=async()=>{await tgConnect();syncConnectionState()};sc.querySelector('#tg-disconnect').onclick=async()=>{await tgDisconnect();syncConnectionState()};
  sc.querySelector('#vk-connect').onclick=vkConnect;sc.querySelector('#vk-disconnect').onclick=vkDisconnect;sc.querySelector('#vk-publish').onclick=vkPublish;
  const tokenInput=sc.querySelector('#tg-bot-token'),tokenToggle=sc.querySelector('#tg-token-toggle');
  tokenToggle.onclick=()=>{const show=tokenInput.type==='password';tokenInput.type=show?'text':'password';tokenToggle.textContent=show?'Скрыть':'Показать';tokenToggle.setAttribute('aria-label',show?'Скрыть токен':'Показать токен');tokenToggle.setAttribute('aria-pressed',String(show));tokenInput.focus()};
@@ -1349,7 +1344,7 @@ function tg(m){
  tgCalendarInit(sc);
  tgEmojiPickerInit(sc,[]);
  tgTimePickerInit(sc,['09:00','14:00','19:00']);
- tgLoadStatus();tgLoadSchedule();
+ tgLoadStatus().then(syncConnectionState);tgLoadSchedule();
 }
 function tgAnalysis(m){
  const sc=el('div','scroll'),card=el('div','card');
