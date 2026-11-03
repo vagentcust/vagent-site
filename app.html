@@ -572,6 +572,42 @@ main{flex:1;min-height:0;position:relative;display:flex;flex-direction:column;wi
 .tgw #tg-stop,.tgw #tg-check{min-height:44px}
 .premium-hero h3,.premium-hero .premium-title{text-align:center!important;width:100%;display:block;margin-inline:auto!important}
 @media(max-width:520px){.tg-connected-summary{flex-wrap:wrap}.tg-connected-summary button{flex:1}.tgw .tg-cal-day{max-height:44px!important}.tg-settings-toggle{padding:12px}}
+
+/* Unified settings accordion, platform stickers and motion */
+.tgw .platform-picker{gap:11px;margin:0 0 14px}
+.tgw .platform-choice{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-height:88px;padding:12px 8px;transform:translateY(0);transition:transform .22s cubic-bezier(.2,.8,.2,1),border-color .22s,background .22s,box-shadow .22s}
+.tgw .platform-choice:hover{transform:translateY(-4px);border-color:var(--ac);box-shadow:0 10px 24px #0003}
+.tgw .platform-choice:active{transform:translateY(-1px) scale(.98)}
+.tgw .platform-choice strong{display:flex!important;align-items:center!important;justify-content:center!important;gap:8px;line-height:1.2}
+.tgw .platform-sticker{width:30px!important;height:30px!important;flex:0 0 30px!important;display:grid!important;place-items:center!important;border-radius:10px!important;transform:none!important;overflow:hidden}
+.tgw .platform-sticker svg{display:block;width:19px;height:19px}
+.tgw .tg-sticker svg{width:20px;height:20px}
+.tgw .vk-sticker svg{width:22px;height:22px}
+.tgw .max-sticker svg{width:21px;height:21px}
+.tgw .tg-settings-toggle{margin:0 0 10px;min-height:66px;gap:12px;transition:transform .22s,border-color .22s,background .22s,box-shadow .22s}
+.tgw .tg-settings-toggle:hover{transform:translateY(-2px);box-shadow:0 10px 25px #0002}
+.tgw .tg-settings-sticker{width:40px;height:40px;flex:0 0 40px;border-radius:13px;display:grid;place-items:center;background:linear-gradient(145deg,color-mix(in srgb,var(--ac) 24%,var(--p2)),var(--p2));font-size:20px}
+.tgw .tg-settings-meta{display:flex;flex-direction:column;gap:3px;flex:1;min-width:0}
+.tgw .tg-settings-meta b{font-size:14px}
+.tgw .tg-settings-meta small{font-size:12px;color:var(--mute)}
+.tgw .tg-settings-chevron,.tgw .tg-summary-chevron{font-size:20px;color:var(--mute);transition:transform .22s}
+.tgw .tg-settings-panel{display:grid!important;grid-template-rows:0fr;gap:0;overflow:hidden;opacity:0;max-height:0;margin:0;transition:grid-template-rows .32s ease,opacity .22s ease,max-height .35s ease,margin .25s ease}
+.tgw .tg-settings-panel>*{min-height:0}
+.tgw .tg-settings-panel.open{grid-template-rows:1fr;gap:12px;opacity:1;max-height:6000px;margin:0 0 14px;overflow:visible;animation:none}
+.tgw .tg-connected-summary{width:100%;box-sizing:border-box;display:none;align-items:center;gap:12px;padding:13px 15px;margin:0 0 10px;border:1px solid rgba(75,211,158,.42);border-radius:17px;background:linear-gradient(110deg,rgba(75,211,158,.11),rgba(75,211,158,.045));color:#f5f6ff;text-align:left;cursor:pointer;transition:transform .2s,border-color .2s,box-shadow .2s}
+.tgw .tg-connected-summary.visible{display:flex}
+.tgw .tg-connected-summary:hover{transform:translateY(-2px);border-color:rgba(75,211,158,.7);box-shadow:0 9px 22px #0002}
+.tgw .tg-connected-mark{width:36px;height:36px;flex:0 0 36px;border-radius:12px;display:grid;place-items:center;background:rgba(75,211,158,.16);color:#54dca5;font-size:20px;font-weight:800}
+.tgw .tg-connected-text{flex:1;min-width:0}
+.tgw .tg-connected-text b{display:block;font-size:13px}
+.tgw .tg-connected-text small{display:block;color:var(--mute);font-size:11px;margin-top:3px;overflow-wrap:anywhere}
+.tgw .tg-connected-summary .tg-summary-chevron{margin-left:auto}
+.tgw .vk-panel{margin:0!important}
+.tgw .vk-panel.is-visible{animation:tgDayIn .28s ease both}
+.tgw #tg-save{width:auto;min-width:190px}
+.tgw #tg-stop{min-height:44px}
+@media(max-width:520px){.tgw .platform-choice{min-height:82px}.tgw .platform-choice strong{font-size:12px}.tgw .tg-settings-sticker{width:36px;height:36px;flex-basis:36px}}
+@media(prefers-reduced-motion:reduce){.tgw .platform-choice,.tgw .tg-settings-toggle,.tgw .tg-connected-summary,.tgw .tg-settings-panel{transition:none!important}}
 </style>
 <style id="requested-ui-polish">
 .generated-preview{cursor:zoom-in;max-width:min(100%,520px);border-radius:14px;transition:transform .16s;outline-offset:3px}.generated-preview:hover{transform:scale(1.01)}
@@ -1259,7 +1295,7 @@ async function tgConnect(){
 }
 async function tgLoadStatus(){
  const s=$('#tg-connection-status');if(!s)return;
- try{const d=await tgRequest('/tg/status');s.className='st '+(d.connected?'ok':'');s.textContent=d.connected?`Подключён: @${d.bot_username||'бот'} → ${d.channel}`:'Бот пока не подключён';if(d.connected&&$('#tg-channel'))$('#tg-channel').value=d.channel||'';}
+ try{const d=await tgRequest('/tg/status');s.className='st '+(d.connected?'ok':'');s.textContent=d.connected?`Подключён: @${d.bot_username||'бот'} → ${d.channel}`:'Бот пока не подключён';}
  catch(e){s.className='st er';s.textContent=e.message}
 }
 async function tgDisconnect(){
@@ -1278,15 +1314,15 @@ async function tgPublish(button,status){
 }
 function tg(m){
  const sc=el('div','scroll');const w=el('div','tgw');
- const picker=el('div','platform-picker');picker.innerHTML=`<button class="platform-choice active" data-platform="telegram"><strong><span class="platform-sticker tg-sticker" aria-label="Telegram"><svg viewBox="0 0 24 24" role="img" aria-hidden="true"><path fill="currentColor" d="M21.7 4.1 18.6 19c-.2 1.1-.9 1.4-1.8.9l-5-3.7-2.4 2.3c-.3.3-.5.5-1 .5l.4-5.1 9.3-8.4c.4-.4-.1-.6-.6-.3L6 12.4 1.1 10.9c-1.1-.3-1.1-1.1.2-1.6L20.4 2c.9-.3 1.7.2 1.3 2.1Z"/></svg></span>Telegram</strong><small>Автопостинг</small></button><button class="platform-choice" data-platform="vk"><strong><span class="platform-sticker vk-sticker">VK</span>ВКонтакте</strong><small>Автопостинг</small></button><button class="platform-choice" data-platform="max"><strong><span class="platform-sticker max-sticker">м</span>MAX</strong><small>Автопостинг</small></button>`;w.append(picker);
- const platformNotice=el('div','platform-coming');platformNotice.style.display='none';w.append(platformNotice);
+ const picker=el('div','platform-picker');picker.innerHTML=`<button class="platform-choice active" data-platform="telegram"><strong><span class="platform-sticker tg-sticker" aria-label="Telegram"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M21.7 4.1 18.6 19c-.2 1.1-.9 1.4-1.8.9l-5-3.7-2.4 2.3c-.3.3-.5.5-1 .5l.4-5.1 9.3-8.4c.4-.4-.1-.6-.6-.3L6 12.4 1.1 10.9c-1.1-.3-1.1-1.1.2-1.6L20.4 2c.9-.3 1.7.2 1.3 2.1Z"/></svg></span>Telegram</strong><small>Автопостинг</small></button><button class="platform-choice" data-platform="vk"><strong><span class="platform-sticker vk-sticker" aria-label="ВКонтакте"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M3.2 7.1h3.1c.2 4.1 1.9 5.8 3.2 6.2V7.1h2.9v3.5c1.3-.1 2.7-1.7 3.2-3.5h2.9c-.3 2.1-1.9 3.8-3 4.5 1.1.6 3 2.1 3.7 4.8h-3.2c-.6-1.8-1.9-3.2-3.6-3.3v3.3h-.4C6.8 16.4 3.5 12.9 3.2 7.1Z"/></svg></span>ВКонтакте</strong><small>Автопостинг</small></button><button class="platform-choice" data-platform="max"><strong><span class="platform-sticker max-sticker" aria-label="MAX"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 18V6h3.2l3.8 5.1L15.8 6H19v12h-3v-7.1l-4 5-4-5V18z" fill="currentColor"/></svg></span>MAX</strong><small>Автопостинг</small></button>`;w.append(picker);
+ const platformNotice=el('div','platform-coming');platformNotice.style.display='none';
  const vkPanel=el('div','card vk-panel');vkPanel.innerHTML=`<h3><span class="ib">${svg('users',17)}</span>Подключение сообщества VK</h3><p>Создай ключ доступа в настройках своего сообщества и подключи его к V-Agent. Ключ будет сохранён на сервере в зашифрованном виде.</p>
  <div class="vk-instructions"><b>Как получить ключ сообщества</b><ol><li>Открой своё сообщество ВКонтакте и перейди в <b>Управление</b>.</li><li>Открой <b>Дополнительно → Работа с API → Ключи доступа</b> (названия пунктов могут немного отличаться).</li><li>Нажми <b>Создать ключ</b> и выдай право <b>Управление сообществом</b> и <b>Стена</b> / публикация записей, если VK показывает выбор прав.</li><li>Скопируй ключ. Не отправляй его никому и не вставляй в публичные места.</li><li>Скопируй числовой ID сообщества из адреса/настроек сообщества.</li></ol><div class="vk-help">V-Agent не просит пароль от ВКонтакте. Нужен только ключ доступа конкретного сообщества.</div></div>
  <label class="tg-label" for="vk-group-id">ID сообщества (только цифры)</label><input class="f" id="vk-group-id" inputmode="numeric" placeholder="Например: 123456789" autocomplete="off">
  <label class="tg-label" for="vk-token">Ключ доступа сообщества</label><input class="f" id="vk-token" type="password" placeholder="Вставь ключ vk1.a…" autocomplete="new-password" autocapitalize="off" spellcheck="false">
  <div class="vk-actions"><button class="btn" id="vk-connect">${svg('link',16)}<span>Подключить VK</span></button><button class="btn g" id="vk-disconnect">Отключить</button></div><div class="st" id="vk-connect-status"></div><div class="st" id="vk-status">Проверяю подключение…</div>
- <div class="divider"></div><h3 style="margin-top:16px">Опубликовать запись</h3><p>Отправка текстовой записи на стену подключённого сообщества.</p><textarea class="f" id="vk-post-text" rows="7" maxlength="15000" placeholder="Вставь готовый текст публикации…"></textarea><div class="vk-actions"><button class="btn" id="vk-publish">${svg('send',16)}<span>Опубликовать</span></button></div><div class="st" id="vk-publish-status"></div><div class="note">Сейчас поддерживается текстовая публикация. Авторасписание и загрузка изображений для VK ещё не подключены.</div></div>`;w.append(vkPanel);
- picker.querySelectorAll('[data-platform]').forEach(btn=>btn.onclick=()=>{picker.querySelectorAll('.platform-choice').forEach(x=>x.classList.toggle('active',x===btn));const platform=btn.dataset.platform;const isTg=platform==='telegram',isVk=platform==='vk';a.style.display=isTg?'':'none';plan.style.display=isTg?'':'none';vkPanel.style.display=isVk?'block':'none';vkPanel.classList.toggle('is-visible',isVk);platformNotice.style.display=(!isTg&&!isVk)?'':'none';if(!isTg&&!isVk)platformNotice.innerHTML=`<div class="ib">${svg('message-circle',24)}</div><h3>MAX</h3><span class="badge">Скоро</span><p>Подключение и публикация через MAX API ещё не реализованы.</p>`;if(isVk)vkLoadStatus()});
+ <div class="divider"></div><h3 style="margin-top:16px">Опубликовать запись</h3><p>Отправка текстовой записи на стену подключённого сообщества.</p><textarea class="f" id="vk-post-text" rows="7" maxlength="15000" placeholder="Вставь готовый текст публикации…"></textarea><div class="vk-actions"><button class="btn" id="vk-publish">${svg('send',16)}<span>Опубликовать</span></button></div><div class="st" id="vk-publish-status"></div><div class="note">Сейчас поддерживается текстовая публикация. Авторасписание и загрузка изображений для VK ещё не подключены.</div></div>`;
+ picker.querySelectorAll('[data-platform]').forEach(btn=>btn.onclick=()=>{picker.querySelectorAll('.platform-choice').forEach(x=>x.classList.toggle('active',x===btn));const platform=btn.dataset.platform;const isTg=platform==='telegram',isVk=platform==='vk';a.style.display=isTg?'':'none';plan.style.display=isTg?'':'none';vkPanel.style.display=isVk?'block':'none';platformNotice.style.display=(!isTg&&!isVk)?'':'none';if(!isTg&&!isVk)platformNotice.innerHTML=`<div class="ib">${svg('message-circle',24)}</div><h3>MAX</h3><span class="badge">Скоро</span><p>Подключение и публикация через MAX API ещё не реализованы.</p>`;if(isVk)vkLoadStatus()});
  const a=el('div','card tga');
  a.innerHTML=`<h3><span class="ib">${svg('bot',17)}</span>Telegram-автоматизация</h3><p>Подключи бота, выбери дни и время публикаций. Расписание выполняется на сервере, даже когда сайт закрыт.</p>
  <div class="tg-token-row" style="display:flex;gap:8px;align-items:stretch">
@@ -1300,7 +1336,7 @@ function tg(m){
  const plan=el('div','card');plan.id='tg-plan';
  plan.innerHTML=`<h3><span class="ib">${svg('clock',17)}</span>Расписание автопостинга</h3>
  <p>Выбери дни недели и добавь до 5 времён публикации с шагом 5 минут.</p>
- <div class="tg-days" id="tg-days">${[['Пн',1],['Вт',2],['Ср',3],['Чт',4],['Пт',5],['Сб',6],['Вс',0]].map(([n,d])=>`<label><input type="checkbox" value="${d}" checked><span>${n}</span></label>`).join('')}</div>
+ <div class="tg-cal" id="tg-calendar"></div><div class="tg-days" id="tg-days">${[['Пн',1],['Вт',2],['Ср',3],['Чт',4],['Пт',5],['Сб',6],['Вс',0]].map(([n,d])=>`<label><input type="checkbox" value="${d}" checked><span>${n}</span></label>`).join('')}</div>
  <label class="tg-label">Время публикаций</label><div class="tg-time-list" id="tg-time-list"></div>
  <div class="tg-time-picker" id="tg-time-picker"><div class="tg-wheel-field"><span>Часы</span><div class="tg-wheel" id="tg-hour-wheel" aria-label="Выбор часов"></div></div><b class="tg-time-colon">:</b><div class="tg-wheel-field"><span>Минуты</span><div class="tg-wheel" id="tg-minute-wheel" aria-label="Выбор минут"></div></div><button class="btn sm" id="tg-wheel-add" type="button">Добавить</button></div>
  <div class="note">Нажми на время один раз, чтобы удалить его.</div>
@@ -1312,19 +1348,15 @@ function tg(m){
  <label class="tg-label" for="tg-link1-label">Ссылка внизу поста (необязательно)</label><input class="f" id="tg-link1-label" placeholder="Текст ссылки"><input class="f" id="tg-link1-url" placeholder="https://…">
  <label class="tg-label" for="tg-link2-label">Вторая ссылка (необязательно)</label><input class="f" id="tg-link2-label" placeholder="Текст ссылки"><input class="f" id="tg-link2-url" placeholder="https://…">
  <label class="tg-label" for="tg-image-mode">Изображения</label><select class="f" id="tg-image-mode"><option value="commons" selected>Искать фото в интернете с открытой лицензией</option><option value="off">Без изображений</option></select>
- <div class="row"><button class="btn" id="tg-save">${svg('check',16)}<span>Сохранить и включить</span></button><button class="btn g" id="tg-stop">Остановить</button></div><div class="row"><button class="btn g" id="tg-check">${svg('shield-check',16)}<span>Проверить автопостинг</span></button></div><div class="st" id="tg-plan-status"></div><div class="note" id="tg-plan-info">Расписание ещё не загружено.</div><div class="note">Длина постов: случайная, от 50 до 500 слов. Текст не обрезается посреди мысли. Новости проверяются по публикациям за последние 24 часа. Фото подбираются из Wikimedia Commons только при наличии подходящей открытой лицензии; авторство и тип лицензии указываются в подписи.</div><div class="note">Для запуска расписания на сервере нужен Cron Trigger Cloudflare с интервалом 5 минут (*/5 * * * *).</div>`;
- // Календарь остаётся отдельным блоком; остальные параметры собраны в одной кнопке настроек.
- const calendarCard=el('div','card tg-calendar-card');
- calendarCard.innerHTML=`<h3><span class="ib">${svg('calendar-days',17)}</span>Календарь публикаций</h3><p>Выбирай даты отдельно от остальных настроек расписания.</p><div class="tg-cal" id="tg-calendar"></div>`;
- // Keep Telegram connection and all non-calendar options inside the settings button.
- const settingsPanel=el('div','tg-settings-panel');settingsPanel.append(a,plan);
- const settingsToggle=el('button','tg-settings-toggle');settingsToggle.type='button';settingsToggle.innerHTML=`<span class="ib">${svg('settings',17)}</span><span class="tg-settings-meta"><b>Настройки</b><small>Подключение, расписание и параметры автопостинга</small></span><span class="tg-settings-chevron">⌄</span>`;
- const connectedSummary=el('div','tg-connected-summary');connectedSummary.innerHTML=`<span class="ib" style="color:#54dca5;font-size:22px">✓</span><span class="tg-connected-text"><b>Telegram-бот подключён</b><small class="tg-connected-detail">Подключение активно</small></span><button class="btn g tg-summary-edit" type="button">Изменить</button><button class="btn g tg-summary-delete" type="button">Удалить</button>`;
- w.append(calendarCard,settingsToggle,connectedSummary,settingsPanel);
- const openSettings=(open)=>{settingsPanel.classList.toggle('open',open);settingsToggle.setAttribute('aria-expanded',String(open));settingsToggle.querySelector('.tg-settings-chevron').textContent=open?'⌃':'⌄'};
+ <div class="row"><button class="btn" id="tg-save">${svg('check',16)}<span>Сохранить и включить</span></button><button class="btn g" id="tg-stop">Остановить</button></div><div class="st" id="tg-plan-status"></div><div class="note" id="tg-plan-info">Расписание ещё не загружено.</div><div class="note">Длина постов: случайная, от 50 до 500 слов. Текст не обрезается посреди мысли. Новости проверяются по публикациям за последние 24 часа. Фото подбираются из Wikimedia Commons только при наличии подходящей открытой лицензии; авторство и тип лицензии указываются в подписи.</div><div class="note">Для запуска расписания на сервере нужен Cron Trigger Cloudflare с интервалом 5 минут (*/5 * * * *).</div>`;
+ // Все подключения, календарь и параметры публикаций находятся внутри единого раскрывающегося блока.
+ const settingsPanel=el('div','tg-settings-panel');settingsPanel.append(a,plan,vkPanel,platformNotice);
+ const settingsToggle=el('button','tg-settings-toggle');settingsToggle.type='button';settingsToggle.setAttribute('aria-expanded','false');settingsToggle.innerHTML=`<span class="tg-settings-sticker" aria-hidden="true">⚙️</span><span class="tg-settings-meta"><b>Настройки</b><small>Каналы, календарь и параметры автопостинга</small></span><span class="tg-settings-chevron">⌄</span>`;
+ const connectedSummary=el('button','tg-connected-summary');connectedSummary.type='button';connectedSummary.setAttribute('aria-expanded','false');connectedSummary.innerHTML=`<span class="tg-connected-mark" aria-hidden="true">✓</span><span class="tg-connected-text"><b>Telegram подключён</b><small class="tg-connected-detail">Подключение активно</small></span><span class="tg-summary-chevron">⌄</span>`;
+ w.append(connectedSummary,settingsToggle,settingsPanel);
+ const openSettings=(open)=>{settingsPanel.classList.toggle('open',open);settingsToggle.setAttribute('aria-expanded',String(open));connectedSummary.setAttribute('aria-expanded',String(open));settingsToggle.querySelector('.tg-settings-chevron').textContent=open?'⌃':'⌄';connectedSummary.querySelector('.tg-summary-chevron').textContent=open?'⌃':'⌄'};
  settingsToggle.onclick=()=>openSettings(!settingsPanel.classList.contains('open'));
- connectedSummary.querySelector('.tg-summary-edit').onclick=()=>{openSettings(true);settingsPanel.scrollIntoView({behavior:'smooth',block:'start'})};
- connectedSummary.querySelector('.tg-summary-delete').onclick=()=>{if(confirm('Удалить подключение Telegram-бота?'))tgDisconnect()};
+ connectedSummary.onclick=()=>openSettings(!settingsPanel.classList.contains('open'));
  const connectionStatus=sc.querySelector('#tg-connection-status');
  const syncConnectionState=()=>{
   const msg=(connectionStatus?.textContent||'').trim();
@@ -1340,7 +1372,7 @@ function tg(m){
  sc.querySelector('#vk-connect').onclick=vkConnect;sc.querySelector('#vk-disconnect').onclick=vkDisconnect;sc.querySelector('#vk-publish').onclick=vkPublish;
  const tokenInput=sc.querySelector('#tg-bot-token'),tokenToggle=sc.querySelector('#tg-token-toggle');
  tokenToggle.onclick=()=>{const show=tokenInput.type==='password';tokenInput.type=show?'text':'password';tokenToggle.textContent=show?'Скрыть':'Показать';tokenToggle.setAttribute('aria-label',show?'Скрыть токен':'Показать токен');tokenToggle.setAttribute('aria-pressed',String(show));tokenInput.focus()};
- sc.querySelector('#tg-detect').onclick=tgAutoDetect;sc.querySelector('#tg-save').onclick=tgAutoSave;sc.querySelector('#tg-stop').onclick=tgAutoStop;sc.querySelector('#tg-check').onclick=tgAutoCheck;
+ sc.querySelector('#tg-detect').onclick=tgAutoDetect;sc.querySelector('#tg-save').onclick=tgAutoSave;sc.querySelector('#tg-stop').onclick=tgAutoStop;
 
 /* Removed duplicate Telegram DOM wrapper: it nested the settings panel twice and prevented the tab from opening. */
 
@@ -1421,7 +1453,7 @@ async function tgAutoDetect(){const b=$('#tg-detect'),s=$('#tg-detect-status');b
 async function tgAutoSave(){const b=$('#tg-save'),s=$('#tg-plan-status');try{const times=tgParseTimes(),days=tgSelectedDays();if(!days.length)throw new Error('Выбери хотя бы один день недели');if(!tgSession())throw new Error('Войди в аккаунт заново, чтобы обновить сессию');b.disabled=true;s.className='st';s.textContent='Сохраняю расписание…';const d=await tgRequest('/tg/auto-save','POST',{times,days,date_overrides:tgDateOverrides,timezone:tgTimezone(),topic:$('#tg-topic').value.trim(),image_mode:$('#tg-image-mode').value,post_length:$('#tg-post-length').value,post_style:$('#tg-post-style').value,emoji_mode:$('#tg-emoji-mode').checked,emojis:tgChosenEmojis,links:[{label:$('#tg-link1-label').value,url:$('#tg-link1-url').value},{label:$('#tg-link2-label').value,url:$('#tg-link2-url').value}]});s.className='st ok';s.textContent=d.message;tgLoadSchedule()}catch(e){s.className='st er';s.textContent=e.message}finally{b.disabled=false}}
 async function tgAutoCheck(){const b=$('#tg-check'),s=$('#tg-plan-status');b.disabled=true;s.className='st';s.textContent='Проверяю бота, канал и Cloudflare AI…';try{const d=await tgRequest('/tg/auto-check','POST',{});s.className='st ok';s.textContent=d.message}catch(e){s.className='st er';s.textContent=e.message}finally{b.disabled=false}}
 async function tgAutoStop(){const s=$('#tg-plan-status');try{const d=await tgRequest('/tg/auto-stop','POST',{});s.className='st ok';s.textContent=d.message;tgLoadSchedule()}catch(e){s.className='st er';s.textContent=e.message}}
-async function tgLoadSchedule(){const info=$('#tg-plan-info');if(!info)return;try{const d=await tgRequest('/tg/auto-status');tgTimes=[...new Set((d.times||[]).slice(0,5))].sort();tgArmedTime='';tgRenderTimes();tgSetDays(d.days||[0,1,2,3,4,5,6]);tgDateOverrides=d.date_overrides&&typeof d.date_overrides==='object'?d.date_overrides:{};document.querySelector('#tg-calendar')?._render?.();$('#tg-topic').value=d.topic||'';$('#tg-image-mode').value=d.image_mode||'commons';$('#tg-post-length').value=d.post_length||'standard';$('#tg-post-style').value=d.post_style||'friendly';$('#tg-emoji-mode').checked=d.emoji_mode===true;tgEmojiPickerInit(document,d.emojis||[]);const links=d.links||[];$('#tg-link1-label').value=links[0]?.label||'';$('#tg-link1-url').value=links[0]?.url||'';$('#tg-link2-label').value=links[1]?.label||'';$('#tg-link2-url').value=links[1]?.url||'';info.textContent=`Автопостинг ${d.enabled?'включён':'выключен'} · ${tgTimes.length} времён · дни: ${(d.days||[0,1,2,3,4,5,6]).map(x=>['Вс','Пн','Вт','Ср','Чт','Пт','Сб'][x]).join(', ')} · ${d.timezone||'Europe/Riga'}`;const status=$('#tg-plan-status');if(d.last_error){status.className='st er';status.textContent='Последняя ошибка автопостинга: '+d.last_error}else if(d.last_success){status.className='st ok';status.textContent='Последняя публикация: '+new Date(d.last_success).toLocaleString('ru-RU')}else if(d.last_attempt){status.className='st';status.textContent='Последняя попытка автопостинга: '+new Date(d.last_attempt).toLocaleString('ru-RU')}}catch(e){info.textContent=e.message}}
+async function tgLoadSchedule(){const info=$('#tg-plan-info');if(!info)return;try{const d=await tgRequest('/tg/auto-status');if(!d.enabled){info.textContent='Автопостинг выключен.';return}tgTimes=[...new Set((d.times||[]).slice(0,5))].sort();tgArmedTime='';tgRenderTimes();tgSetDays(d.days||[0,1,2,3,4,5,6]);tgDateOverrides=d.date_overrides&&typeof d.date_overrides==='object'?d.date_overrides:{};document.querySelector('#tg-calendar')?._render?.();$('#tg-topic').value=d.topic||'';$('#tg-image-mode').value=d.image_mode||'commons';$('#tg-post-length').value=d.post_length||'standard';$('#tg-post-style').value=d.post_style||'friendly';$('#tg-emoji-mode').checked=d.emoji_mode===true;tgEmojiPickerInit(document,d.emojis||[]);const links=d.links||[];$('#tg-link1-label').value=links[0]?.label||'';$('#tg-link1-url').value=links[0]?.url||'';$('#tg-link2-label').value=links[1]?.label||'';$('#tg-link2-url').value=links[1]?.url||'';info.textContent=`Автопостинг включён · ${tgTimes.length} времён · дни: ${(d.days||[0,1,2,3,4,5,6]).map(x=>['Вс','Пн','Вт','Ср','Чт','Пт','Сб'][x]).join(', ')} · ${d.timezone}`;const status=$('#tg-plan-status');if(d.last_error){status.className='st er';status.textContent='Последняя ошибка автопостинга: '+d.last_error}else if(d.last_success){status.className='st ok';status.textContent='Последняя публикация: '+new Date(d.last_success).toLocaleString('ru-RU')}else if(d.last_attempt){status.className='st';status.textContent='Последняя попытка автопостинга: '+new Date(d.last_attempt).toLocaleString('ru-RU')}}catch(e){info.textContent=e.message}}
 
 function neuro(m){
  const c=MODES[st.mode];st.chats[st.mode]||(st.chats[st.mode]=[]);
@@ -1606,8 +1638,4 @@ premiumRefresh().then(()=>{if(st.view==='tg'||st.view==='premium'||st.view==='me
 .usage-counter[hidden]{display:none!important}
 
 .cf-brand-mark{display:inline-flex;align-items:center;gap:9px;flex-shrink:0}.cf-logo-tile{width:34px;height:34px;border-radius:10px;background:#fff;border:1px solid rgba(0,0,0,.12);display:inline-flex;align-items:center;justify-content:center;overflow:hidden;box-sizing:border-box}.cf-logo-tile svg{width:27px;height:27px;display:block}.cf-brand-mark b{font-weight:650}
-</style>
-
-<style id="telegram-brand-logo-fix">
-.tg-sticker svg{width:19px;height:19px;display:block;color:#fff}
 </style>
