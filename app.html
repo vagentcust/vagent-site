@@ -1321,8 +1321,22 @@ function tg(m){
  settingsToggle.onclick=()=>openSettings(!settingsPanel.classList.contains('open'));
  connectedSummary.querySelector('.tg-summary-edit').onclick=()=>{openSettings(true);settingsPanel.scrollIntoView({behavior:'smooth',block:'start'})};
  connectedSummary.querySelector('.tg-summary-delete').onclick=()=>{if(confirm('Удалить подключение Telegram-бота?'))tgDisconnect()};
- const connectionObserver=new MutationObserver(()=>{const msg=(sc.querySelector('#tg-connection-status')?.textContent||'').trim();const good=/Подключ[её]н/i.test(msg)&&!/не подключ/i.test(msg);connectedSummary.classList.toggle('visible',good);if(good){connectedSummary.querySelector('.tg-connected-detail').textContent=msg;openSettings(false)}});
- connectionObserver.observe(sc,{subtree:true,childList:true,characterData:true});
+ const connectionStatus=sc.querySelector('#tg-connection-status');
+ const applyConnectionState=()=>{
+  const msg=(connectionStatus?.textContent||'').trim();
+  const good=/Подключ[её]н/i.test(msg)&&!/не подключ/i.test(msg);
+  connectedSummary.classList.toggle('visible',good);
+  if(good){
+   connectedSummary.querySelector('.tg-connected-detail').textContent=msg;
+   openSettings(false);
+   connectionObserver.disconnect();
+  }
+ };
+ // Observe only the status label. Watching the entire panel caused our own
+ // class/text updates to retrigger the observer indefinitely.
+ const connectionObserver=new MutationObserver(applyConnectionState);
+ if(connectionStatus)connectionObserver.observe(connectionStatus,{subtree:true,childList:true,characterData:true});
+ applyConnectionState();
  sc.append(w);m.append(sc);
  sc.querySelector('#tg-connect').onclick=tgConnect;sc.querySelector('#tg-disconnect').onclick=tgDisconnect;
  sc.querySelector('#vk-connect').onclick=vkConnect;sc.querySelector('#vk-disconnect').onclick=vkDisconnect;sc.querySelector('#vk-publish').onclick=vkPublish;
