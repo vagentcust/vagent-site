@@ -1349,12 +1349,20 @@ function tg(m){
  const settingsInner=el('div','tg-settings-inner');settingsInner.append(plan.querySelector('#tg-advanced-settings'));settingsPanel.append(settingsInner);
  const settingsToggle=el('button','tg-settings-toggle');settingsToggle.type='button';settingsToggle.setAttribute('aria-expanded','false');settingsToggle.setAttribute('aria-controls','tg-settings-panel');settingsToggle.innerHTML=`<span class="tg-settings-sticker" aria-hidden="true">${svg('gear',20)}</span><span class="tg-settings-meta"><b>Настройки</b><small>Дополнительные функции автопостинга</small></span><span class="tg-settings-chevron" aria-hidden="true">⌄</span>`;
  const connectedSummary=el('button','tg-connected-summary');connectedSummary.type='button';connectedSummary.setAttribute('aria-expanded','false');connectedSummary.innerHTML=`<span class="tg-connected-mark" aria-hidden="true">✓</span><span class="tg-connected-text"><b>Telegram подключён</b><small class="tg-connected-detail">Подключение активно</small></span><span class="tg-summary-chevron">⌄</span>`;
- const automationGrid=el('div','tg-automation-grid');
+ const automationNav=el('div','tg-automation-nav');
+ automationNav.innerHTML=`<button type="button" class="tg-automation-tab active" data-view="plan">${svg('calendar',16)}<span>Автоведение</span></button><button type="button" class="tg-automation-tab" data-view="logs">${svg('activity',16)}<span>Журнал публикаций</span><span class="tg-logs-count" id="tg-logs-count">Логи</span></button>`;
+ const automationGrid=el('div','tg-automation-grid');automationGrid.id='tg-automation-content';
  const logsCard=el('section','card tg-logs-card');logsCard.id='tg-publication-logs';
  logsCard.innerHTML=`<div class="tg-logs-head"><div><h3>${svg('activity',18)} Журнал публикаций</h3><p>Отчёты о публикациях, пропусках и причинах ошибок.</p></div><button type="button" class="btn g sm" id="tg-logs-refresh">${svg('refresh',15)} Обновить</button></div><div class="tg-logs-list" id="tg-logs-list"><div class="tg-logs-empty">Загружаю журнал…</div></div>`;
  automationGrid.append(plan,logsCard);
- /* Настройки и журнал остаются рядом с основным расписанием. На узком экране колонки складываются. */
- w.append(a,connectedSummary,settingsToggle,settingsPanel,automationGrid,vkPanel,platformNotice);
+ logsCard.hidden=true;
+ /* Журнал открывается отдельной вкладкой рядом с меню автопостинга, а не внутри его карточки. */
+ w.append(a,connectedSummary,settingsToggle,settingsPanel,automationNav,automationGrid,vkPanel,platformNotice);
+ automationNav.querySelectorAll('[data-view]').forEach(tab=>tab.addEventListener('click',()=>{
+  const view=tab.dataset.view;automationNav.querySelectorAll('[data-view]').forEach(x=>x.classList.toggle('active',x===tab));
+  plan.hidden=view!=='plan';logsCard.hidden=view!=='logs';
+  if(view==='logs')tgLoadLogs();
+ }));
  const openSettings=(open)=>{settingsPanel.classList.toggle('open',open);settingsToggle.setAttribute('aria-expanded',String(open));};
  settingsToggle.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();openSettings(settingsToggle.getAttribute('aria-expanded')!=='true')});
  const connectionStatus=sc.querySelector('#tg-connection-status');
@@ -1642,9 +1650,16 @@ premiumRefresh().then(()=>{if(st.view==='tg'||st.view==='premium'||st.view==='me
 
 .cf-brand-mark{display:inline-flex;align-items:center;gap:9px;flex-shrink:0}.cf-logo-tile{width:34px;height:34px;border-radius:10px;background:#fff;border:1px solid rgba(0,0,0,.12);display:inline-flex;align-items:center;justify-content:center;overflow:hidden;box-sizing:border-box}.cf-logo-tile svg{width:27px;height:27px;display:block}.cf-brand-mark b{font-weight:650}
 
-/* Publication log beside the autoposting schedule */
-.tgw .tg-automation-grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(280px,.85fr);gap:14px;align-items:start;width:100%;min-width:0}
-.tgw .tg-automation-grid>#tg-plan,.tgw .tg-automation-grid>.tg-logs-card{min-width:0;margin:0!important;height:100%}
+/* Separate adjacent navigation for autoposting and publication journal */
+.tgw .tg-automation-nav{display:flex;align-items:center;gap:8px;width:max-content;max-width:100%;padding:5px;margin:2px 0 12px;border:1px solid var(--line2);border-radius:15px;background:var(--p1)}
+.tgw .tg-automation-tab{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:0 15px;border:1px solid transparent;border-radius:11px;background:transparent;color:var(--mute);font:inherit;font-size:13px;font-weight:650;cursor:pointer;transition:background .2s,color .2s,border-color .2s,transform .2s}
+.tgw .tg-automation-tab:hover{color:var(--ink);background:var(--hov)}
+.tgw .tg-automation-tab.active{color:var(--ink);background:var(--p2);border-color:var(--line2);box-shadow:0 3px 12px #0002}
+.tgw .tg-automation-tab.active svg{color:var(--ac)}
+.tg-logs-count{padding:3px 7px;border-radius:7px;background:color-mix(in srgb,var(--ac) 13%,var(--p2));color:var(--ac);font-size:10px}
+.tgw .tg-automation-grid{display:block;width:100%;min-width:0}
+.tgw .tg-automation-grid>#tg-plan,.tgw .tg-automation-grid>.tg-logs-card{width:100%;min-width:0;margin:0!important}
+.tgw .tg-automation-grid>[hidden]{display:none!important}
 .tg-logs-card{padding:18px;border:1px solid var(--line2);border-radius:20px;background:var(--p1);overflow:hidden}
 .tg-logs-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:14px}
 .tg-logs-head h3{display:flex;align-items:center;gap:8px;margin:0 0 6px;font-size:16px}
@@ -1654,6 +1669,5 @@ premiumRefresh().then(()=>{if(st.view==='tg'||st.view==='premium'||st.view==='me
 .tg-log-item{display:grid;grid-template-columns:9px minmax(0,1fr);gap:10px;padding:11px;border:1px solid var(--line);border-radius:13px;background:var(--p2);animation:tgDayIn .2s ease-out}
 .tg-log-dot{width:8px;height:8px;margin-top:5px;border-radius:50%;background:#8991a5}.tg-log-item.success .tg-log-dot{background:#48c995}.tg-log-item.error .tg-log-dot{background:#f07178}.tg-log-item.skip .tg-log-dot{background:#e0a64e}.tg-log-item.found .tg-log-dot{background:#7b8cff}
 .tg-log-title{font-size:12px;font-weight:700;color:var(--ink);margin-bottom:4px}.tg-log-message{font-size:11px;line-height:1.5;color:var(--mute);overflow-wrap:anywhere}.tg-log-time{font-size:10px;color:var(--mute);margin-top:6px}
-@media(max-width:900px){.tgw .tg-automation-grid{grid-template-columns:minmax(0,1fr)}}
-@media(max-width:520px){.tg-logs-card{padding:14px}.tg-logs-head{align-items:center}.tg-logs-list{max-height:420px}}
+@media(max-width:520px){.tg-automation-nav{width:100%!important}.tg-automation-tab{flex:1;padding:0 9px;font-size:12px}.tg-logs-card{padding:14px}.tg-logs-head{align-items:center}.tg-logs-list{max-height:420px}}
 </style>
