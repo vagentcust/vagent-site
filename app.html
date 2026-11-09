@@ -640,14 +640,14 @@ main{flex:1;min-height:0;position:relative;display:flex;flex-direction:column;wi
 <div class="aurora"></div>
 <div class="shell">
  <aside class="side">
-  <a class="brand" href="javascript:void(0)" onclick="go('home')"><img src="icon.png" alt=""><span>V-Agent</span></a>
+  <a class="brand" href="javascript:void(0)" onclick="go('home')"><img src="logo_text.jpg" alt="V-Agent" class="wordmark"></a>
   <nav class="nav" id="side"></nav>
   <div class="foot" id="foot"></div>
  </aside>
  <div class="stage">
 
   <nav class="top-nav">
-    <a class="logo" href="javascript:void(0)" onclick="go('home')"><img src="logo_text.png" alt="V-Agent"></a>
+    <a class="logo" href="javascript:void(0)" onclick="go('home')"><img src="logo_text.jpg" alt="V-Agent"></a>
     <div class="nav-right">
       <a href="index.html#download" class="lnk">Скачать</a>
       <a href="javascript:void(0)" class="lnk" onclick="openModal('privacy')">Безопасность</a>
@@ -679,7 +679,7 @@ main{flex:1;min-height:0;position:relative;display:flex;flex-direction:column;wi
   </nav>
 
   <header class="top">
-   <a class="brand" href="javascript:void(0)" onclick="go('home')"><img src="icon.png" alt=""><span>V-Agent</span></a>
+   <a class="brand" href="javascript:void(0)" onclick="go('home')"><img src="logo_text.jpg" alt="V-Agent" class="wordmark"></a>
    <button class="ibtn gear" id="gm" onclick="go('me')" aria-label="Настройки"></button>
    <button class="ava" id="avm" onclick="go('me')" aria-label="Профиль"></button>
   </header>
@@ -1298,9 +1298,9 @@ async function tgRequest(path,method='GET',body=null){
 }
 async function tgConnect(){
  const b=$('#tg-connect'),stx=$('#tg-connect-status');if(!b||!stx)return;
- const bot=($('#tg-bot-token')?.value||'').trim(),channel=($('#tg-channel')?.value||'').trim();
+ const channel=($('#tg-channel')?.value||'').trim();
  stx.className='st';stx.textContent='Подключаю бота…';b.disabled=true;
- try{const d=await tgRequest('/tg/connect','POST',{bot_token:bot,channel});stx.className='st ok';stx.textContent=d.message||'Бот подключён';await tgLoadStatus()}
+ try{const d=await tgRequest('/tg/connect','POST',{channel});stx.className='st ok';stx.textContent=d.message||'Бот подключён';await tgLoadStatus()}
  catch(e){stx.className='st er';stx.textContent=e.message}
  b.disabled=false;
 }
@@ -1335,15 +1335,12 @@ function tg(m){
  <div class="divider"></div><h3 style="margin-top:16px">Опубликовать запись</h3><p>Отправка текстовой записи на стену подключённого сообщества.</p><textarea class="f" id="vk-post-text" rows="7" maxlength="15000" placeholder="Вставь готовый текст публикации…"></textarea><div class="vk-actions"><button class="btn" id="vk-publish">${svg('send',16)}<span>Опубликовать</span></button></div><div class="st" id="vk-publish-status"></div><div class="note">Сейчас поддерживается текстовая публикация. Авторасписание и загрузка изображений для VK ещё не подключены.</div></div>`;
  picker.querySelectorAll('[data-platform]').forEach(btn=>btn.onclick=()=>{picker.querySelectorAll('.platform-choice').forEach(x=>x.classList.toggle('active',x===btn));const platform=btn.dataset.platform;const isTg=platform==='telegram',isVk=platform==='vk';a.style.display=isTg?'':'none';plan.style.display=isTg?'':'none';vkPanel.style.display=isVk?'block':'none';platformNotice.style.display=(!isTg&&!isVk)?'':'none';if(!isTg&&!isVk)platformNotice.innerHTML=`<div class="ib">${svg('message-circle',24)}</div><h3>MAX</h3><span class="badge">Скоро</span><p>Подключение и публикация через MAX API ещё не реализованы.</p>`;if(isVk)vkLoadStatus()});
  const a=el('div','card tga');
- a.innerHTML=`<h3><span class="ib">${svg('bot',17)}</span>Telegram-автоматизация</h3><p>Подключи бота, выбери дни и время публикаций. Расписание выполняется на сервере, даже когда сайт закрыт.</p>
- <div class="tg-token-row" style="display:flex;gap:8px;align-items:stretch">
- <input class="f" id="tg-bot-token" type="password" placeholder="Токен бота от @BotFather" autocomplete="new-password" autocapitalize="off" autocorrect="off" spellcheck="false" inputmode="text" style="flex:1;min-width:0">
- <button class="btn g" type="button" id="tg-token-toggle" aria-label="Показать токен" aria-pressed="false" style="white-space:nowrap;padding-left:14px;padding-right:14px">Показать</button>
- </div>
+ a.innerHTML=`<h3><span class="ib">${svg('bot',17)}</span>Telegram-автоматизация</h3><p>Подключи канал через общего бота V-Agent, выбери дни и время публикаций. Расписание выполняется на сервере, даже когда сайт закрыт.</p>
+ <div class="note">Работаем через общего бота <a href="https://t.me/aivagent" target="_blank" rel="noopener noreferrer">@aivagent</a>. Добавь его администратором своего канала с правом публикации, затем укажи канал ниже.</div>
  <input class="f" id="tg-channel" placeholder="@канал или https://t.me/канал" autocomplete="off" autocapitalize="off">
- <div class="row"><button class="btn" id="tg-connect">${svg('link',16)}<span>Подключить бота</span></button><button class="btn g" id="tg-disconnect">Отключить</button></div>
+ <div class="row"><button class="btn" id="tg-connect">${svg('link',16)}<span>Подключить канал</span></button><button class="btn g" id="tg-disconnect">Отключить</button></div>
  <div class="st" id="tg-connect-status"></div><div class="st" id="tg-connection-status">Проверяю подключение…</div>
- <div class="note">Бот должен быть администратором канала с правом публикации сообщений.</div>`;
+ <div class="note">Токен общего бота хранится на сервере. Вводить токен в браузере не нужно.</div>`;
  const plan=el('div','card');plan.id='tg-plan';
  plan.innerHTML=`<h3><span class="ib">${svg('clock',17)}</span>Расписание автопостинга</h3>
  <p>Выбери дни недели и добавь до 5 времён публикации с шагом 5 минут.</p>
@@ -1393,8 +1390,6 @@ function tg(m){
  sc.querySelectorAll('button:not([type])').forEach(button=>button.type='button');
  sc.querySelector('#tg-connect').onclick=async()=>{await tgConnect();syncConnectionState()};sc.querySelector('#tg-disconnect').onclick=async()=>{await tgDisconnect();syncConnectionState()};
  sc.querySelector('#vk-connect').onclick=vkConnect;sc.querySelector('#vk-disconnect').onclick=vkDisconnect;sc.querySelector('#vk-publish').onclick=vkPublish;
- const tokenInput=sc.querySelector('#tg-bot-token'),tokenToggle=sc.querySelector('#tg-token-toggle');
- tokenToggle.onclick=()=>{const show=tokenInput.type==='password';tokenInput.type=show?'text':'password';tokenToggle.textContent=show?'Скрыть':'Показать';tokenToggle.setAttribute('aria-label',show?'Скрыть токен':'Показать токен');tokenToggle.setAttribute('aria-pressed',String(show));tokenInput.focus()};
  sc.querySelector('#tg-detect').onclick=tgAutoDetect;sc.querySelector('#tg-save').onclick=tgAutoSave;sc.querySelector('#tg-stop').onclick=tgAutoStop;
  const linksToggle=sc.querySelector('#tg-links-enabled'),linksFields=sc.querySelector('#tg-links-fields');linksToggle.onchange=()=>{linksFields.hidden=!linksToggle.checked};
  const imagesToggle=sc.querySelector('#tg-images-enabled'),imageMode=sc.querySelector('#tg-image-mode');imagesToggle.onchange=()=>{imageMode.value=imagesToggle.checked?'commons':'off'};
@@ -1404,6 +1399,7 @@ function tg(m){
  tgCalendarInit(sc);
  tgEmojiPickerInit(sc,[]);
  tgTimePickerInit(sc,['09:00','14:00','19:00']);
+ mountStudio(sc);
  tgLoadStatus().then(syncConnectionState);tgLoadSchedule();tgLoadLogs();sc.querySelector("#tg-logs-refresh").onclick=tgLoadLogs;
 }
 function channelStatistics(m){
@@ -1427,6 +1423,44 @@ function channelStatistics(m){
  }catch(e){if(sc.isConnected){status.className='st er';status.textContent=e.message}}finally{button.disabled=false}};
  button.onclick=load;load();
 }
+function mountStudio(root){
+ const host=el('section','card va-studio');
+ host.innerHTML=`<h3>Студия контента</h3><p>Материал → генерация → предпросмотр → публикация</p>
+ <div class="sg"><label>Режим<select class="f" data-va="mode"><option value="monitor">Мониторинг</option><option value="blog">Блог</option><option value="rewrite">Рерайт</option><option value="horoscope">Гороскоп</option><option value="fact">Случайный факт</option><option value="modrinth">Мод / ресурс-пак</option></select></label><label>Язык<select class="f" data-va="language">${Object.entries({ru:'Русский',en:'English',es:'Español',uk:'Українська',de:'Deutsch',fr:'Français',pt:'Português',pl:'Polski',it:'Italiano',tr:'Türkçe',zh:'中文',ja:'日本語',ko:'한국어'}).map(([v,t])=>'<option value="'+v+'">'+t+'</option>').join('')}</select></label></div>
+ <label>Источник<select class="f" data-va="source"><option value="weather">Погода</option><option value="currency">Курсы валют</option><option value="news">Новости</option></select></label><label data-va="project-label" hidden>Тип проекта<select class="f" data-va="project"><option value="mod">Мод</option><option value="resourcepack">Ресурс-пак</option></select></label>
+ <label>Тема, город или исходный текст<textarea class="f" data-va="topic" rows="4" placeholder="Москва / USD EUR / тема поста"></textarea></label>
+ <label>Тон<input class="f" data-va="tone" value="Дружелюбный"></label>
+ <label>Шаблон режима<textarea class="f" data-va="template" rows="3" placeholder="{content}">{content}</textarea></label><small class="note">Доступны {content}, {title}, {source}, {date}. Шаблоны сохраняются отдельно для каждого режима.</small>
+ <div class="row"><button class="btn g" type="button" data-va="research">Получить материал</button><button class="btn" type="button" data-va="generate">Сгенерировать</button></div>
+ <details><summary>Исходные данные</summary><textarea class="f" data-va="material" rows="6"></textarea><div data-va="sources"></div></details>
+ <div class="row"><label><input type="checkbox" data-va="auto"> Автообновление материала</label><select class="f" data-va="period" style="width:auto"><option value="60000">1 минута</option><option value="300000" selected>5 минут</option><option value="3600000">1 час</option></select></div><small class="note">Обновление работает, пока открыт этот раздел. Публикация — по кнопке; расписание ниже работает на сервере.</small>
+ <h3>Предпросмотр Telegram</h3><textarea class="f" data-va="result" rows="10" placeholder="Здесь появится текст. Его можно отредактировать."></textarea>
+ <label>Ссылка в конце поста<input class="f" data-va="link" type="url" placeholder="https://…"></label><label>Подпись ссылки<input class="f" data-va="link-label" placeholder="Подробнее"></label>
+ <div class="row"><button class="btn g" type="button" data-va="copy">Копировать</button><button class="btn" type="button" data-va="publish">Опубликовать в Telegram</button></div><div class="st" role="status" data-va="status"></div>
+ <details><summary>История Studio</summary><div data-va="history"></div></details><details open><summary>Консоль</summary><div class="va-console" data-va="console" role="log" aria-live="polite"></div></details>`;
+ root.querySelector('.tgw')?.prepend(host);
+ const q=id=>host.querySelector('[data-va="'+id+'"]');let busy=false,project=null,timer=null,excluded=[];
+ const accountKey='vagent_studio_'+USER;
+ const read=(key,fallback)=>{try{return JSON.parse(localStorage.getItem(accountKey+key)||'null')??fallback}catch{return fallback}};
+ const save=(key,value)=>{try{localStorage.setItem(accountKey+key,JSON.stringify(value))}catch{log('Локальное сохранение недоступно','error')}};
+ function log(message,type='info'){const row=el('div','va-console-'+type);row.textContent='['+new Date().toLocaleTimeString('ru-RU')+'] '+message;q('console').append(row);while(q('console').children.length>80)q('console').firstChild.remove();q('console').scrollTop=q('console').scrollHeight;}
+ const run=async(action)=>{if(busy)return;busy=true;host.querySelectorAll('button').forEach(b=>b.disabled=true);q('status').className='st';q('status').textContent='Выполняю…';try{await action();q('status').className='st ok';q('status').textContent='Готово'}catch(e){q('status').className='st er';q('status').textContent=e.message;log(e.message,'error')}finally{busy=false;host.querySelectorAll('button').forEach(b=>b.disabled=false)}};
+ const research=async()=>{const mode=q('mode').value,topic=q('topic').value.trim();if(!topic)throw new Error('Введи тему или город');log('Получаю актуальный материал…');const data=await tgRequest(mode==='modrinth'?'/studio/modrinth':'/studio/research','POST',{topic,source:q('source').value,project_type:q('project').value,exclude_ids:excluded});if(!host.isConnected)return;
+ q('material').value=data.text||'';project=mode==='modrinth'?data:null;if(project){excluded.push(project.project_id);excluded=excluded.slice(-100)}q('sources').replaceChildren();for(const s of [...(data.sources||[]),...(project?[{title:project.title,url:project.url}]:[])]){try{const url=new URL(s.url);if(!['https:','http:'].includes(url.protocol))continue;const a=el('a','note',s.title);a.href=url.href;a.target='_blank';a.rel='noopener noreferrer';q('sources').append(a,document.createElement('br'))}catch{}}log('Материал получен. '+new Date(data.at).toLocaleString('ru-RU'),'success');};
+ function renderHistory(){const items=read('_history',[]),box=q('history');box.replaceChildren();if(!items.length){box.textContent='Пока нет сохранённых постов.';return}for(const item of items){const button=el('button','btn g sm',new Date(item.at).toLocaleString('ru-RU')+' · '+item.text.slice(0,45));button.type='button';button.onclick=()=>{q('result').value=item.text;log('Пост восстановлен из истории')};box.append(button)}}
+ q('mode').onchange=()=>{const mod=q('mode').value==='modrinth';q('project-label').hidden=!mod;q('source').closest('label').hidden=mod;q('template').value=read('_template_'+q('mode').value,'{content}');project=null;q('material').value='';log('Выбран режим: '+q('mode').selectedOptions[0].textContent)};
+ q('template').oninput=()=>save('_template_'+q('mode').value,q('template').value);
+ q('research').onclick=()=>run(research);
+ q('generate').onclick=()=>run(async()=>{const mode=q('mode').value;if(['monitor','modrinth'].includes(mode)&&!q('material').value.trim())await research();log('Генерирую текст…');const data=await tgRequest('/studio/generate','POST',{topic:q('topic').value,mode,language:q('language').value,tone:q('tone').value,material:q('material').value});if(!host.isConnected)return;const values={content:data.text,title:project?.title||q('topic').value,source:project?.url||'',date:new Date(data.at).toLocaleDateString('ru-RU')};q('result').value=q('template').value.replace(/\{(content|title|source|date)\}/g,(_,key)=>values[key]);if(!q('template').value.trim())q('result').value=data.text;save('_history',[{at:data.at,text:q('result').value},...read('_history',[])].slice(0,50));renderHistory();log('Текст готов. Проверь перед публикацией.','success')});
+ q('copy').onclick=()=>run(async()=>{await navigator.clipboard.writeText(q('result').value);log('Текст скопирован','success')});
+ q('publish').onclick=()=>run(async()=>{let text=q('result').value.trim();if(!text)throw new Error('Сначала подготовь пост');const link=q('link').value.trim();if(link){let url;try{url=new URL(link)}catch{throw new Error('Проверь ссылку')}if(!['https:','http:'].includes(url.protocol))throw new Error('Нужна ссылка http или https');text+='\n\n'+(q('link-label').value.trim()?q('link-label').value.trim()+' — ':'')+url.href}if(text.length>4096)throw new Error('Telegram принимает до 4096 символов');await tgRequest('/tg/publish','POST',{text});log('Пост опубликован в подключённом канале','success');tgLoadLogs()});
+ function auto(){clearInterval(timer);if(!q('auto').checked)return;timer=setInterval(()=>{if(!host.isConnected){clearInterval(timer);return}if(!busy)run(research)},Number(q('period').value));log('Автообновление материала включено')}
+ q('auto').onchange=auto;q('period').onchange=auto;
+ const observer=new MutationObserver(()=>{if(!host.isConnected){clearInterval(timer);observer.disconnect()}});observer.observe(root.parentNode,{childList:true});
+ q('mode').onchange();renderHistory();log('Studio готова. Общий бот V-Agent используется для публикаций.');
+}
+
+
 function tgAnalysis(m){
  const sc=el('div','scroll'),card=el('div','card');
  card.innerHTML=`<h3><span class="ib">${svg('chart',17)}</span>Анализ Telegram-канала</h3><p>Вставь ссылку на публичный канал, чтобы изучить его тематику, стиль и подготовить оригинальный пост.</p><input class="f" id="tgl" placeholder="t.me/название_канала или @название" autocomplete="off" autocapitalize="off" spellcheck="false"><input class="f" id="tgt" placeholder="Тема нового поста (необязательно)"><div class="row"><button class="btn" id="tga">${svg('search',16)}<span>Анализировать</span></button></div><div class="st" id="tgs"></div>`;
@@ -1708,7 +1742,9 @@ premiumRefresh().then(()=>{if(st.view==='tg'||st.view==='premium'||st.view==='me
 .tg-log-title{font-size:12px;font-weight:700;color:var(--ink);margin-bottom:4px}.tg-log-message{font-size:11px;line-height:1.5;color:var(--mute);overflow-wrap:anywhere}.tg-log-time{font-size:10px;color:var(--mute);margin-top:6px}
 @media(max-width:520px){.tg-automation-nav{width:100%!important}.tg-automation-tab{flex:1;padding:0 9px;font-size:12px}.tg-logs-card{padding:14px}.tg-logs-head{align-items:center}.tg-logs-list{max-height:420px}}
 </style>
-<style id="vagent-workspace-motion">
+<style id="vagent-studio-layout">
+.va-studio{margin-bottom:18px!important}.va-studio>label{display:block;margin:14px 0 8px;font-size:12px;color:var(--mute)}.va-studio .f{margin-top:7px}.va-studio details{margin:16px 0;padding:14px;border:1px solid var(--line);border-radius:14px;background:var(--p2)}.va-studio summary{cursor:pointer;font-size:13px;font-weight:600}.va-studio details[open]>summary{margin-bottom:12px}.va-studio .row{margin:14px 0;flex-wrap:wrap}.va-studio .sg label{min-width:0;color:var(--mute);font-size:12px}.va-studio textarea{resize:vertical;line-height:1.65}.va-console{height:190px;overflow:auto;background:#080b13;color:#a3aec5;border-radius:12px;padding:12px;font:11px/1.8 Consolas,monospace;overflow-wrap:anywhere}.va-console-error{color:#ff9caa}.va-console-success{color:#81ddbc}.va-studio [data-va=history]{display:flex;flex-wrap:wrap;gap:8px}.va-studio [data-va=result]{background:var(--p1);border-radius:18px;padding:18px;min-height:260px}.va-studio [data-va=sources] a{display:inline-block;padding:5px 0;max-width:100%;overflow-wrap:anywhere}
+</style><style id="vagent-workspace-motion">
 .channel-statistics>.card{position:relative;overflow:hidden;border:1px solid var(--line2);background:linear-gradient(145deg,var(--p1),var(--p2));border-radius:24px;padding:24px;animation:vaPanelIn .4s ease both}
 .channel-statistics h3{letter-spacing:-.025em}.channel-statistics>.card>h3{font-size:23px;margin-bottom:8px}
 .channel-statistics .sg{margin:22px 0;gap:12px}.channel-statistics .sg>.card{margin:0;min-height:120px;background:var(--glass);border:1px solid var(--line2);border-radius:18px;transition:transform .22s,box-shadow .22s;animation:vaPanelIn .4s ease both}
@@ -1719,4 +1755,8 @@ premiumRefresh().then(()=>{if(st.view==='tg'||st.view==='premium'||st.view==='me
 @media(max-width:560px){.channel-statistics>.card{padding:16px;border-radius:20px}.channel-statistics .sg{grid-template-columns:repeat(2,minmax(0,1fr))}.channel-statistics .sg h3{font-size:24px}.channel-statistics .sg>.card{padding:12px;min-width:0}#tabs .tb{min-width:0;font-size:10px}}
 @keyframes vaPanelIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}@keyframes vaBusy{50%{opacity:.55}}
 @media(prefers-reduced-motion:reduce){.channel-statistics *,.tgw *{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style><style id="vagent-navigation-refresh">
+.side{width:276px;padding:22px 14px 16px;background:radial-gradient(ellipse at 0 0,#8794ff13,transparent 60%),#0b0d13;border-right:1px solid #ffffff0d}.side .brand{padding:4px 12px 24px;min-height:74px}.brand img.wordmark{width:176px;height:44px;object-fit:contain;border-radius:0}.top .brand img.wordmark{width:128px;height:34px;border-radius:0}.top-nav .logo img{width:158px;height:44px;object-fit:contain}.side .grp{padding:20px 14px 8px;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:#717b91}.side .si{min-height:44px;padding:11px 14px;margin:2px 0;border:1px solid transparent;border-radius:13px;transition:background .2s,transform .2s,border-color .2s,color .2s}.side .si .ib{width:28px;height:28px;border-radius:9px;background:#ffffff04;color:#99a6c4}.side .si.on{background:linear-gradient(100deg,#8794ff20,#8794ff09);border-color:#8794ff28;color:#fff;box-shadow:0 5px 18px #0001}.side .si.on .ib{background:#8794ff20;color:#b4bdff}.side .si.on:before{display:none}.side .usr{border-radius:16px;background:linear-gradient(140deg,#171b29,#10131d);border:1px solid #ffffff0c;padding:12px}.side .foot-profile-actions{padding-top:12px;border-top:1px solid #ffffff0b}.side .nav{padding-right:2px}.side .si:focus-visible{outline:2px solid #a6b0ff;outline-offset:2px}
+@media(hover:hover){.side .si:hover{background:#ffffff06;transform:translateX(3px);border-color:#ffffff09}.side .si.on:hover{background:linear-gradient(100deg,#8794ff29,#8794ff10);border-color:#8794ff35}}
+@media(prefers-reduced-motion:reduce){.side *{animation:none!important;transition:none!important}}
 </style>
