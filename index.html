@@ -897,13 +897,18 @@
 
         async function handleAuth() {
             const user = $('#auth-username').value.trim();
-            const pass = $('#auth-password').value.trim();
-            const confirm = $('#auth-confirm').value.trim();
+            const pass = $('#auth-password').value;
+            const confirm = $('#auth-confirm').value;
             const errorBox = $('#auth-error');
             const btn = $('#auth-submit');
 
             if (!user || !pass) {
                 errorBox.textContent = 'Заполни все поля';
+                errorBox.style.display = 'block';
+                return;
+            }
+            if (!isLoginMode && (pass.length < 6 || pass.length > 256)) {
+                errorBox.textContent = 'Пароль: от 6 до 256 символов. Можно использовать только цифры; спецзнаки необязательны.';
                 errorBox.style.display = 'block';
                 return;
             }
@@ -1101,3 +1106,4 @@
     </script>
 </body>
 </html>
+

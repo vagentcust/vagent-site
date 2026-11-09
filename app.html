@@ -850,8 +850,8 @@ async function ai(path,body){
 }
 const chatAI=(messages,max)=>ai('/ai/text',{feature:st.mode==='image'?'chat':(st.mode||'chat'),messages,max_tokens:max||900}).then(d=>{const t=d.text;return (typeof t==='string'?t:t==null?'':JSON.stringify(t)).trim()});
 
-const SIDE=[['home','home','Главная'],['premium','crown','Premium'],['grp','Нейросети'],['chat','chat'],['image','image'],['ideas','bulb'],['templates','grid'],['hashtags','hash'],['grp','Ещё'],['an','chart','Анализ канала'],['tg','send','Автоведение'],['me','gear','Настройки']];
-const TABS=[['neuro','spark','Нейросети'],['an','chart','Анализ'],['home','home','Главная'],['tg','send','Автоведение'],['me','gear','Настройки']];
+const SIDE=[['home','home','Главная'],['premium','crown','Premium'],['grp','Нейросети'],['chat','chat'],['image','image'],['ideas','bulb'],['templates','grid'],['hashtags','hash'],['grp','Ещё'],['an','chart','Анализ канала'],['tg','send','Автоведение'],['stats','chart','Статистика'],['me','gear','Настройки']];
+const TABS=[['neuro','spark','Нейросети'],['an','chart','Анализ'],['home','home','Главная'],['tg','send','Автоведение'],['stats','chart','Статистика'],['me','gear','Настройки']];
 let premiumNavRequest=0;
 function go(v,mode){if(mode)st.mode=mode;st.view=v;drawNav();draw();if(v==='tg'||v==='premium'){const request=++premiumNavRequest;premiumRefresh().then(()=>{if(request===premiumNavRequest&&st.view===v){drawNav();draw()}})}}
 function drawNav(){
@@ -878,7 +878,7 @@ function drawNav(){
 }
 function draw(){
  const m=$('#main');m.innerHTML='';m.classList.remove('view');void m.offsetWidth;m.classList.add('view');paintTheme();
- if(st.view==='home')home(m);else if(st.view==='premium')premiumPage(m);else if(st.view==='neuro')neuro(m);else if(st.view==='an')tgAnalysis(m);else if(st.view==='tg'){if(premiumState.loading){const wait=el('div','card');wait.innerHTML='<h3>Проверяю Premium…</h3><p>Загружаю статус подписки.</p>';m.append(wait)}else if(!premiumState.active)locked(m);else tg(m)}else me(m);
+ if(st.view==='home')home(m);else if(st.view==='premium')premiumPage(m);else if(st.view==='neuro')neuro(m);else if(st.view==='an')tgAnalysis(m);else if(st.view==='stats')channelStatistics(m);else if(st.view==='tg'){if(premiumState.loading){const wait=el('div','card');wait.innerHTML='<h3>Проверяю Premium…</h3><p>Загружаю статус подписки.</p>';m.append(wait)}else if(!premiumState.active)locked(m);else tg(m)}else me(m);
 }
 function home(m){
  const sc=el('div','scroll stg');const hr=new Date().getHours();
@@ -1406,6 +1406,27 @@ function tg(m){
  tgTimePickerInit(sc,['09:00','14:00','19:00']);
  tgLoadStatus().then(syncConnectionState);tgLoadSchedule();tgLoadLogs();sc.querySelector("#tg-logs-refresh").onclick=tgLoadLogs;
 }
+function channelStatistics(m){
+ const sc=el('div','scroll channel-statistics');m.append(sc);
+ const card=el('div','card');sc.append(card);
+ card.innerHTML='<h3>Статистика канала</h3><p>Подписчики и публикации V-Agent</p><button class="btn" type="button">Обновить</button><div class="st" role="status"></div><div class="channel-stat-content"></div>';
+ const status=card.querySelector('.st'),content=card.querySelector('.channel-stat-content'),button=card.querySelector('button');
+ const load=async()=>{button.disabled=true;status.className='st';status.textContent='Загружаю данные Telegram…';content.replaceChildren();
+ try{const d=await tgRequest('/tg/statistics');if(!sc.isConnected)return;
+ if(!d.connected){status.textContent='Подключи Telegram-канал в разделе «Автоведение».';const link=el('button','btn','Подключить канал');link.onclick=()=>go('tg');content.append(link);return}
+ status.className='st ok';status.textContent=d.title+' · '+new Date(d.updated_at).toLocaleString('ru-RU');
+ const grid=el('div','sg');content.append(grid);
+ const baseline=d.history.length>1?d.history[0].members:null;
+ for(const [label,value] of [['Подписчики',d.members],['Изменение с первого замера',baseline===null?'Недостаточно данных':((d.members-baseline>=0?'+':'')+(d.members-baseline))],['Публикации сервиса за 7 дней',d.published],['Ошибки за 7 дней',d.errors]]){const box=el('div','card');box.append(el('small','',label),el('h3','',String(value)));grid.append(box)}
+ content.append(el('h3','','История подписчиков'));
+ if(d.history.length<2)content.append(el('p','','Первый замер сохранён. Следующие появятся при обновлении в другие дни.'));
+ const table=document.createElement('table');table.style.cssText='width:100%;text-align:left;border-spacing:0 10px';const head=document.createElement('tr');head.append(el('th','','Дата'),el('th','','Подписчики'));table.append(head);
+ for(const x of [...d.history].reverse()){const tr=document.createElement('tr');tr.append(el('td','',x.day),el('td','',String(x.members)));table.append(tr)}content.append(table,el('p','note',d.history_note));
+ content.append(el('h3','','Последние события'));if(!d.events.length)content.append(el('p','','Пока нет событий.'));
+ for(const event of d.events){const row=el('div','card');row.append(el('b','',event.title||event.status),el('p','',event.message||''),el('small','',new Date(event.at).toLocaleString('ru-RU')));content.append(row)}
+ }catch(e){if(sc.isConnected){status.className='st er';status.textContent=e.message}}finally{button.disabled=false}};
+ button.onclick=load;load();
+}
 function tgAnalysis(m){
  const sc=el('div','scroll'),card=el('div','card');
  card.innerHTML=`<h3><span class="ib">${svg('chart',17)}</span>Анализ Telegram-канала</h3><p>Вставь ссылку на публичный канал, чтобы изучить его тематику, стиль и подготовить оригинальный пост.</p><input class="f" id="tgl" placeholder="t.me/название_канала или @название" autocomplete="off" autocapitalize="off" spellcheck="false"><input class="f" id="tgt" placeholder="Тема нового поста (необязательно)"><div class="row"><button class="btn" id="tga">${svg('search',16)}<span>Анализировать</span></button></div><div class="st" id="tgs"></div>`;
@@ -1571,7 +1592,7 @@ function me(m){
  const [rt]=row('pal','Тема','Оформление приложения',seg);
  sc.append(grp('Внешний вид',[rt]));
  sc.append(grp('Нейросети',[acc('shield-check','Cloudflare AI','Подключён сервером V-Agent','<span class="cf-brand-mark" aria-label="Cloudflare"><span class="cf-logo-tile"><svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#F38020" d="M35.5 20.2a12.5 12.5 0 0 0-23.7-2.8A9.3 9.3 0 0 0 11 35h25.1a7.4 7.4 0 0 0-.6-14.8Z"/><path fill="#FAAE40" d="M8.7 35h28.1a7.3 7.3 0 0 0-1.1-14.5 12.4 12.4 0 0 0-23.9-2.8A9.3 9.3 0 0 0 8.7 35Z"/></svg></span><b>Cloudflare</b></span><span class="badge ok"><i></i>Серверная настройка</span>','<p style="color:var(--mute);font-size:13px;margin:4px 0 8px">Cloudflare API Token хранится только в секретах Worker. Вводить или сохранять ключ в браузере не нужно.</p>',false)]));
- const pwBody=`<input class="f" id="op" type="password" placeholder="Старый пароль" autocomplete="current-password"><input class="f" id="np" type="password" placeholder="Новый пароль (от 6 символов, буква + цифра + знак)" autocomplete="new-password"><div class="row"><button class="btn" onclick="chPass()">Сменить пароль</button></div><div class="st" id="ps"></div>`;
+ const pwBody=`<input class="f" id="op" type="password" placeholder="Старый пароль" autocomplete="current-password"><input class="f" id="np" type="password" placeholder="Новый пароль (от 6 до 256 символов)" autocomplete="new-password"><div class="row"><button class="btn" onclick="chPass()">Сменить пароль</button></div><div class="st" id="ps"></div>`;
  sc.append(grp('Подписка',[acc('crown','V-Agent Premium',premiumState.active?'Активна до '+premiumDate():'Подписка не активна',`<span class="badge ${premiumState.active?'ok':''}"><i></i>${premiumState.active?'Активна':'Не активна'}</span>`,premiumMarkup(),false)]));
  sc.append(grp('Безопасность',[acc('shield','Сменить пароль','Введи старый и новый пароль','',pwBody,false)]));
  const total=Object.values(st.chats).reduce((n,a)=>n+(a?a.length:0),0);
@@ -1586,7 +1607,7 @@ function me(m){
  m.append(sc);$('#ava2').textContent=USER[0].toUpperCase();$('#nm2').textContent=USER;
 }
 async function chPass(){
- const s=$('#ps'),o=$('#op').value,n=$('#np').value;if(!o||n.length<6||!/[A-Za-z]/.test(n)||!/[0-9]/.test(n)||!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>/?`~]/.test(n)){s.className='st er';s.textContent='Новый пароль: минимум 6 символов, английская буква, цифра и специальный знак';return}
+ const s=$('#ps'),o=$('#op').value,n=$('#np').value;if(!o||n.length<6||n.length>256){s.className='st er';s.textContent='Новый пароль: от 6 до 256 символов. Спецзнаки необязательны.';return}
  try{const r=await fetch(API+'/change-password',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:USER,old_password:o,new_password:n})});const d=await r.json();s.className='st '+(r.ok?'ok':'er');s.textContent=r.ok?'Пароль изменён ✓':(d.error||'Ошибка');if(r.ok)addNotification('Пароль успешно изменен!', 'success');else addNotification('Ошибка смены пароля: '+(d.error||''), 'error')}catch(e){s.className='st er';s.textContent='Нет связи с сервером'}
 }
 function logout(){localStorage.removeItem('vagent_user');localStorage.removeItem('vagent_session_token');location.href='web.html'}
@@ -1686,4 +1707,16 @@ premiumRefresh().then(()=>{if(st.view==='tg'||st.view==='premium'||st.view==='me
 .tg-log-dot{width:8px;height:8px;margin-top:5px;border-radius:50%;background:#8991a5}.tg-log-item.success .tg-log-dot{background:#48c995}.tg-log-item.error .tg-log-dot{background:#f07178}.tg-log-item.skip .tg-log-dot{background:#e0a64e}.tg-log-item.found .tg-log-dot{background:#7b8cff}
 .tg-log-title{font-size:12px;font-weight:700;color:var(--ink);margin-bottom:4px}.tg-log-message{font-size:11px;line-height:1.5;color:var(--mute);overflow-wrap:anywhere}.tg-log-time{font-size:10px;color:var(--mute);margin-top:6px}
 @media(max-width:520px){.tg-automation-nav{width:100%!important}.tg-automation-tab{flex:1;padding:0 9px;font-size:12px}.tg-logs-card{padding:14px}.tg-logs-head{align-items:center}.tg-logs-list{max-height:420px}}
+</style>
+<style id="vagent-workspace-motion">
+.channel-statistics>.card{position:relative;overflow:hidden;border:1px solid var(--line2);background:linear-gradient(145deg,var(--p1),var(--p2));border-radius:24px;padding:24px;animation:vaPanelIn .4s ease both}
+.channel-statistics h3{letter-spacing:-.025em}.channel-statistics>.card>h3{font-size:23px;margin-bottom:8px}
+.channel-statistics .sg{margin:22px 0;gap:12px}.channel-statistics .sg>.card{margin:0;min-height:120px;background:var(--glass);border:1px solid var(--line2);border-radius:18px;transition:transform .22s,box-shadow .22s;animation:vaPanelIn .4s ease both}
+.channel-statistics .sg>.card:nth-child(2){animation-delay:50ms}.channel-statistics .sg>.card:nth-child(3){animation-delay:100ms}.channel-statistics .sg>.card:nth-child(4){animation-delay:150ms}
+.channel-statistics .sg h3{font-size:30px;margin:14px 0 0;color:var(--ac)}.channel-statistics small,.channel-statistics .note{color:var(--mute);line-height:1.6}.channel-statistics table{padding:10px 14px;background:var(--p1);border:1px solid var(--line);border-radius:16px}.channel-statistics td{padding:8px 0;border-bottom:1px solid var(--line)}
+.tgw>.card,.tgw .tg-automation-nav,.tgw .tg-logs-card{animation:vaPanelIn .35s ease both}.tgw .tg-automation-nav{animation-delay:50ms}.tgw .tg-logs-card{animation-delay:80ms}.tgw .btn,.channel-statistics .btn{transition:transform .18s,box-shadow .18s,opacity .18s}.tgw .btn:active,.channel-statistics .btn:active{transform:scale(.97)}.channel-statistics .btn:disabled{animation:vaBusy 1.4s ease-in-out infinite}.tgw .platform-choice{transition:transform .2s,border-color .2s,background .2s}.tgw .platform-choice.active{box-shadow:0 6px 24px #8794ff18}
+@media(hover:hover){.channel-statistics .sg>.card:hover{transform:translateY(-3px);box-shadow:0 10px 28px #0002}.tgw .btn:hover,.channel-statistics .btn:hover{transform:translateY(-1px)}.tgw .platform-choice:hover{transform:translateY(-2px)}}
+@media(max-width:560px){.channel-statistics>.card{padding:16px;border-radius:20px}.channel-statistics .sg{grid-template-columns:repeat(2,minmax(0,1fr))}.channel-statistics .sg h3{font-size:24px}.channel-statistics .sg>.card{padding:12px;min-width:0}#tabs .tb{min-width:0;font-size:10px}}
+@keyframes vaPanelIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}@keyframes vaBusy{50%{opacity:.55}}
+@media(prefers-reduced-motion:reduce){.channel-statistics *,.tgw *{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 </style>
