@@ -163,6 +163,49 @@ export default {
       return (await premiumExpiry(username)) > Date.now();
     }
 
+    // Browser sessions create challenges; only the shared bot can confirm them.
+    if(url.pathname==='/tg/link/complete'&&request.method==='POST'){
+      try{
+        if(!env.TG_MAIN_BOT_TOKEN)return json({error:'Общий бот не настроен'},503);
+        const raw=await request.text();if(raw.length>3000)return json({error:'Запрос слишком большой'},413);
+        const signature=request.headers.get('X-VAgent-Signature')||'';
+        if(!/^[a-f0-9]{64}$/.test(signature))return json({error:'Неверная подпись'},401);
+        const key=await crypto.subtle.importKey('raw',new TextEncoder().encode(env.TG_MAIN_BOT_TOKEN),{name:'HMAC',hash:'SHA-256'},false,['verify']);
+        const bytes=Uint8Array.from(signature.match(/../g),x=>parseInt(x,16));
+        if(!await crypto.subtle.verify('HMAC',key,bytes,new TextEncoder().encode('vagent-web-link-v1\n'+raw)))return json({error:'Неверная подпись'},401);
+        const b=JSON.parse(raw),code=String(b.code||'').toUpperCase();
+        if(!/^WEB-[A-F0-9]{32}$/.test(code)||!Number.isSafeInteger(b.telegram_id)||b.telegram_id<=0||!Number.isFinite(b.timestamp)||Math.abs(Date.now()-b.timestamp)>120000)return json({error:'Неверные или просроченные данные'},400);
+        const challengeRaw=await env.VAGENT_TELEGRAM.get('web_link_code_'+code);
+        if(!challengeRaw)return json({error:'Код истёк или уже использован. Получи новый код на сайте.'},410);
+        const challenge=JSON.parse(challengeRaw);
+        const pending=await env.VAGENT_TELEGRAM.get('web_link_pending_'+challenge.username);
+        if(challenge.expires_at<Date.now()||pending!==code)return json({error:'Код недействителен. Получи новый код.'},410);
+        await env.VAGENT_TELEGRAM.put('web_link_profile_'+challenge.username,JSON.stringify({telegram_id:b.telegram_id,username:String(b.telegram_username||'').slice(0,64),first_name:String(b.first_name||'').slice(0,100),linked_at:Date.now()}));
+        await env.VAGENT_TELEGRAM.delete('web_link_code_'+code);
+        await env.VAGENT_TELEGRAM.delete('web_link_pending_'+challenge.username);
+        return json({status:'ok',message:'Telegram-профиль связан с аккаунтом сайта. Обнови подключение на сайте и укажи свой канал.'});
+      }catch{return json({error:'Не удалось подтвердить привязку'},500)}
+    }
+    if(url.pathname==='/tg/link/start'&&request.method==='POST'){
+      try{
+        const user=await authenticate(request);if(!user)return json({error:'Необходим вход'},401);
+        if(!env.TG_MAIN_BOT_TOKEN)return json({error:'Общий бот не настроен'},503);
+        const oldRaw=await env.VAGENT_TELEGRAM.get('web_link_created_'+user.username);
+        if(Number(oldRaw)>Date.now()-15000)return json({error:'Подожди 15 секунд перед созданием нового кода'},429);
+        const code='WEB-'+Array.from(crypto.getRandomValues(new Uint8Array(16)),x=>x.toString(16).padStart(2,'0')).join('').toUpperCase(),expires_at=Date.now()+600000;
+        await env.VAGENT_TELEGRAM.put('web_link_code_'+code,JSON.stringify({username:user.username,expires_at}),{expirationTtl:600});
+        await env.VAGENT_TELEGRAM.put('web_link_pending_'+user.username,code,{expirationTtl:600});
+        await env.VAGENT_TELEGRAM.put('web_link_created_'+user.username,String(Date.now()),{expirationTtl:60});
+        return json({code,expires_at,bot_url:'https://t.me/aivagent',command:'/connect '+code});
+      }catch{return json({error:'Не удалось создать код'},500)}
+    }
+    if(url.pathname==='/tg/link/status'&&request.method==='GET'){
+      const user=await authenticate(request);if(!user)return json({error:'Необходим вход'},401);
+      const raw=await env.VAGENT_TELEGRAM.get('web_link_profile_'+user.username);
+      if(!raw)return json({linked:false});
+      try{return json({linked:true,profile:JSON.parse(raw)})}catch{return json({error:'Не удалось прочитать привязку'},500)}
+    }
+
     // ===== V-AGENT PREMIUM: СТАТУС И АКТИВАЦИЯ =====
     if (request.method === "GET" && url.pathname === "/premium/status") {
       const user = await authenticate(request);
@@ -623,6 +666,12 @@ export default {
         const botToken = env.TG_MAIN_BOT_TOKEN;
         if (!botToken) return json({ error: "Бот сервиса не настроен на сервере" }, 500);
 
+        const linkRaw=await env.VAGENT_TELEGRAM.get('web_link_profile_'+user.username);
+        if(!linkRaw)return json({error:'Сначала свяжи Telegram-профиль через одноразовый код'},403);
+        const linkedProfile=JSON.parse(linkRaw);
+        const ownerResponse=await fetch(`https://api.telegram.org/bot${botToken}/getChatMember`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:channel,user_id:linkedProfile.telegram_id})});
+        const owner=await ownerResponse.json();
+        if(!owner.ok||!['administrator','creator'].includes(owner.result?.status))return json({error:'Подтверждённый Telegram-профиль должен быть владельцем или администратором канала'},403);
         const meResponse = await fetch(`https://api.telegram.org/bot${botToken}/getMe`);
         const me = await meResponse.json();
         if (!me.ok || !me.result?.id) return json({ error: "Ошибка токена бота" }, 500);
@@ -893,6 +942,12 @@ export default {
         const botToken = env.TG_MAIN_BOT_TOKEN;
         if (!botToken) return failCheck("Не задан токен бота сервиса", 500);
         
+        const linkRaw=await env.VAGENT_TELEGRAM.get('web_link_profile_'+user.username);
+        if(!linkRaw)return json({error:'Сначала свяжи Telegram-профиль через одноразовый код'},403);
+        const linkedProfile=JSON.parse(linkRaw);
+        const ownerResponse=await fetch(`https://api.telegram.org/bot${botToken}/getChatMember`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:channel,user_id:linkedProfile.telegram_id})});
+        const owner=await ownerResponse.json();
+        if(!owner.ok||!['administrator','creator'].includes(owner.result?.status))return json({error:'Подтверждённый Telegram-профиль должен быть владельцем или администратором канала'},403);
         const meResponse = await fetch(`https://api.telegram.org/bot${botToken}/getMe`);
         const me = await meResponse.json().catch(() => ({}));
         if (!me.ok) return failCheck("Telegram отклонил токен бота: " + (me.description || "неизвестная ошибка"), 502);
