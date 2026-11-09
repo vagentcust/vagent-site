@@ -1399,6 +1399,7 @@ function tg(m){
  tgCalendarInit(sc);
  tgEmojiPickerInit(sc,[]);
  tgTimePickerInit(sc,['09:00','14:00','19:00']);
+ mountTelegramLink(sc);
  mountStudio(sc);
  tgLoadStatus().then(syncConnectionState);tgLoadSchedule();tgLoadLogs();sc.querySelector("#tg-logs-refresh").onclick=tgLoadLogs;
 }
@@ -1423,6 +1424,18 @@ function channelStatistics(m){
  }catch(e){if(sc.isConnected){status.className='st er';status.textContent=e.message}}finally{button.disabled=false}};
  button.onclick=load;load();
 }
+function mountTelegramLink(root){
+ const connection=root.querySelector('.tga');if(!connection)return;
+ const box=el('div','va-link-box');
+ box.innerHTML='<h3>Связать Telegram-профиль</h3><p>Получи одноразовый код и отправь команду общему боту в личные сообщения. Код действует 10 минут.</p><div class="row"><button type="button" class="btn" data-link="start">Получить код</button><a class="btn g" href="https://t.me/aivagent" target="_blank" rel="noopener noreferrer">Открыть бота</a><button type="button" class="btn g" data-link="refresh">Проверить привязку</button></div><div class="st" role="status" data-link="status"></div><div data-link="challenge" hidden><label>Команда для бота<input class="f" data-link="code" readonly></label><small class="note" data-link="expires"></small><button type="button" class="btn g sm" data-link="copy">Копировать команду</button></div>';
+ connection.prepend(box);const q=id=>box.querySelector('[data-link="'+id+'"]');let timer=null,expiry=0,polling=false;
+ async function status(){if(polling||!box.isConnected)return;polling=true;try{const d=await tgRequest('/tg/link/status');if(!box.isConnected)return;if(d.linked&&(!expiry||d.profile.linked_at>=expiry-600000)){q('status').className='st ok';q('status').textContent='Telegram подтверждён: '+(d.profile.username?'@'+d.profile.username:d.profile.first_name||String(d.profile.telegram_id));if(timer)clearInterval(timer);q('challenge').hidden=true}else{q('status').className='st';q('status').textContent=expiry>Date.now()?'Ожидаю команду в боте…':'Telegram-профиль пока не связан.'}}catch(e){q('status').className='st er';q('status').textContent=e.message}finally{polling=false}}
+ q('start').onclick=async()=>{q('start').disabled=true;try{const d=await tgRequest('/tg/link/start','POST',{});expiry=d.expires_at;q('code').value=d.command;q('challenge').hidden=false;q('expires').textContent='Действует до '+new Date(expiry).toLocaleTimeString('ru-RU');q('status').className='st';q('status').textContent='Отправь команду боту @aivagent. Не передавай код другим людям.';clearInterval(timer);timer=setInterval(()=>{if(!box.isConnected||Date.now()>expiry){clearInterval(timer);if(box.isConnected){q('status').textContent='Код истёк. Получи новый.';q('challenge').hidden=true}return}status()},4000)}catch(e){q('status').className='st er';q('status').textContent=e.message}finally{q('start').disabled=false}};
+ q('refresh').onclick=status;q('copy').onclick=async()=>{try{await navigator.clipboard.writeText(q('code').value)}catch{q('status').textContent='Выдели и скопируй команду вручную.'}};
+ const observer=new MutationObserver(()=>{if(!box.isConnected){clearInterval(timer);observer.disconnect()}});observer.observe(root.parentNode,{childList:true});status();
+}
+
+
 function mountStudio(root){
  const host=el('section','card va-studio');
  host.innerHTML=`<h3>Студия контента</h3><p>Материал → генерация → предпросмотр → публикация</p>
